@@ -1,4 +1,4 @@
-//test
+//update nov.13.11 23:40
 
 #include <iostream>
 #include <vector>
@@ -307,34 +307,40 @@ int main()
     bool eof = false;
     string line;
     LineList *resultList=NULL, *mergedList=NULL;
-    while (!eof)
-    {
-        getline(cin, line);
-        if (cin.eof())
+    getline(cin, line);
+        cout<<"line: "<<line.length()<<endl;
+	if(line.length() == 0 || line[0] != '#')
+	{
+	  cout<<"ERROR"<<endl;
 	  eof = true;
+	}
 	else
 	{
-	  if(isNewFile(line))
-	  {
-	    resultList= mergeLists(resultList , mergedList);
-	    deleteList(mergedList);
-	    mergedList=NULL;
+	  while (!eof)
+	  {	
+		if(isNewFile(line))
+		{
+		  resultList= mergeLists(resultList , mergedList);
+		  deleteList(mergedList);
+		  mergedList=NULL;
 
+		}
+		else
+		{
+		  Line *l = parseLine(line);
+		  mergedList= addOneLine(mergedList, l);
+		}
+		getline(cin, line);
+		if (cin.eof())
+		  eof = true;
+		
 	  }
-	  else
-	  {
-	    Line *l = parseLine(line);
-	    mergedList= addOneLine(mergedList, l);
-	  }
+	  cout<<"before const final merge"<<endl;
+	  resultList = mergeLists(resultList , mergedList);
+	  cout<<"after final merge"<<endl;
+
+	  printLines(resultList);
+	  deleteList(resultList);
+	  deleteList(mergedList);
 	}
-	  
-     }
-     cout<<"before const final merge"<<endl;
-     resultList = mergeLists(resultList , mergedList);
-     cout<<"after final merge"<<endl;
-
-     printLines(resultList);
-     deleteList(resultList);
-     deleteList(mergedList);
-
 }
