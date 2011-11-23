@@ -18,7 +18,7 @@ vector<cv::Rect> FaceDetector::getFaces()
 	Mat grayImg;
 	cvtColor(this->image,grayImg,CV_BGR2GRAY);
 	// Load the model before it is used
-	string face_cascade_name = "haarcascade_frontalface_alt.xml";
+	string face_cascade_name = "/usr/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml";
 	CascadeClassifier face_cascade;
 	face_cascade.load( face_cascade_name );
 	vector<Rect> faces;

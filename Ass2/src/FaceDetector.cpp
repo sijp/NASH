@@ -26,6 +26,11 @@ vector<cv::Rect> FaceDetector::getFaces()
 	return faces;
 }
 
+Mat &FaceDetector::getImage()
+{
+	return this->image;
+}
+
 
 
 
