@@ -23,6 +23,7 @@ class FaceDetector
 		//read the image into a cv::mat object.
 		FaceDetector(const string &imgName);
 		vector<Rect> getFaces();
+		Mat &getImage();
 };
 
 
