@@ -1,4 +1,4 @@
-
+/*
  * FaceDetectorGui.h
  *
  *  Created on: Nov 22, 2011
@@ -13,9 +13,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <string>
-
+#include "../include/FaceDetector.h"
 using namespace cv;
-using namespace std:
+using namespace std;
 
 class FaceDetectorGui
 {
@@ -29,7 +29,7 @@ class FaceDetectorGui
     FaceDetectorGui(const string &imgName ,const string &linuxTitle);
     bool show();
     bool save(const string &targetFile);
-}:
+};
 
 
 
