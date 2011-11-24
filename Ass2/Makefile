@@ -1,5 +1,6 @@
 # All Targets
 all: ./bin/step1
+step1: ./bin/step1
 # Tool invocations
 # Executable "step1" depends on the files FaceDetector.o, FaceDetectorGui.o and step1.cpp.
 
