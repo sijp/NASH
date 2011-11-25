@@ -24,6 +24,7 @@ class FaceDetectorGui
     FaceDetector detector;
     string linuxTitle;
     vector<Rect> faces;
+		vector<Rect> bodies;
     Mat result;
   public:
     FaceDetectorGui(const string &imgName ,const string &linuxTitle);

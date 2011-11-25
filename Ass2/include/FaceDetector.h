@@ -3,6 +3,7 @@
  *
  *  Created on: Nov 22, 2011
  *      Author: shlomi
+	Author: nadavi
  */
 
 #ifndef FACEDETECTOR_H_
@@ -23,6 +24,7 @@ class FaceDetector
 		//read the image into a cv::mat object.
 		FaceDetector(const string &imgName);
 		vector<Rect> getFaces();
+		vector<Rect> getBodies();
 		Mat &getImage();
 };
 

@@ -26,6 +26,24 @@ vector<cv::Rect> FaceDetector::getFaces()
 	return faces;
 }
 
+vector<cv::Rect> FaceDetector::getBodies()
+{
+	vector<Rect> faces=this->getFaces();
+	vector<Rect> bodies;
+	int i;
+	for (i = 0 ; i<faces.size(); i++)
+	{
+		int x=faces[i].x- faces[i].width;
+		int y=faces[i].y - faces[i].height/2;
+		int w=faces[i].width *3;
+		int h=faces[i].height * 8;
+		Rect r(x,y,w,h);
+		bodies.push_back(r);		
+	}
+	return bodies;
+
+}
+
 Mat &FaceDetector::getImage()
 {
 	return this->image;
