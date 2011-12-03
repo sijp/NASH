@@ -47,11 +47,31 @@ class Blend
 		 * determining which pixel to put where.
 		 */
 		Mat blended_image;
+		/*
+		 * This method adds the forground image on top of the
+		 * background image and saves it in the blended_image property.
+		 */
 		void process();
 	public:
+		/*
+		 * Constructor
+		 * bg- the background image
+		 * fg- the foreground image
+		 * msk- the mask used for the blending process
+		 */
 		Blend(Mat &bg,Mat &fg,Mat &msk);
+		/*
+		 * returns the final blended image.
+		 */
 		Mat &getBlendedImage();
+		/*
+		 * shows the blended image in a new window
+		 */
 		void show();
+		/*
+		 * saves the blended image to `filename` file
+		 */
+		void save(const string &filename);
 };
 
 #endif

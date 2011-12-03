@@ -25,4 +25,12 @@ void Blend::show()
 	destroyWindow("Blended Image");
 }
 
+bool Blend::save(const string &filename)
+{
+	if (this->blended_image.empty())
+		return false;
+	imwrite(filename, this->blended_image);
+	return true;
+}
+
 
