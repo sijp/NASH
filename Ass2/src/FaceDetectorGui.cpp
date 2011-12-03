@@ -36,6 +36,7 @@ bool FaceDetectorGui::show()
     Point p2 (this->bodies[i].x + this->bodies[i].width , this->bodies[i].y + this->bodies[i].height);
     rectangle(this->result, p1, p2, Scalar(0 , 0 , 255) , 2);
   }
+ 
   
   namedWindow(linuxTitle);
   imshow(this->linuxTitle , this->result);
@@ -73,6 +74,9 @@ Mat &FaceDetectorGui::getOriginalImage()
 }
 
 
-
+FaceDetectorGui::~FaceDetectorGui()
+{
+	this->result.release();
+}
 
 

@@ -38,6 +38,7 @@ class FaceDetector
 		 * returns the source image 
 		 */
 		Mat &getImage();
+		virtual ~FaceDetector();
 };
 
 

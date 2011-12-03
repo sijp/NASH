@@ -61,6 +61,7 @@ class FaceDetectorGui
 	*returns the original image
 	*/
     Mat &getOriginalImage();
+    virtual ~FaceDetectorGui();
 };
 
 

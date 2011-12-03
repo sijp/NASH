@@ -23,6 +23,7 @@ vector<cv::Rect> FaceDetector::getFaces()
 	face_cascade.load( face_cascade_name );
 	vector<Rect> faces;
 	face_cascade.detectMultiScale( grayImg, faces );
+	grayImg.release();
 	return faces;
 }
 
@@ -51,5 +52,8 @@ Mat &FaceDetector::getImage()
 }
 
 
-
+FaceDetector::~FaceDetector()
+{
+	this->image.release();
+}
 

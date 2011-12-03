@@ -16,10 +16,8 @@ int main(int argc , char *argv[])
 		cout<<"this program gets exactly two parameters"<<endl;
 		return 1;
 	}
-
 	FaceDetectorGui fdg(argv[1] , "Face Detector");
 	fdg.show();
 	fdg.save(argv[2]);
-
 	return 0;
 }
