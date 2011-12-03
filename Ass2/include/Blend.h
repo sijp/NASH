@@ -71,7 +71,7 @@ class Blend
 		/*
 		 * saves the blended image to `filename` file
 		 */
-		void save(const string &filename);
+		bool save(const string &filename);
 };
 
 #endif
