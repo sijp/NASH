@@ -8,7 +8,8 @@ Blend::Blend(Mat &bg,Mat &fg,Mat &msk):bg_image(bg),fg_image(fg),mask(msk)
 void Blend::process()
 {
 	this->bg_image.copyTo(this->blended_image);
-	this->fg_image.copyTo(this->blended_image,this->mask);
+	Mat t=this->blended_image(Rect(this->bg_image.size().width/2-this->fg_image.size().width/2,this->bg_image.size().height-this->fg_image.size().height,this->fg_image.size().width,this->fg_image.size().height));
+	this->fg_image.copyTo(t,this->mask);
 }
 
 Mat &Blend::getBlendedImage()
@@ -18,7 +19,7 @@ Mat &Blend::getBlendedImage()
 
 void Blend::show()
 {
-	namedWindow("Blended Image",1);
+	namedWindow("Blended Image",CV_WINDOW_NORMAL);
 	imshow("Blended Image",this->getBlendedImage());
 	cvWaitKey();
 	destroyWindow("Blended Image");

@@ -22,17 +22,30 @@ using namespace cv;
 /*
  *	Class Blend:
  *	Resposible for taking a background image a foreground image and a mask.
- *	then it generates a new "Blended Image" which shows a combination of all
- 
- *
+ *	then it generates a new "Blended Image" which shows a new image
+ *	with the background image and with the forgroud image on top of it.
  */
 
 class Blend
 {
 	private:
+		/*
+		 * the background image for the blending process
+		 */
 		Mat bg_image;
+		/*
+		 * the foreground image for the blending process
+		 */
 		Mat fg_image;
+		/*
+		 * the image mask for the blending process, used for 
+		 * determining which pixel to put where.
+		 */
 		Mat mask;
+		/*
+		 * the image mask for the blending process, used for 
+		 * determining which pixel to put where.
+		 */
 		Mat blended_image;
 		void process();
 	public:
