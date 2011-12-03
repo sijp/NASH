@@ -2,7 +2,10 @@
 
 #include "../include/FaceDetectorGui.h"
 
- 
+/*
+*constructor, gets image name and a title name for the window
+ recognize the faces and bodies and insert them into the faces vector
+*/
 FaceDetectorGui::FaceDetectorGui(const string &imgName ,const string &linuxTitle) : detector(imgName), linuxTitle(linuxTitle)
 {
   this->faces = this->detector.getFaces();
@@ -10,6 +13,10 @@ FaceDetectorGui::FaceDetectorGui(const string &imgName ,const string &linuxTitle
   this->result = imread(imgName);
 }
 
+/*
+*drews rectangle around the faces and bodies in the image
+*show the result in a window for 5 seconds
+*/
 bool FaceDetectorGui::show()
 {
   int i;
@@ -37,7 +44,9 @@ bool FaceDetectorGui::show()
   return true;
 }
 
-
+/*
+*saves the recognized faces and body image into the target file
+*/
 bool FaceDetectorGui::save(const string &targetFile)
 {
 	if(this->result.empty())
@@ -45,7 +54,9 @@ bool FaceDetectorGui::save(const string &targetFile)
   	imwrite(targetFile , this->result);
   	return true;
 }
-
+/*
+*return the first Rectangle of a body.
+*/
 Rect &FaceDetectorGui::getRectangle()
 {
 	if(this->bodies.size()==0)
@@ -53,6 +64,9 @@ Rect &FaceDetectorGui::getRectangle()
 	return this->bodies[0];
 }
 
+/*
+*returns the original image
+*/
 Mat &FaceDetectorGui::getOriginalImage()
 {
 	return this->detector.getImage();	
