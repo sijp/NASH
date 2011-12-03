@@ -33,6 +33,7 @@ bool FaceDetectorGui::show()
   namedWindow(linuxTitle);
   imshow(this->linuxTitle , this->result);
 	waitKey(5000);
+	destroyWindow(this->linuxTitle);
   return true;
 }
 
@@ -45,7 +46,7 @@ bool FaceDetectorGui::save(const string &targetFile)
 Rect &FaceDetectorGui::getRectangle()
 {
 	if(this->bodies.size()==0)
-		this->bodies.push_back(Rect(0,0,this->result.width,this->result.height));
+		this->bodies.push_back(Rect(0,0,this->result.size().width,this->result.size().height));
 	return this->bodies[0];
 }
 

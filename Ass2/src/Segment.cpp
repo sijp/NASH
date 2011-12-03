@@ -137,6 +137,9 @@ void Segment::show()
             	cout << iterCount << ">" << endl;
             	iterCount++;
                 break;
+            case 'b':
+            	cout<<"Initializing Blend operation shit"<<endl;
+            	return;
             }
         }
 	destroyWindow( winName.c_str() );
@@ -152,11 +155,4 @@ Mat& Segment::getMask()
 	return this->mask;
 }
 
-int main(int argc , char *argv[])
-{	
-	Mat ma =imread("../data/assdetector.jpg");
-	Rect rect(225,10,200,345);
-	Segment seg(ma, rect);
-	seg.show();
-	return 0;
-}
+
