@@ -141,7 +141,7 @@ void Segment::show()
             	iterCount++;
                 break;
             case 'b':
-            	cout<<"Initializing Blend operation shit"<<endl;
+            	cout<<"Initializing Blend operation"<<endl;
             	destroyWindow(this->winName.c_str());
             	return;
             }
