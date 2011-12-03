@@ -32,31 +32,92 @@ typedef enum userState
 class Segment
 {
 	private:
+		/*
+		*holds the original image
+		*/
 		Mat image;
+		/*
+		*holds the mask of the image
+		*/
 		Mat mask;
-		Mat res;
+		/*
+		*holds the binary format of the mask image
+		*/
 		Mat binMask;
+		/*
+		*temporary values used for the grabCut operation
+		*/		
 		Mat bgdModel, fgdModel;
+		/*
+		*an indicator that save the situation of the pixel state
+		*/
 		userState pixState;
+		/*
+		*holds a rectangle of one body
+		*/		
 		Rect rect;
+		/*
+		*saves the background pixels for the change mask
+		*/		
 		vector<Point> bgdPixels;
-		vector<Point> fgdPixels;
-		Point p1, p2;
+		/*
+		*saves the foreground pixels for the change mask
+		*/		
+		vector<Point> fgdPixels;		
+		/*
+		*saves the RGB value for red
+		*/		
 		const Scalar RED;
+		/*
+		**saves the RGB value for blue
+		*/    		
     		const Scalar BLUE;
+		/*
+		*holds the winsow name
+		*/    		
     		const string winName;
+		/*
+		*saves the numcer of iteration we call grabCut
+		*/    		
     		int iterCount;
 	public:
+		/*
+		*constructor, gets the original image and a rect that represent one body from the original image
+		*/
 		Segment(Mat& , Rect&);
-		void getBinMask();
+		/*
+		*making the binary file
+		*/
+		void makeBinMask();
+		/*
+		*holds the operation to do when we use the mouse
+		*/
 		void onMouse( int event, int x, int y, int flags);
+		/*
+		*updating the mask image
+		*/
 		void changeMask();
+		/*
+		*show the image in a image window
+		*/
 		void showImage();
+		/*
+		*the main function, with the user help, crop the image, making the binary mask file
+		*/
 		void show();
+		/*
+		*return a refrence to the original image
+		*/
 		Mat &getImage();
-		Mat &getMask();
+		/*
+		*return the binary mask made for the foreground image
+		*/
+		Mat &getBinMask();
 }; //nadavi
 
+/*
+*a function that helps us use the "onMouse" method in order to use the grabCut
+*/
 void wrappedOnMouse(int event, int x , int y , int flags , void* ptr);
 
 #endif

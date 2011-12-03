@@ -23,9 +23,7 @@ int main(int argc , char* argv[])
 	Segment imageSeg(fdg.getOriginalImage() , fdg.getRectangle());
 	imageSeg.show();
 	Mat bgImage = imread(argv[2]);
-	namedWindow("check" , 1);
-	imshow("check" , imageSeg.getMask());
-	Blend imageBlender(bgImage , fdg.getOriginalImage() , imageSeg.getMask());
+	Blend imageBlender(bgImage , fdg.getOriginalImage() , imageSeg.getBinMask());
 	imageBlender.show();
 	 
 

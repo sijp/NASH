@@ -8,6 +8,7 @@
 
 #include "../include/Segment.h"
 
+//construct the Segment object, give the Mat object a init value
 Segment::Segment(Mat &imageFile, Rect &rectFile) : image(imageFile), rect(rectFile) , RED(0,0,255) ,BLUE(255,0,0) , winName("image")
 {
 	this->mask = Mat::ones(imageFile.size(), CV_8UC1);
@@ -18,7 +19,7 @@ Segment::Segment(Mat &imageFile, Rect &rectFile) : image(imageFile), rect(rectFi
 
 
 // Each element in the mask is an 8-bit unsigned char (i.e., a byte) - called CV_8UC1
-void Segment::getBinMask()
+void Segment::makeBinMask()
 {
 	if( this->mask.empty() || this->mask.type()!=CV_8UC1 )
 	    CV_Error( CV_StsBadArg, "mask is empty or has incorrect type (not CV_8UC1)" );
@@ -45,7 +46,7 @@ void Segment::showImage()
             this->image.copyTo(res1);
         else
         {
-            getBinMask();
+            makeBinMask();
             this->image.copyTo( res1, this->binMask);
         }
      
@@ -150,9 +151,9 @@ Mat& Segment::getImage()
 	return this->image;
 }
 
-Mat& Segment::getMask()
+Mat& Segment::getBinMask()
 {
-	return this->mask;
+	return this->binMask;
 }
 
 
