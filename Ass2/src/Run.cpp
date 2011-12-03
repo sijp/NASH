@@ -35,7 +35,6 @@ int main(int argc , char* argv[])
 	Segment imageSeg(fdg.getOriginalImage() , fdg.getRectangle());
 	imageSeg.show();
 	imageSeg.save(string(argv[1]) + "_extracted");
-	cout<<bgImage.size().width<<endl;
 	Blend imageBlender(bgImage , fdg.getOriginalImage() , imageSeg.getBinMask());
 	imageBlender.show();
 	imageBlender.save(string(argv[1]) + "_blended");

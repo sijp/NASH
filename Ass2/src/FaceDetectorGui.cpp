@@ -34,7 +34,6 @@ bool FaceDetectorGui::show()
   
   for ( i = 0 ; i<this->bodies.size() ; i++ )
   {
-    cout<<i<<endl;
     Point p1 (this->bodies[i].x , this->bodies[i].y);
     Point p2 (this->bodies[i].x + this->bodies[i].width , this->bodies[i].y + this->bodies[i].height);
     rectangle(this->result, p1, p2, Scalar(0 , 0 , 255) , 2);

@@ -10,7 +10,7 @@ ass2: ./bin/ass2
 	g++ `pkg-config opencv --libs --cflags` ./bin/FaceDetector.o ./bin/FaceDetectorGui.o ./src/step1.cpp -o ./bin/step1
 ./bin/ass2: ./bin/FaceDetectorGui.o ./bin/Segment.o ./bin/Blend.o ./src/Run.cpp
 	@echo "Building ass2"
-	g++ `pkg-config opencv --libs --cflags`  ./bin/FaceDetector.o ./bin/FaceDetectorGui.o ./bin/Segment.o ./bin/Blend.o ./src/Run.cpp -o ./bin/ass2
+	g++ `pkg-config opencv --libs --cflags`  ./bin/FaceDetector.o ./bin/FaceDetectorGui.o ./bin/Segment.o ./bin/Blend.o ./src/Run.cpp -o ./Ex2
 ./bin/Blend.o: ./src/Blend.cpp ./include/Blend.h
 	@echo "Building Blend"
 	g++ -c `pkg-config opencv --libs --cflags` ./src/Blend.cpp -o ./bin/Blend.o
