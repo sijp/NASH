@@ -10,6 +10,7 @@ void Blend::process()
 	//first we copy the bg image to the blended image
 	this->bg_image.copyTo(this->blended_image);
 	// then we select only the ROI of the bg image (where we want to paste the fg image)
+
 	Mat t=this->blended_image(Rect(this->bg_image.size().width/2-this->fg_image.size().width/2,this->bg_image.size().height-this->fg_image.size().height,this->fg_image.size().width,this->fg_image.size().height));
 	//and finally we copy the fg image to the ROI.
 	this->fg_image.copyTo(t,this->mask);

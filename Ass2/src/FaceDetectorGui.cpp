@@ -8,9 +8,12 @@
 */
 FaceDetectorGui::FaceDetectorGui(const string &imgName ,const string &linuxTitle) : detector(imgName), linuxTitle(linuxTitle)
 {
-  this->faces = this->detector.getFaces();
-  this->bodies = this->detector.getBodies();
-  this->result = imread(imgName);
+  if (this->detector.isValid())
+  {
+  	this->faces = this->detector.getFaces();
+  	this->bodies = this->detector.getBodies();
+  	this->result = imread(imgName);
+  }	
 }
 
 /*
@@ -73,6 +76,10 @@ Mat &FaceDetectorGui::getOriginalImage()
 	return this->detector.getImage();	
 }
 
+bool FaceDetectorGui::isValid()
+{
+	return this->detector.isValid();
+}
 
 FaceDetectorGui::~FaceDetectorGui()
 {

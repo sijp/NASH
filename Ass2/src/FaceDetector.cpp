@@ -39,6 +39,16 @@ vector<cv::Rect> FaceDetector::getBodies()
 		int y=faces[i].y - faces[i].height/2;
 		int w=faces[i].width *3;
 		int h=faces[i].height * 8;
+
+		if (x<0)
+			x=1;
+		if (y<0)
+			y=1;
+		if (w+x>this->image.size().width)
+			w=this->image.size().width-x-1;
+		if (h+y>this->image.size().height)
+			h=this->image.size().height-y-1;
+		
 		Rect r(x,y,w,h);
 		bodies.push_back(r);		
 	}
@@ -51,6 +61,10 @@ Mat &FaceDetector::getImage()
 	return this->image;
 }
 
+bool FaceDetector::isValid()
+{
+	return !this->image.empty();
+}
 
 FaceDetector::~FaceDetector()
 {
