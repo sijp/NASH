@@ -31,6 +31,7 @@ vector<cv::Rect> FaceDetector::getBodies()
 	vector<Rect> faces=this->getFaces();
 	vector<Rect> bodies;
 	int i;
+	//for each face we approximate where the body is using average proportions.
 	for (i = 0 ; i<faces.size(); i++)
 	{
 		int x=faces[i].x- faces[i].width;

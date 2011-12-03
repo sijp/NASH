@@ -19,12 +19,24 @@ using namespace cv;
 class FaceDetector
 {
 	private:
+		/*
+		 * the image we use to detect faces
+		 */
 		Mat image;
 	public:
 		//read the image into a cv::mat object.
 		FaceDetector(const string &imgName);
+		/*
+		 * searches for faces in the image.
+		 */
 		vector<Rect> getFaces();
+		/*
+		 * uses the faces method to approximate the bodies position.
+		 */
 		vector<Rect> getBodies();
+		/*
+		 * returns the source image 
+		 */
 		Mat &getImage();
 };
 
