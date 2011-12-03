@@ -24,12 +24,14 @@ class FaceDetectorGui
     FaceDetector detector;
     string linuxTitle;
     vector<Rect> faces;
-		vector<Rect> bodies;
+    vector<Rect> bodies;
     Mat result;
   public:
     FaceDetectorGui(const string &imgName ,const string &linuxTitle);
     bool show();
     bool save(const string &targetFile);
+    Rect &getRectangle();
+    Mat &getOriginalImage();
 };
 
 

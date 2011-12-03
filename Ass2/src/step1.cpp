@@ -2,7 +2,7 @@
  * step1.cpp
  *
  *  Created on: Nov 22, 2011
- *      Author: shlomi
+ *      Author: shlomi, nadavi
  */
 #include "../include/FaceDetector.h"
 #include "../include/FaceDetectorGui.h"
@@ -13,7 +13,7 @@ int main(int argc , char *argv[])
 {
 	if (argc != 3)
 	{
-		cout<<"this program gets exactly two parameter"<<endl;
+		cout<<"this program gets exactly two parameters"<<endl;
 		return 1;
 	}
 

@@ -38,6 +38,7 @@ class Blend
 	public:
 		Blend(Mat &bg,Mat &fg,Mat &msk);
 		Mat &getBlendedImage();
+		void show();
 };
 
 #endif

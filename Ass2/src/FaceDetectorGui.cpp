@@ -5,8 +5,8 @@
  
 FaceDetectorGui::FaceDetectorGui(const string &imgName ,const string &linuxTitle) : detector(imgName), linuxTitle(linuxTitle)
 {
-  this->faces = detector.getFaces();
-  this->bodies = detector.getBodies();
+  this->faces = this->detector.getFaces();
+  this->bodies = this->detector.getBodies();
   this->result = imread(imgName);
 }
 
@@ -41,3 +41,20 @@ bool FaceDetectorGui::save(const string &targetFile)
 {
   imwrite(targetFile , this->result);
 }
+
+Rect &FaceDetectorGui::getRectangle()
+{
+	if(this->bodies.size()==0)
+		this->bodies.push_back(Rect(0,0,this->result.width,this->result.height));
+	return this->bodies[0];
+}
+
+Mat &FaceDetectorGui::getOriginalImage()
+{
+	return this->detector.getImage();	
+}
+
+
+
+
+

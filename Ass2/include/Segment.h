@@ -47,7 +47,7 @@ class Segment
     		const string winName;
     		int iterCount;
 	public:
-		Segment(Mat , Rect);
+		Segment(Mat& , Rect&);
 		void getBinMask();
 		void onMouse( int event, int x, int y, int flags);
 		void changeMask();

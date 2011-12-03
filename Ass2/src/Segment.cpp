@@ -8,7 +8,7 @@
 
 #include "../include/Segment.h"
 
-Segment::Segment(Mat imageFile, Rect rectFile) : image(imageFile), rect(rectFile) , RED(0,0,255) ,BLUE(255,0,0) , winName("image")
+Segment::Segment(Mat &imageFile, Rect &rectFile) : image(imageFile), rect(rectFile) , RED(0,0,255) ,BLUE(255,0,0) , winName("image")
 {
 	this->mask = Mat::ones(imageFile.size(), CV_8UC1);
 	grabCut( this->image, this->mask, this->rect, this->bgdModel, this->fgdModel, 0, GC_INIT_WITH_RECT );
@@ -140,6 +140,11 @@ void Segment::show()
             }
         }
 	destroyWindow( winName.c_str() );
+}
+
+Mat& Segment::getImage()
+{
+	return this->image;
 }
 
 Mat& Segment::getMask()
