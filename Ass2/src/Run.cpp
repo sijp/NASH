@@ -18,14 +18,19 @@ int main(int argc , char* argv[])
 		return 1;
 	}
 	
+	
 	FaceDetectorGui fdg(argv[1] , "Face Detector");
 	fdg.show();
+	fdg.save(string(argv[1]) + "_detections");
 	Segment imageSeg(fdg.getOriginalImage() , fdg.getRectangle());
 	imageSeg.show();
+	imageSeg.save(string(argv[1]) + "_extracted");
 	Mat bgImage = imread(argv[2]);
 	Blend imageBlender(bgImage , fdg.getOriginalImage() , imageSeg.getBinMask());
 	imageBlender.show();
-	 
+	imageBlender.save(string(argv[1]) + "_blended");
+	
+	
 
 	return 0;
 }

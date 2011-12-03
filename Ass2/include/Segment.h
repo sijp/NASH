@@ -49,6 +49,10 @@ class Segment
 		*/		
 		Mat bgdModel, fgdModel;
 		/*
+		*saves the final extracted foreground image
+		*/		
+		Mat res;
+		/*
 		*an indicator that save the situation of the pixel state
 		*/
 		userState pixState;
@@ -113,10 +117,14 @@ class Segment
 		*return the binary mask made for the foreground image
 		*/
 		Mat &getBinMask();
+		/*
+		*saves the extracted foreground image into a target file
+		*/
+		bool save(const string &targetFile);
 }; //nadavi
 
 /*
-*a function that helps us use the "onMouse" method in order to use the grabCut
+*a function that helps us use the "onMouse" method in order to use the setMouseCallback
 */
 void wrappedOnMouse(int event, int x , int y , int flags , void* ptr);
 

@@ -38,9 +38,12 @@ void Segment::changeMask()
         for( ; it != itEnd; ++it )
             this->mask.at<uchar>(*it) = GC_FGD;
 }
-
+/*
+*define the new crop picture by the pixels that were given
+*/
 void Segment::showImage()
 {
+	//res1 - temp Mat holds the picture we see each iteration
 	Mat res1;
         if(this->mask.empty() )
             this->image.copyTo(res1);
@@ -49,7 +52,7 @@ void Segment::showImage()
             makeBinMask();
             this->image.copyTo( res1, this->binMask);
         }
-     
+     	
         vector<Point>::const_iterator it;
         for( it = this->bgdPixels.begin(); it != this->bgdPixels.end(); ++it )
             circle( res1, *it, 1, BLUE );
@@ -57,7 +60,12 @@ void Segment::showImage()
             circle( res1, *it, 1, RED );
      
         imshow( winName, res1 );
+        res1.copyTo(this->res);
 }
+
+/*
+*deals with the points the user mark on the picture
+*/
 
 void Segment::onMouse( int event, int x, int y, int flags)
     {
@@ -99,6 +107,9 @@ void Segment::onMouse( int event, int x, int y, int flags)
         }
     }
     
+/*
+* used for calling the method "onMouse", because setMouseCallback cannot call a method.
+*/    
 void wrappedOnMouse(int event, int x , int y , int flags , void* ptr)
 {
 	Segment* segptr = (Segment*)ptr;
@@ -110,25 +121,16 @@ void Segment::show()
 {
 	namedWindow(this->winName.c_str(), CV_WINDOW_AUTOSIZE );
 	this->showImage();
-	//imshow(this->winName.c_str(),this->image);
 	setMouseCallback( this->winName.c_str(), wrappedOnMouse, (void*)this );
 	
 	this->pixState = NOT_SET;
 	this->iterCount = 0;
         for(;;)
         {
+        	//working according to the user typing
             int c = cvWaitKey(0);
             switch( (char) c )
             {
-            case 'r':
-                this->pixState = NOT_SET;
-                this->iterCount = 0;
-                this->bgdPixels.clear(); this->fgdPixels.clear();
-                this->mask.release();
-                cout << endl;
-                assert( this->bgdPixels.empty() && this->fgdPixels.empty() && this->mask.empty() );
-                showImage();
-                break;
             case 'n':
             	cout << "<" << iterCount << "... ";
             	changeMask();
@@ -140,9 +142,11 @@ void Segment::show()
                 break;
             case 'b':
             	cout<<"Initializing Blend operation shit"<<endl;
+            	destroyWindow(this->winName.c_str());
             	return;
             }
         }
+    //destroys the image window
 	destroyWindow( winName.c_str() );
 }
 
@@ -156,4 +160,11 @@ Mat& Segment::getBinMask()
 	return this->binMask;
 }
 
+bool Segment::save(const string &targetFile)
+{
+	if(this->res.empty())
+		return false;
+  	imwrite(targetFile , this->res);
+  	return true;
+}
 

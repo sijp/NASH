@@ -40,7 +40,10 @@ bool FaceDetectorGui::show()
 
 bool FaceDetectorGui::save(const string &targetFile)
 {
-  imwrite(targetFile , this->result);
+	if(this->result.empty())
+		return false;
+  	imwrite(targetFile , this->result);
+  	return true;
 }
 
 Rect &FaceDetectorGui::getRectangle()
