@@ -27,4 +27,6 @@ public interface Board {
 	 * gets the missions that are completed. NOT! 
 	 */
 	public Vector<Mission> getIncompletedMissions();
+	
+	public boolean markAsComplete(Mission m, Sergeant pepper);
 }

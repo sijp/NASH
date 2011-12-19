@@ -2,7 +2,22 @@ package nash.ass3;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public interface Mission extends Comparable<Mission>{
+/**
+ * @author Nadav lord of Middle Earth and Shlomi
+ *
+ */
+
+/*
+ * TODO: Note: Mission does not extends comparator anymore. we need 4 types of comparators now
+ * each for every queue in the MissionHolder.
+ * so we need to give each queue a comparator class (we need 4 of these).
+ * right now MissionHolder is broken.
+ */
+
+public interface Mission{
+	
+	public static final String PREASSIGNED="Preassigned", QUEUED="Queued", EXECUTED="Executed", COMPLETED="Completed";
+	
 	/*
 	 * gets the require skill for this mission.
 	 * used to determine whether they can complete this mission.
@@ -26,10 +41,10 @@ public interface Mission extends Comparable<Mission>{
 	public Hashtable<String,Integer> getRequiredItems();
 	
 	/*
-	 * returns a list (Vector) of Missions that are needed to
+	 * returns a list (Vector) of Missions' names that are needed to
 	 * be completed before this mission can be executed.
 	 */
-	public Vector<Mission> getPreMissions();
+	public Vector<String> getPreMissions();
 	
 	/*
 	 * gets the status of this mission (Preassigned, Queued, Executed, Complete)
@@ -39,4 +54,9 @@ public interface Mission extends Comparable<Mission>{
 	 * sets the status of this mission (Preassigned, Queued, Executed, Complete)
 	 */
 	public void setStatus(String status);
+	/*
+	 * Adds the specified Mission `m` to the list of missions that are needed to be completed
+	 * before this mission can start. 
+	 */
+	public void addPreMission(String m);
 }
