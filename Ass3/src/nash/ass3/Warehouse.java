@@ -10,8 +10,21 @@ import java.util.Vector;
  */
 
 public interface Warehouse {
-	public boolean useItem(String item);
-	public boolean releaseItem(String item);
-	public void addItem(String item);
-	public Vector<String> getItems();
+	/*
+	 * receives an itemlist, with names and amount of the items
+	 * takes it from the warehouse
+	 */
+	public void useItem(ItemList itemsToTake);
+	/*
+	 * returns items and their amount to the warehouse
+	 */
+	public void releaseItem(ItemList itemToReturn);
+	/*
+	 * adds a new item into the warehouse
+	 */
+	public void addItem(ItemImpl newItem);
+	/*
+	 * returns an item list with all the current items in the warehouse
+	 */
+	public ItemList getItems();
 }
