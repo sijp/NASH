@@ -11,6 +11,12 @@ import java.util.Vector;
  */
 public interface Sergeant extends Runnable{
 	/*
+	 * global constantin (david) for the priority values.
+	 */
+	public static final String LONGEST="longestMission", SHORTEST="shortestMission",
+			MINITEMS="minItems", MAXITEMS="maxItems";
+	
+	/*
 	 * get the name of the sergeant
 	 */
 	public String getName();
@@ -50,10 +56,13 @@ public interface Sergeant extends Runnable{
 	 * gets the current executed missions
 	 */
 	public Vector<Mission> getCurrnetMissions();
-	
-	
+
 	/*
-	 * assigns the Mission `m` to this sergeant to be executed 
+	 * adds a new mission to the mission list of this sergeant
+	 */
+	public void addMission(Mission m);
+	/*
+	 * assigns the Mission `m` to the executor 
 	 */
 	public void assignMission(Mission m);
 	
@@ -62,4 +71,25 @@ public interface Sergeant extends Runnable{
 	 * checks whether this sergeant can take more missions
 	 */
 	public boolean isAvailable();
+	
+	/*
+	 * set the maximum number of missions that this sergeant can execute.
+	 */
+	public void setMaxMissions(int max);
+	/*
+	 * acquire the items the sergeant needs to execute a mission from an item list.
+	 */
+	public void acquireItems(ItemList list);
+	
+	/*
+	 * return items that are not in use
+	 */
+	public void returnItems(ItemList returnedItems);
+	
+	/*
+	 *mark a mission as completed on the bored
+	 *and removes it from the sergeant missions
+	 */
+	public void completeMission(Mission m);
+	
 }

@@ -40,7 +40,8 @@ public class ItemImpl implements Item {
 		/*
 		 * check necessity for the synchronization
 		 */
-		synchronized (this.lock) {
+		synchronized (this.lock) 
+		{
 			this.itemAmount = this.itemAmount + amount;
 		}
 	}

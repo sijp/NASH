@@ -41,8 +41,11 @@ public class BoardImpl implements Board {
 			Mission m=new MissionImpl(mName, mSkill, mToc);
 			String mPreMissions=p.getProperty("m"+i+"PreRequisites");
 			String[] mPreMissionsVec=mPreMissions.split(",");
-			for (int j=0;j<mPreMissionsVec.length;j++)
+			//TODO: implement the mission dependency build process
+			/*for (int j=0;j<mPreMissionsVec.length;j++)
 				m.addPreMission(mPreMissionsVec[j]);
+				*/
+			
 			this.append(m);
 		}
 	}

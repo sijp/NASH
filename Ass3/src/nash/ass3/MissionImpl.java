@@ -3,7 +3,6 @@
  */
 package nash.ass3;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
 /**
@@ -15,8 +14,9 @@ public class MissionImpl implements Mission {
 	String skill;
 	String name;
 	int timeToCompletion;
-	Hashtable<String,Integer> requiredItems;
-	Vector<String> preMissions;
+	int workedTime;
+	ItemList requiredItems;
+	Vector<Mission> preMissions;
 	String status;
 	
 	public MissionImpl()
@@ -29,7 +29,7 @@ public class MissionImpl implements Mission {
 		this.name=name;
 		this.skill=skill;
 		this.timeToCompletion=toc;
-		this.requiredItems=new Hashtable<String,Integer>();
+		this.requiredItems=new ItemList();
 		this.preMissions=new Vector<Mission>();
 		this.status=Mission.PREASSIGNED;
 	}
@@ -48,12 +48,12 @@ public class MissionImpl implements Mission {
 		return this.timeToCompletion;
 	}
 
-	public Hashtable<String, Integer> getRequiredItems()
+	public ItemList getRequiredItems()
 	{
 		return this.requiredItems;
 	}
 
-	public Vector<String> getPreMissions()
+	public Vector<Mission> getPreMissions()
 	{
 		return this.preMissions;
 	}
@@ -68,8 +68,18 @@ public class MissionImpl implements Mission {
 		this.status=status;
 	}
 	
-	public void addPreMission(String mName)
+	public void addPreMission(Mission m)
 	{
 		this.preMissions.add(m);
+	}
+	
+	public int getWorkTimeLeft()
+	{
+		return this.timeToCompletion - this.workedTime;
+	}
+	
+	public void addWorkTime(int i)
+	{
+		this.workedTime = this.workedTime + i;
 	}
 }

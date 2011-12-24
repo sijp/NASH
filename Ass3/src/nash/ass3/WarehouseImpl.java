@@ -8,9 +8,20 @@ package nash.ass3;
  *
  */
 public class WarehouseImpl implements Warehouse {
-
+	private static Warehouse theWarehouse = null;
 	ItemList closet;
 	
+	public static Warehouse getInstance()
+	{
+		if(theWarehouse == null)
+			theWarehouse = new WarehouseImpl();
+		return theWarehouse;
+	}
+	
+	private WarehouseImpl()
+	{
+		this.closet = new ItemList();
+	}
 	
 	/* (non-Javadoc)
 	 * @see nash.ass3.Warehouse#useItem(nash.ass3.ItemList)

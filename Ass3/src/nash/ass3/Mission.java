@@ -38,13 +38,13 @@ public interface Mission{
 	 * the amount of each item needed.
 	 * Note: Hashtables are thread-safe.
 	 */
-	public Hashtable<String,Integer> getRequiredItems();
+	public ItemList getRequiredItems();
 	
 	/*
 	 * returns a list (Vector) of Missions' names that are needed to
 	 * be completed before this mission can be executed.
 	 */
-	public Vector<String> getPreMissions();
+	public Vector<Mission> getPreMissions();
 	
 	/*
 	 * gets the status of this mission (Preassigned, Queued, Executed, Complete)
@@ -58,5 +58,16 @@ public interface Mission{
 	 * Adds the specified Mission `m` to the list of missions that are needed to be completed
 	 * before this mission can start. 
 	 */
-	public void addPreMission(String m);
+	public void addPreMission(Mission m);
+	
+	/*
+	 * returns the time left for completing the mission
+	 */
+	public int getWorkTimeLeft();
+
+	/*
+	 * adds the time i we worked on this mission
+	 */
+	public void addWorkTime(int i);
+	
 }
