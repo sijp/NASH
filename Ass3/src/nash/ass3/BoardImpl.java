@@ -15,19 +15,27 @@ import java.util.Vector;
 public class BoardImpl implements Board {
 
 	
+	private static Board board=null;
+	
 	private Vector<Mission> preassigned, queued, executed, completed;
 	
 	
-	public BoardImpl(String filename) throws IOException
+	public static synchronized Board getInstance()
+	{
+		if (BoardImpl.board==null)
+			BoardImpl.board=new BoardImpl();
+		return BoardImpl.board;
+	}
+	
+	private BoardImpl() 
 	{
 		this.preassigned=new Vector<Mission>();
 		this.queued=new Vector<Mission>();
 		this.executed=new Vector<Mission>();
 		this.completed=new Vector<Mission>();
-		this.readProperties(filename);
 	}
 	
-	private void readProperties(String filename) throws IOException
+	public void readProperties(String filename) throws IOException
 	{
 		FileInputStream in=new FileInputStream(filename);
 		Properties p=new Properties();
@@ -38,15 +46,32 @@ public class BoardImpl implements Board {
 			String mName=p.getProperty("m"+i+"Name");
 			String mSkill=p.getProperty("m"+i+"skill");
 			int mToc=Integer.parseInt(p.getProperty("m"+i+"Time"));
+			
 			Mission m=new MissionImpl(mName, mSkill, mToc);
 			String mPreMissions=p.getProperty("m"+i+"PreRequisites");
 			String[] mPreMissionsVec=mPreMissions.split(",");
-			//TODO: implement the mission dependency build process
-			/*for (int j=0;j<mPreMissionsVec.length;j++)
-				m.addPreMission(mPreMissionsVec[j]);
-				*/
-			
-			this.append(m);
+			this.addPreMissions(m,mPreMissionsVec);
+			int pos=this.preassigned.indexOf(m);
+			if (pos<0)
+				this.append(m);
+			else
+			{
+				Mission realMission=this.preassigned.elementAt(pos);
+				realMission.update(m);
+			}
+		}
+	}
+	
+	private void addPreMissions(Mission m,String [] v)
+	{
+		for (int i=0;i<=v.length;i++)
+		{
+			Mission pre=new MissionImpl(v[i], "", 0);
+			int pos=this.preassigned.indexOf(pre);
+			if (pos<0)
+				this.preassigned.add(pre);
+			else pre=this.preassigned.elementAt(pos);
+			pre.addPreMission(pre);
 		}
 	}
 	
@@ -60,10 +85,26 @@ public class BoardImpl implements Board {
 	
 	/* (non-Javadoc)
 	 * @see nash.ass3.Board#getAssignableMissions()
+	 * 
 	 */
 	@Override
-	public Vector<Mission> getAssignableMissions() {
-		return this.preassigned;
+	public Vector<Mission> getAssignableMissions()
+	{
+		Vector<Mission> ret=new Vector<Mission>();
+		boolean toAdd=true;
+		Mission m;
+		for (int i=0;i<this.preassigned.size();i++)
+		{
+			m=this.preassigned.elementAt(i);
+
+			for (int j=0;j<m.getPreMissions().size();j++)
+				if (m.getPreMissions().elementAt(j).getStatus()!=Mission.COMPLETED)
+					toAdd=false;
+			if (toAdd)
+				ret.add(m);
+			toAdd=true;
+		}
+		return ret;
 	}
 
 	/* (non-Javadoc)
@@ -94,5 +135,27 @@ public class BoardImpl implements Board {
 		m.setStatus(Mission.COMPLETED);
 		this.completed.add(m);
 		return true;
+	}
+
+	@Override
+	public void levelUp(Mission m) {
+		if (m.getStatus()==Mission.PREASSIGNED)
+		{
+			m.setStatus(Mission.QUEUED);
+			this.preassigned.remove(m);
+			this.queued.add(m);
+		}
+		else if (m.getStatus()==Mission.QUEUED)
+		{
+			m.setStatus(Mission.EXECUTED);
+			this.queued.remove(m);
+			this.executed.add(m);
+		}
+		else if (m.getStatus()==Mission.EXECUTED)
+		{
+			m.setStatus(Mission.COMPLETED);
+			this.executed.remove(m);
+			this.completed.add(m);
+		}
 	}
 }

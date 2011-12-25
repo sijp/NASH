@@ -112,6 +112,7 @@ public class SergeantImpl implements Sergeant {
 	@Override
 	public void addMission(Mission m) {
 		this.serMissions.add(m);
+		this.assignMission(m);
 	}
 	
 	public void completeMission(Mission m)

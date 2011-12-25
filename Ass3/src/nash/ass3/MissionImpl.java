@@ -82,4 +82,14 @@ public class MissionImpl implements Mission {
 	{
 		this.workedTime = this.workedTime + i;
 	}
+
+	@Override
+	public void update(Mission m) {
+		
+		this.name=m.getName();
+		this.skill=m.getSkill();
+		this.timeToCompletion=m.getTimeToCompletion();
+		this.requiredItems=m.getRequiredItems();
+		this.preMissions=m.getPreMissions();
+	}
 }

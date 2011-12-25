@@ -69,5 +69,6 @@ public interface Mission{
 	 * adds the time i we worked on this mission
 	 */
 	public void addWorkTime(int i);
+	public void update(Mission m);
 	
 }

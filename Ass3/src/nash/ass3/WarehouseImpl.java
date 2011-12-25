@@ -11,7 +11,12 @@ public class WarehouseImpl implements Warehouse {
 	private static Warehouse theWarehouse = null;
 	ItemList closet;
 	
-	public static Warehouse getInstance()
+	/*
+	 * returns the singleton instance of the Warehouse.
+	 * it's synchronized for thread-safety.
+	 */
+	
+	public static synchronized Warehouse getInstance()
 	{
 		if(theWarehouse == null)
 			theWarehouse = new WarehouseImpl();

@@ -1,5 +1,7 @@
 package nash.ass3;
 
+import java.util.Vector;
+
 public interface MissionHolder {
 /*
  * @inv: all Mission holders sorted by the appropiate key.
@@ -12,7 +14,7 @@ public interface MissionHolder {
 	 * @pre: none;
 	 * @post: queue size = queue size+1 ; 
 	 */
-	public void insert(Mission m);
+	public void insert(Vector<Mission> mList);
 	
 	/*
 	 * @returns a mission according to the sergeant priority and skills
@@ -37,4 +39,5 @@ public interface MissionHolder {
 	public int getSize();
 
 	public void clear();
+
 }

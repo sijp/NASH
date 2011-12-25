@@ -29,4 +29,6 @@ public interface Board {
 	public Vector<Mission> getIncompletedMissions();
 	
 	public boolean markAsComplete(Mission m, Sergeant pepper);
+	
+	public void levelUp(Mission m);
 }

@@ -3,6 +3,7 @@
  */
 package nash.ass3;
 import java.util.PriorityQueue;
+import java.util.Vector;
 /**
  * @author nadav , shlomi
  *
@@ -15,7 +16,13 @@ public class MissionHolderImpl implements MissionHolder {
 	 * allows only one instance of a missionHolder.
 	 */
 	private static MissionHolder missionHolder;
-	public static MissionHolder getInstance()
+	
+	/*
+	 * returns the singleton instance of the MissionHolder.
+	 * it's synchronized for thread-safety.
+	 */
+	
+	public static synchronized MissionHolder getInstance()
 	{
 		System.out.println("getting");
 		if (missionHolder==null)
@@ -44,25 +51,35 @@ public class MissionHolderImpl implements MissionHolder {
 	 */
 	@Override
 	public boolean isEmpty() {
-		System.out.println("size: " + this.minLength.size());
 		return(this.minLength.size()==0);
 	}
 
-	@Override
-	public void insert(Mission m) {
-		System.out.println("insert");
+	private void insert(Mission m) {
 		this.minLength.add(m);
-		System.out.println(this.isEmpty());
 		this.maxLength.add(m);
 		this.minItems.add(m);
 		this.maxItems.add(m);
 	}
 
 	@Override
+	public void insert(Vector<Mission> mList)
+	{
+		for (int i=0;i<=mList.size();i++)
+		{
+			Mission m=mList.elementAt(i);
+			this.insert(m);
+		}
+	}
+
+	@Override
 	public Mission fetch(Sergeant s) {
 		Mission mFetch = this.getMission(s);
-		this.delete(mFetch);
-		return mFetch;
+		if(mFetch!=null)
+		{
+			this.delete(mFetch);
+			return mFetch;
+		}
+		return null;
 	}
 
 	@Override
