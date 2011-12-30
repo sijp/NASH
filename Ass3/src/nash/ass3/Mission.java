@@ -79,4 +79,9 @@ public interface Mission{
 	 * adds the in charge sergeant
 	 */
 	public void setSergeant(String serName);
+	
+	/*
+	 * returns the lock for the mission
+	 */
+	public Object getLock();
 }

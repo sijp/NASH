@@ -30,7 +30,7 @@ public class ItemList extends Vector<ItemImpl>
 			Collections.sort(this, itemComp);
 		}
 		else
-			this.elementAt(this.indexOf(item)).returnItems(item.getAmount());
+			this.elementAt(this.indexOf(item)).add(item.getAmount());
 		}
 	
 	public ItemList getCopy()

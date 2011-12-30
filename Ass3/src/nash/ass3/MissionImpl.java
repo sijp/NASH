@@ -5,6 +5,8 @@ package nash.ass3;
 
 import java.util.Vector;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 /*
  * 
  */
@@ -129,17 +131,32 @@ public class MissionImpl implements Mission
 	}
 	
 	/*
-	 * prints: mission name, houre left to excecuted, names of pre missions
+	 * prints: mission name, hours left to excecuted, names of pre missions
 	 * that aren't completef yet.
 	 */
 	private void printIncompleted()
 	{
-		
+		System.out.println("Mission Name: " + this.name + " , " 
+				+ "Hours left to completion: " + this.getWorkTimeLeft());
+		System.out.println("Premissions: ");
+		for(Mission m : this.preMissions)
+		{
+			synchronized (m.getLock()) {
+				if(m.getStatus() != Mission.COMPLETED)
+					System.out.print(m.getName() + " ");
+			}
+		}
+		System.out.println("");
 	}
 
 	@Override
 	public void setSergeant(String serName) {
 		this.sergeantSignature = serName;		
+	}
+
+	@Override
+	public Object getLock() {
+		return this.misLock;
 	}
 	
 }

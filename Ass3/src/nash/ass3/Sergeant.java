@@ -92,4 +92,9 @@ public interface Sergeant extends Runnable{
 	 */
 	public void completeMission(Mission m);
 	
+	/*
+	 * prints: name, names of all of his missions , time required for completion
+	 * for each mission.
+	 */
+	public void print();
 }
