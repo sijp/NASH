@@ -4,13 +4,14 @@
 package nash.ass3;
 import java.util.PriorityQueue;
 import java.util.Vector;
+import java.util.concurrent.PriorityBlockingQueue;
 /**
  * @author nadav , shlomi
  *
  */
 
 public class MissionHolderImpl implements MissionHolder {
-	private PriorityQueue<Mission> minLength, maxLength, minItems, maxItems;
+	private PriorityBlockingQueue<Mission> minLength, maxLength, minItems, maxItems;
 	
 	/*
 	 * allows only one instance of a missionHolder.
@@ -39,10 +40,10 @@ public class MissionHolderImpl implements MissionHolder {
 	*/
 	private MissionHolderImpl()
 	{
-		this.minLength = new PriorityQueue<Mission>();
-		this.maxLength = new PriorityQueue<Mission>();
-		this.minItems = new PriorityQueue<Mission>();
-		this.maxItems = new PriorityQueue<Mission>();
+		this.minLength = new PriorityBlockingQueue<Mission>();
+		this.maxLength = new PriorityBlockingQueue<Mission>();
+		this.minItems = new PriorityBlockingQueue<Mission>();
+		this.maxItems = new PriorityBlockingQueue<Mission>();
 	}
 	
 	int size = 0;

@@ -6,7 +6,6 @@ package nash.ass3;
 import java.util.Vector;
 
 /**
- * @author Shlomi, Nadavi
  *
  */
 public class MissionImpl implements Mission {
