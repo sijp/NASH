@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 /**
  * @author Shlomi
  *
@@ -16,7 +18,7 @@ public class BoardImpl implements Board {
 
 	
 	private static Board board=null;
-	
+	private static Object lockLists= new Object();
 	private Vector<Mission> preassigned, queued, executed, completed;
 	
 	
@@ -112,7 +114,11 @@ public class BoardImpl implements Board {
 	 */
 	@Override
 	public Vector<Mission> getCompletedMissions() {
-		return this.completed;
+		Vector<Mission> completedCopy = new Vector<Mission>();
+		synchronized (BoardImpl.lockLists) {
+			completedCopy.addAll(this.completed);
+		}
+		return completedCopy;
 	}
 
 	/* (non-Javadoc)
@@ -121,9 +127,12 @@ public class BoardImpl implements Board {
 	@Override
 	public Vector<Mission> getIncompletedMissions() {
 		Vector<Mission> ret=new Vector<Mission>();
-		ret.addAll(this.preassigned);
-		ret.addAll(this.queued);
-		ret.addAll(this.executed);
+		synchronized (BoardImpl.lockLists) 
+		{
+			ret.addAll(this.preassigned);
+			ret.addAll(this.queued);
+			ret.addAll(this.executed);
+		}
 		return ret;
 	}
 	
@@ -138,24 +147,28 @@ public class BoardImpl implements Board {
 	}
 
 	@Override
-	public void levelUp(Mission m) {
-		if (m.getStatus()==Mission.PREASSIGNED)
+	public void levelUp(Mission m)
+	{
+		synchronized (BoardImpl.lockLists) 
 		{
-			m.setStatus(Mission.QUEUED);
-			this.preassigned.remove(m);
-			this.queued.add(m);
-		}
-		else if (m.getStatus()==Mission.QUEUED)
-		{
-			m.setStatus(Mission.EXECUTED);
-			this.queued.remove(m);
-			this.executed.add(m);
-		}
-		else if (m.getStatus()==Mission.EXECUTED)
-		{
-			m.setStatus(Mission.COMPLETED);
-			this.executed.remove(m);
-			this.completed.add(m);
+			if (m.getStatus()==Mission.PREASSIGNED)
+			{
+				m.setStatus(Mission.QUEUED);
+				this.preassigned.remove(m);
+				this.queued.add(m);
+			}
+			else if (m.getStatus()==Mission.QUEUED)
+			{
+				m.setStatus(Mission.EXECUTED);
+				this.queued.remove(m);
+				this.executed.add(m);
+			}
+			else if (m.getStatus()==Mission.EXECUTED)
+			{
+				m.setStatus(Mission.COMPLETED);
+				this.executed.remove(m);
+				this.completed.add(m);
+			}
 		}
 	}
 }

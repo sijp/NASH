@@ -7,11 +7,11 @@ import java.util.Collections;
 import java.util.Vector;
 
 /**
- * @author nadav
+ * @author nadav, shlomi
  *
  */
-public class ItemList extends Vector<ItemImpl> {
-	
+public class ItemList extends Vector<ItemImpl> 
+{
 	private static final long serialVersionUID = 1L;
 	
 	ItemComparator itemComp;
@@ -33,4 +33,15 @@ public class ItemList extends Vector<ItemImpl> {
 			this.elementAt(this.indexOf(item)).returnItems(item.getAmount());
 		}
 	
+	public ItemList getCopy()
+	{
+		ItemList itemsCopy = new ItemList();
+		for (ItemImpl i : this)
+		{
+			synchronized (i.getLock()) {
+				itemsCopy.addElement(i);
+			}
+		}
+		return itemsCopy;
+	}
 }

@@ -11,6 +11,17 @@ import java.io.IOException;
  *	
  */
 public interface Observer {
+	
+	public static final String COMPLETEMISSIONS="completeMissions",
+							INCOMPLETEMISSIONS="incompleteMissions",
+							SERGEANTS="sergeants",
+							WAREHOUSE="warehouse",
+							ADDMISSION="addMission",
+							ADDSERGEANT="addSergeant",
+							ADDITEM="addItem",
+							STOP="stop";
+
+	
 	/*
 	 * prints the completed missions
 	 */
@@ -48,7 +59,7 @@ public interface Observer {
 	/*
 	 * finds which function to execute from the cmd command
 	 */
-	public void executeCommand(String cmd);
+	public void executeCommand(String cmd) throws Exception;
 	/*
 	 * Start the observer's process
 	 */

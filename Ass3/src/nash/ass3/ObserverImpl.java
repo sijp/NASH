@@ -3,6 +3,8 @@ package nash.ass3;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class ObserverImpl implements Observer
 {
@@ -23,27 +25,37 @@ public class ObserverImpl implements Observer
 	}
 	
 	@Override
-	public void printCompleteMissions() {
-		// TODO Auto-generated method stub
+	public void printCompleteMissions() 
+	{
+		Vector<Mission> toPrint = BoardImpl.getInstance().getCompletedMissions();
+		for(Mission m : toPrint)
+		{
+			//TODO: print for mission
+			m.print();
+		}
 
 	}
 
 	@Override
 	public void printIncompleteMissions() {
-		// TODO Auto-generated method stub
-
+		Vector<Mission> toPrint = BoardImpl.getInstance().getIncompletedMissions();
+		for(Mission m : toPrint)
+			m.print();
 	}
 
 	@Override
 	public void printSergeants() {
-		// TODO Auto-generated method stub
+		Vector<Sergeant> toPrint = ChiefOfStaffImpl.getInstance().getSergeants();
+		for(Sergeant s : toPrint)
+			s.print();
 
 	}
 
 	@Override
 	public void printItems() {
-		// TODO Auto-generated method stub
-
+		ItemList toPrint = WarehouseImpl.getInstance().getItems();
+		for(Item i : toPrint)
+			i.print();
 	}
 
 	@Override
@@ -67,12 +79,32 @@ public class ObserverImpl implements Observer
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void executeCommand(String cmd) {
-		// TODO Auto-generated method stub
+	public void executeCommand(String cmd) throws Exception {
+		StringTokenizer st = new StringTokenizer(cmd);
+		if(!st.hasMoreTokens())
+			throw new Exception("We will ignore this, this time.");
+		String newCmd = st.nextToken();
+		if(newCmd.equals(Observer.COMPLETEMISSIONS))
+			this.printCompleteMissions();
+		else if (newCmd.equals(Observer.INCOMPLETEMISSIONS))
+			this.printIncompleteMissions();
+		else if (newCmd.equals(Observer.SERGEANTS))
+			this.printSergeants();
+		else if (newCmd.equals(Observer.WAREHOUSE))
+			this.printItems();
+		else if (newCmd.equals(Observer.ADDMISSION))
+			this.addMission(cmd);
+		else if (newCmd.equals(Observer.ADDSERGEANT))
+			this.addSergeant(cmd);
+		else if (newCmd.equals(Observer.ADDITEM))
+			this.addItem(cmd);
+		else if (newCmd.equals(Observer.STOP))
+			this.stop();
+		else
+			throw new Exception("Unknown Command");
 
 	}
 	

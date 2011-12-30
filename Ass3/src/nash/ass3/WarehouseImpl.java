@@ -84,7 +84,7 @@ public class WarehouseImpl implements Warehouse {
 	 */
 	@Override
 	public ItemList getItems() {
-		return this.closet;
+		return this.closet.getCopy();
 	}
 
 }

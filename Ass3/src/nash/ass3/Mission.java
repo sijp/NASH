@@ -1,5 +1,4 @@
 package nash.ass3;
-import java.util.Hashtable;
 import java.util.Vector;
 
 /**
@@ -69,6 +68,15 @@ public interface Mission{
 	 * adds the time i we worked on this mission
 	 */
 	public void addWorkTime(int i);
-	public void update(Mission m);
 	
+	public void update(Mission m);
+	/*
+	 * prints the mission according to the complete and incomplete statush.
+	 */
+	public void print();
+	
+	/*
+	 * adds the in charge sergeant
+	 */
+	public void setSergeant(String serName);
 }
