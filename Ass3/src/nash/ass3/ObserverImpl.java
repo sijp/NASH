@@ -59,15 +59,59 @@ public class ObserverImpl implements Observer
 	}
 
 	@Override
-	public void addMission(String cmd) {
-		// TODO Auto-generated method stub
+	public void addMission(String cmd)
+	{
+		StringTokenizer st=new StringTokenizer(cmd);
+		
+		String misName=st.nextToken();
+		String misSkill=st.nextToken();
+		int misTime=Integer.parseInt(st.nextToken(", "));
+		String misItems=st.nextToken(", ");
+		
+		StringTokenizer itemsTokenizer=new StringTokenizer(misItems);
+		ItemList items=new ItemList();
+		while (itemsTokenizer.hasMoreTokens())
+		{
+			String itemName=itemsTokenizer.nextToken();
+			int itemCount=Integer.parseInt(itemsTokenizer.nextToken());
+			items.addElement(new ItemImpl(itemName,itemCount));
+		}
+
+		Mission preMis=new MissionImpl(misName,misSkill,misTime);
+		while (st.hasMoreTokens())
+		{
+			String preMissionName=st.nextToken();
+			//TODO: We are not in kensas anymore. Something is wrong with the addPremissions method
+			//must fix fix ifixfixixfiixfixifffxi
+			preMis.addPreMission(new MissionImpl(preMissionName, "", 0));
+		}
+		
+		
+		
 
 	}
 
 	@Override
 	public void addSergeant(String cmd) {
-		// TODO Auto-generated method stub
-
+		StringTokenizer st=new StringTokenizer(cmd);
+		
+		String serName=st.nextToken();
+		String numOfThreads=st.nextToken();
+		String maxNumOfMissions=st.nextToken(", ");
+		String serSkills=st.nextToken(", ");
+		
+		StringTokenizer skillsTokenizer=new StringTokenizer(serSkills);
+		Vector<String> vecSkills=new Vector<String>();
+		while (skillsTokenizer.hasMoreTokens())
+			vecSkills.add(skillsTokenizer.nextToken());
+		
+		String workHours=st.nextToken();
+		String priorityOrder=st.nextToken();
+		
+		Sergeant s=new SergeantImpl(serName, Integer.parseInt(workHours), Integer.parseInt(numOfThreads), priorityOrder, vecSkills);
+		s.setMaxMissions(Integer.parseInt(maxNumOfMissions));
+		
+		ChiefOfStaffImpl.getInstance().addSergeant(s);
 	}
 
 	@Override
@@ -86,7 +130,9 @@ public class ObserverImpl implements Observer
 		StringTokenizer st = new StringTokenizer(cmd);
 		if(!st.hasMoreTokens())
 			throw new Exception("We will ignore this, this time.");
+		
 		String newCmd = st.nextToken();
+		cmd=st.nextToken("\n");
 		if(newCmd.equals(Observer.COMPLETEMISSIONS))
 			this.printCompleteMissions();
 		else if (newCmd.equals(Observer.INCOMPLETEMISSIONS))
@@ -120,8 +166,16 @@ public class ObserverImpl implements Observer
 		String cmd="";
 		while ((cmd=this.getCommand())!=null)
 		{
-			this.executeCommand(cmd);
+			
+			try
+			{
+				this.executeCommand(cmd);
+			}
+			catch (Exception e)
+			{
+				System.out.println(e.getMessage());
+			}
+			
 		}
 	}
-
 }
