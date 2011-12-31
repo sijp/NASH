@@ -34,4 +34,9 @@ public interface ChiefOfStaff extends Runnable{
 	 * stop the thread and all underlying sergeants.
 	 */
 	public void stop();
+	
+	/*
+	 * start the thread and all underlying sergeants.
+	 */
+	public void start();
 }

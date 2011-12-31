@@ -50,4 +50,9 @@ public interface Board {
 	 * reads the properties from the properties file specified by filename.
 	 */
 	public void readProperties(String filename) throws IOException;
+
+	/*
+	 * returns true if all missions are completed 
+	 */
+	public boolean isCompleted();
 }

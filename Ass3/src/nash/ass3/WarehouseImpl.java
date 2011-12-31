@@ -37,8 +37,10 @@ public class WarehouseImpl implements Warehouse {
 	 */
 	@Override
 	public void useItem(ItemList itemsToTake,String serName) {
+		WarSim.log.fine("Sergeant "+serName+" is in the warehouse needs "+itemsToTake.size()+" items");
 		for(int i = 0 ; i < itemsToTake.size() ; i++)
 		{
+			WarSim.log.fine("sergeant "+serName+" requests "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
 			int index=this.closet.indexOf(itemsToTake.elementAt(i));
 			ItemImpl selectedItem =this.closet.elementAt(index);
 			
@@ -54,6 +56,7 @@ public class WarehouseImpl implements Warehouse {
 					ie.printStackTrace();
 				}
 			}
+			WarSim.log.fine("sergeant "+serName+" took "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
 			
 		}
 		//exit for
@@ -68,8 +71,11 @@ public class WarehouseImpl implements Warehouse {
 		{
 			int index = this.closet.indexOf(itemToReturn.elementAt(i));
 			ItemImpl selectedItem = this.closet.elementAt(index);
-			selectedItem.returnItems(itemToReturn.elementAt(i).getAmount(),serName);
-			selectedItem.getLock().notify();
+			synchronized (selectedItem.getLock())
+			{
+				selectedItem.returnItems(itemToReturn.elementAt(i).getAmount(),serName);
+				selectedItem.getLock().notify();
+			}
 		}
 
 	}

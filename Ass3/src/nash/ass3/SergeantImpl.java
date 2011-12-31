@@ -4,7 +4,7 @@
 package nash.ass3;
 
 import java.util.Vector;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
  */
 public class SergeantImpl implements Sergeant {
 	
-	Executor missionExecutor;
+	ExecutorService missionExecutor;
 	private String serName;
 	private int maxHours;
 	private int maxThread;
@@ -116,7 +116,7 @@ public class SergeantImpl implements Sergeant {
 	
 	public void completeMission(Mission m)
 	{
-		m.setStatus(Mission.COMPLETED);
+		BoardImpl.getInstance().levelUp(m);
 		this.serMissions.removeElement(m);
 	}
 	/* (non-Javadoc)
@@ -175,6 +175,7 @@ public class SergeantImpl implements Sergeant {
 	@Override
 	public void stop() {
 		this.runFlag = false;
+		this.missionExecutor.shutdown();
 	}
 
 	@Override

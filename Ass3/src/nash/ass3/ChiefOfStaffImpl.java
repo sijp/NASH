@@ -49,25 +49,49 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 	@Override
 	public void run()
 	{
-		while (this.runFlag)
+		while (this.runFlag && !BoardImpl.getInstance().isCompleted())
 		{
+				
 			Vector<Mission> assignable=BoardImpl.getInstance().getAssignableMissions();
+			WarSim.log.finest("updating mission holder");
 			MissionHolderImpl.getInstance().insert(assignable);
-			
-			while (this.runFlag && MissionHolderImpl.getInstance().isEmpty() )
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			while (this.runFlag && MissionHolderImpl.getInstance().isEmpty() == false )
 			{
-				Sergeant pepper=this.getAvailableSergeant();
-				if (pepper!=null)
+				//Sergeant pepper=this.getAvailableSergeant();
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for (Sergeant pepper : this.getSergeants())
 				{
-					Mission m = MissionHolderImpl.getInstance().fetch(pepper);
-					if (m!=null)
-						this.assignMissionToSergeant(m,pepper);
-				}	
-				// Reads again the missions from the board.
-				assignable=BoardImpl.getInstance().getAssignableMissions();
-				MissionHolderImpl.getInstance().insert(assignable);
+					if (pepper!=null)
+						WarSim.log.finest("querying sergeant "+pepper.getName()+":"+pepper.isAvailable());
+					if (pepper!=null && pepper.isAvailable())
+					{
+						Mission m = MissionHolderImpl.getInstance().fetch(pepper);
+						WarSim.log.finest("we got a mission ? "+(m==null));
+						if (m!=null)
+						{
+							WarSim.log.finest("Assigning Mission "+m.getName()+ " to sergeant "+ pepper.getName() );
+							this.assignMissionToSergeant(m,pepper);
+						}
+					}	
+					
+					// Reads again the missions from the board.
+					assignable=BoardImpl.getInstance().getAssignableMissions();
+					MissionHolderImpl.getInstance().insert(assignable);
+				}
 			}
 		}
+		System.out.println("All missions are done");
 	}
 
 	private void assignMissionToSergeant(Mission m, Sergeant pepper) {
@@ -107,6 +131,7 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		{
 			s.stop();
 		}
+		WarSim.log.finest("stopping chief of staff");
 	}
 
 	@Override
@@ -137,5 +162,6 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 			this.addSergeant(sisi);
 		}
 	}
+	
 
 }

@@ -46,13 +46,27 @@ public class BoardImpl implements Board {
 		for (int i=0;i<numOfMission;i++)
 		{
 			String mName=p.getProperty("m"+i+"Name");
-			String mSkill=p.getProperty("m"+i+"skill");
+			String mSkill=p.getProperty("m"+i+"Skill");
 			int mToc=Integer.parseInt(p.getProperty("m"+i+"Time").trim());
 			
 			Mission m=new MissionImpl(mName, mSkill, mToc);
+			
+			String mItems = p.getProperty("m"+i+"Items");
+			StringTokenizer items=new StringTokenizer(mItems,",");
+			ItemList mItemlist=new ItemList();
+			while (items.hasMoreTokens())
+			{
+				String itemName=items.nextToken().trim();
+				int itemAmount = Integer.parseInt(items.nextToken().trim());
+				mItemlist.addElement(new ItemImpl(itemName, itemAmount));
+			}
+			
+			m.addRequiredItems(mItemlist);
+			
 			String mPreMissions=p.getProperty("m"+i+"PreRequisites");
 			//String[] mPreMissionsVec=mPreMissions.split(",");
 			Vector<String> mPreMissionsVec=new Vector<String>();
+			WarSim.log.fine("Adding to Mission '"+mName+"' the preMissions: "+mPreMissions);
 			
 			if (!mPreMissions.isEmpty())
 			{
@@ -61,16 +75,28 @@ public class BoardImpl implements Board {
 					mPreMissionsVec.addElement(preMissions.nextToken());
 					
 				this.addPreMissions(m,mPreMissionsVec);
-				int pos=this.preassigned.indexOf(m);
-				if (pos<0)
-					this.append(m);
-				else
-				{
-					Mission realMission=this.preassigned.elementAt(pos);
-					realMission.update(m);
-				}
+			}
+			
+					
+			WarSim.log.fine("number of premissions of "+m.getName()+":" + m.getPreMissions().size());
+			int pos=this.preassigned.indexOf(m);
+			WarSim.log.fine("searching if we encountered "+m.getName()+" already:"+pos);
+			if (pos<0)
+				this.append(m);
+			else
+			{
+				Mission realMission=this.preassigned.elementAt(pos);
+				WarSim.log.fine("Mission premission amount before:" + realMission.getPreMissions().size());					
+				realMission.update(m);
+				WarSim.log.fine("Mission premission amount after:" + realMission.getPreMissions().size());
 			}
 		}
+		String s="";
+		for (Mission m : this.preassigned)
+		{
+			s+=m.getName()+":"+m.getPreMissions().size()+"\n";
+		}
+		WarSim.log.fine(s);
 	}
 	
 	private void addPreMissions(Mission m,Vector<String> v)
@@ -81,7 +107,8 @@ public class BoardImpl implements Board {
 			int pos=this.preassigned.indexOf(pre);
 			if (pos<0)
 				this.preassigned.add(pre);
-			else pre=this.preassigned.elementAt(pos);
+			else
+				pre=this.preassigned.elementAt(pos);
 			m.addPreMission(pre);
 		}
 	}
@@ -108,11 +135,15 @@ public class BoardImpl implements Board {
 		{
 			m=this.preassigned.elementAt(i);
 
-			for (int j=0;j<m.getPreMissions().size();j++)
+			for (int j=0;j<m.getPreMissions().size() && toAdd;j++)
 				if (m.getPreMissions().elementAt(j).getStatus()!=Mission.COMPLETED)
 					toAdd=false;
 			if (toAdd)
+			{
+				WarSim.log.fine("Found a mission ready to execute:"+m.getName()+
+						" size: "+m.getPreMissions().size());
 				ret.add(m);
+			}
 			toAdd=true;
 		}
 		return ret;
@@ -208,4 +239,12 @@ public class BoardImpl implements Board {
 		//if doesn't exist in the bored
 		return null;
 	}
+	@Override
+	public boolean isCompleted()
+	{
+		return this.queued.isEmpty() && this.preassigned.isEmpty() && this.executed.isEmpty();
+	}
+	
 }
+
+

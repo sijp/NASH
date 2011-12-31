@@ -24,11 +24,9 @@ public class MissionHolderImpl implements MissionHolder {
 	
 	public static synchronized MissionHolder getInstance()
 	{
-		System.out.println("getting");
 		if (missionHolder==null)
 		{
 			missionHolder = new MissionHolderImpl();
-			System.out.println("+1");
 		}
 		return missionHolder;
 	}
@@ -39,10 +37,10 @@ public class MissionHolderImpl implements MissionHolder {
 	*/
 	private MissionHolderImpl()
 	{
-		this.minLength = new PriorityBlockingQueue<Mission>();
-		this.maxLength = new PriorityBlockingQueue<Mission>();
-		this.minItems = new PriorityBlockingQueue<Mission>();
-		this.maxItems = new PriorityBlockingQueue<Mission>();
+		this.minLength = new PriorityBlockingQueue<Mission>(10,new MinLengthComparator());
+		this.maxLength = new PriorityBlockingQueue<Mission>(10, new MaxLengthComparator());
+		this.minItems = new PriorityBlockingQueue<Mission>(10, new MinItemsComparator());
+		this.maxItems = new PriorityBlockingQueue<Mission>(10, new MaxItemsComparator());
 	}
 	
 	int size = 0;
@@ -55,16 +53,17 @@ public class MissionHolderImpl implements MissionHolder {
 	}
 
 	private void insert(Mission m) {
-		this.minLength.add(m);
-		this.maxLength.add(m);
-		this.minItems.add(m);
-		this.maxItems.add(m);
+		this.minLength.put(m);
+		this.maxLength.put(m);
+		this.minItems.put(m);
+		this.maxItems.put(m);
+		BoardImpl.getInstance().levelUp(m);
 	}
 
 	@Override
 	public void insert(Vector<Mission> mList)
 	{
-		for (int i=0;i<=mList.size();i++)
+		for (int i=0;i<mList.size();i++)
 		{
 			Mission m=mList.elementAt(i);
 			this.insert(m);
@@ -86,15 +85,31 @@ public class MissionHolderImpl implements MissionHolder {
 	public Mission getMission(Sergeant s) {
 		if(this.isEmpty())
 			return null;
-		return this.minLength.peek();
+		Mission m=null;
+		if (s.getPriority().equals(Sergeant.SHORTEST))
+			m=this.minLength.peek();
+		else if (s.getPriority().equals(Sergeant.LONGEST))
+			m=this.maxLength.peek();
+		else if (s.getPriority().equals(Sergeant.MINITEMS))
+			m=this.minItems.peek();
+		else
+			m=this.maxItems.peek();
+		
+		if (m!=null && s.getSkills().contains(m.getSkill().trim()))
+			return m;
+		return null;
 	}
 	
 	private void delete(Mission m)
 	{
+		String s="Removing "+m.getName()+" success? ";
+		
 		this.minLength.remove(m);
 		this.maxLength.remove(m);
 		this.minItems.remove(m);
 		this.maxItems.remove(m);
+		s+=!(this.minLength.contains(m)||this.maxLength.contains(m));
+		WarSim.log.fine(s);
 	}
 	
 	

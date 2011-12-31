@@ -26,21 +26,31 @@ public class SergeantTask implements Runnable {
 	{
 		this.serToDo.acquireItems(misToDo.getRequiredItems());
 		int minWorkTime = Math.min(misToDo.getWorkTimeLeft(), serToDo.getMaxWorkHours());
+		WarSim.log.fine("Hello I am "+serToDo.getName()+" mistodo:"+misToDo.getWorkTimeLeft()+ "sertodo:"+serToDo.getMaxWorkHours());
 		try
 		{
-			Thread.sleep( ((long)minWorkTime) * 1000); 
+			WarSim.log.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
+			Thread.sleep( ((long)minWorkTime) * 100);
+			WarSim.log.fine("Taking a nap :" + this.misToDo.getName());
 		}
 		catch(InterruptedException ie)
 		{
+			System.out.println("Mission:"+misToDo.getName()+" Time left:"+misToDo.getWorkTimeLeft());
 			ie.printStackTrace();
 		}
 		
 		misToDo.addWorkTime(minWorkTime);
 		serToDo.returnItems(misToDo.getRequiredItems());
 		if(misToDo.getWorkTimeLeft() == 0)
+		{
+			WarSim.log.fine("yay we are done! :" + this.misToDo.getName());
 			serToDo.completeMission(misToDo);
+		}
 		else if (serToDo.getRunFlag() == true)
+		{
+			WarSim.log.fine("reassigning the Mission to myself:" + this.misToDo.getName());
 			serToDo.assignMission(misToDo);
+		}
 	}
 
 }

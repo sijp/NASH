@@ -60,7 +60,6 @@ public class ObserverImpl implements Observer
 
 	@Override
 	public void printItems() {
-		System.out.println("PRINTINTG");
 		ItemList toPrint = WarehouseImpl.getInstance().getItems();
 		for(Item i : toPrint)
 		{
@@ -94,6 +93,8 @@ public class ObserverImpl implements Observer
 
 		
 		Mission mis=new MissionImpl(misName,misSkill,misTime);
+		mis.addRequiredItems(items);
+		
 		while (st.hasMoreTokens())
 		{
 			String preMissionName=st.nextToken();

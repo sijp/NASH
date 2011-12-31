@@ -32,11 +32,19 @@ public class MissionImpl implements Mission
 		this.name=name;
 		this.skill=skill;
 		this.timeToCompletion=toc;
+		System.out.println(name+":"+toc);
 		this.requiredItems=new ItemList();
 		this.preMissions=new Vector<Mission>();
 		this.status=Mission.PREASSIGNED;
 		this.sergeantSignature = null;
 		this.misLock = new Object();
+		this.workedTime=0;
+	}
+	
+	@Override
+	public void addRequiredItems(ItemList list)
+	{
+		this.requiredItems.addAll(list);
 	}
 	
 	@Override 
@@ -88,18 +96,27 @@ public class MissionImpl implements Mission
 	@Override 
 	public int getWorkTimeLeft()
 	{
-		return this.timeToCompletion - this.workedTime;
+		int ret=0;
+		synchronized (this.misLock)
+		{
+			ret=this.timeToCompletion - this.workedTime;
+		}
+		return ret;
 	}
 
 	@Override 
 	public void addWorkTime(int i)
 	{
-		this.workedTime = this.workedTime + i;
+		synchronized (this.misLock)
+		{
+			this.workedTime = this.workedTime + i;
+		}
 	}
 
 	@Override 
 	public void update(Mission m) {
-		
+		System.out.println("updating "+m.getName());
+		System.out.println(this.getTimeToCompletion()+"<-"+m.getTimeToCompletion());
 		this.name=m.getName();
 		this.skill=m.getSkill();
 		this.timeToCompletion=m.getTimeToCompletion();
@@ -155,6 +172,28 @@ public class MissionImpl implements Mission
 	@Override
 	public Object getLock() {
 		return this.misLock;
+	}
+
+	@Override
+	public int getNumberOfRequiredItems()
+	{
+		int sum=0;
+		for (Item i : this.requiredItems)
+		{
+			sum += i.getAmount();
+		}
+		return sum;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if (o instanceof MissionImpl)
+		{
+			Mission m=(Mission) o;
+			if(m.getName().equals(this.getName()))
+				return true;
+		}
+		return false;
 	}
 	
 }

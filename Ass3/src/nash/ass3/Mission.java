@@ -84,4 +84,14 @@ public interface Mission{
 	 * returns the lock for the mission
 	 */
 	public Object getLock();
+	/*
+	 * adds the items in the itemlist list to the required items list of this mission
+	 */
+	public void addRequiredItems(ItemList list);
+	
+	/*
+	 * returns the total amount of items required by this mission
+	 * if we have 2 helicopters and 1 tank it will return 3.
+	 */
+	public int getNumberOfRequiredItems();
 }
