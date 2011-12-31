@@ -77,16 +77,27 @@ public class ObserverImpl implements Observer
 			items.addElement(new ItemImpl(itemName,itemCount));
 		}
 
-		Mission preMis=new MissionImpl(misName,misSkill,misTime);
+		Mission mis=new MissionImpl(misName,misSkill,misTime);
 		while (st.hasMoreTokens())
 		{
 			String preMissionName=st.nextToken();
 			//TODO: We are not in kensas anymore. Something is wrong with the addPremissions method
 			//must fix fix ifixfixixfiixfixifffxi
-			preMis.addPreMission(new MissionImpl(preMissionName, "", 0));
+			Mission preMission=new MissionImpl(preMissionName, "", 0);
+			boolean exists=BoardImpl.getInstance().isExist(preMission);
+			if (!exists)
+				BoardImpl.getInstance().append(preMission);
+			else
+				preMission=BoardImpl.getInstance().getMissionByName(preMissionName);
+			
+			mis.addPreMission(preMission);
+			
 		}
-		
-		
+		boolean exists=BoardImpl.getInstance().isExist(mis);
+		if (!exists)
+			BoardImpl.getInstance().append(mis);
+		else
+			BoardImpl.getInstance().getMissionByName(mis.getName()).update(mis);
 		
 
 	}
