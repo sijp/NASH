@@ -164,8 +164,9 @@ public class ObserverImpl implements Observer
 			throw new Exception("We will ignore this, this time.");
 		
 		String newCmd = st.nextToken();
+		String cmdSub = cmd;
 		if (cmd.length()>newCmd.length())
-			cmd=cmd.substring(newCmd.length()+1);
+			cmdSub=cmd.substring(newCmd.length()+1);
 		
 		if(newCmd.equals(Observer.COMPLETEMISSIONS))
 			this.printCompleteMissions();
@@ -176,11 +177,11 @@ public class ObserverImpl implements Observer
 		else if (newCmd.equals(Observer.WAREHOUSE))
 			this.printItems();
 		else if (newCmd.equals(Observer.ADDMISSION))
-			this.addMission(cmd);
+			this.addMission(cmdSub);
 		else if (newCmd.equals(Observer.ADDSERGEANT))
-			this.addSergeant(cmd);
+			this.addSergeant(cmdSub);
 		else if (newCmd.equals(Observer.ADDITEM))
-			this.addItem(cmd);
+			this.addItem(cmdSub);
 		else if (newCmd.equals(Observer.STOP))
 			this.stop();
 		else

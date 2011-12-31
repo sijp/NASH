@@ -19,24 +19,24 @@ public interface ChiefOfStaff extends Runnable{
 	/*
 	 * gets the list of all sergeants
 	 */
-	public Vector<Sergeant> getSergeants();
+	Vector<Sergeant> getSergeants();
 	/*
 	 * adds a sergeant to the list of sergeants under the chief of staff
 	 */
-	public void addSergeant(Sergeant pepper);
+	void addSergeant(Sergeant pepper);
 	
 	/*
 	 * reads the properties of the properties file
 	 */
-	public void readProperties(String filename) throws IOException;
+	void readProperties(String filename) throws IOException;
 
 	/*
 	 * stop the thread and all underlying sergeants.
 	 */
-	public void stop();
+	void stop();
 	
 	/*
 	 * start the thread and all underlying sergeants.
 	 */
-	public void start();
+	void start();
 }
