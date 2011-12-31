@@ -37,10 +37,10 @@ public class MissionHolderImpl implements MissionHolder {
 	*/
 	private MissionHolderImpl()
 	{
-		this.minLength = new PriorityBlockingQueue<Mission>(10,new MinLengthComparator());
-		this.maxLength = new PriorityBlockingQueue<Mission>(10, new MaxLengthComparator());
-		this.minItems = new PriorityBlockingQueue<Mission>(10, new MinItemsComparator());
-		this.maxItems = new PriorityBlockingQueue<Mission>(10, new MaxItemsComparator());
+		this.minLength = new PriorityBlockingQueue<Mission>(MissionHolder.initSize,new MinLengthComparator());
+		this.maxLength = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MaxLengthComparator());
+		this.minItems = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MinItemsComparator());
+		this.maxItems = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MaxItemsComparator());
 	}
 	
 	int size = 0;

@@ -24,10 +24,11 @@ public class WarSim
 	public static void main(String[] args)
 	{
 		FileHandler fh=null;
+		final int MISSIONS=0,SERGEANT=1,ITEMS=2,LOG=3;
 		
 		try
 		{
-			fh=new FileHandler(args[3]);
+			fh=new FileHandler(args[LOG]);
 		}
 		catch (IOException e) 
 		{
@@ -39,9 +40,9 @@ public class WarSim
 		
 		try
 		{
-			BoardImpl.getInstance().readProperties(args[0]);
-			ChiefOfStaffImpl.getInstance().readProperties(args[1]);
-			WarehouseImpl.getInstance().readProperties(args[2]);
+			BoardImpl.getInstance().readProperties(args[MISSIONS]);
+			ChiefOfStaffImpl.getInstance().readProperties(args[SERGEANT]);
+			WarehouseImpl.getInstance().readProperties(args[ITEMS]);
 			ObserverImpl.getInstance().printIncompleteMissions();
 		}
 		catch (IOException ioe)

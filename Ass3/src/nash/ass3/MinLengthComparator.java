@@ -20,15 +20,6 @@ public class MinLengthComparator implements Comparator<Mission> {
 		return arg0.getTimeToCompletion()-arg1.getTimeToCompletion();
 	}
 	
-	public static void main(String arg[]) throws InterruptedException
-	{
-		Mission m1=new MissionImpl("A","",3);
-		Mission m2=new MissionImpl("B","",4);
-		PriorityBlockingQueue<Mission> q=new PriorityBlockingQueue<Mission>(10, new MinLengthComparator());
-		q.put(m1);
-		q.put(m2);
-		System.out.println(q.take().getName());
-		System.out.println(q.take().getName());
-	}
+
 
 }

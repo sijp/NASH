@@ -32,11 +32,12 @@ public class ItemImpl implements Item {
 	 */
 	@Override
 	public boolean takeItem(int amount , String serName) {
+		Integer itemAmount;
 		synchronized (this.lock) {
 			if (this.getAmount() >= amount)
 			{
 				this.itemAmount = this.itemAmount - amount;
-				Integer itemAmount = this.signedSergeants.get(serName);
+				itemAmount = this.signedSergeants.get(serName);
 				int am=0;
 				if (itemAmount!=null)
 					am=itemAmount.intValue();

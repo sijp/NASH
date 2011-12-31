@@ -8,6 +8,7 @@ public interface MissionHolder {
  * @inv: size>=0;
  */
 	
+	public static final int initSize=10;
 	
 	/*
 	 * @returns Nothing, only takes.
