@@ -151,7 +151,8 @@ public class ObserverImpl implements Observer
 	}
 
 	@Override
-	public void stop() {
+	public void stop()
+	{
 		ChiefOfStaffImpl.getInstance().stop();
 		this.runFlag=false;
 	}

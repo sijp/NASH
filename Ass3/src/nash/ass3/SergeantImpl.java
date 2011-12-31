@@ -23,6 +23,7 @@ public class SergeantImpl implements Sergeant {
 	private String serPriority;
 	private Vector<String> serSkills;
 	private Vector<Mission> serMissions;
+	private Vector<Mission> allMissions;
 	private Object serLock;
 	private boolean runFlag = true;
 	
@@ -37,6 +38,7 @@ public class SergeantImpl implements Sergeant {
 		missionExecutor = Executors.newFixedThreadPool(maxThread);
 		this.maxMission = 0;
 		this.serMissions = new Vector<Mission>();
+		this.allMissions = new Vector<Mission>();
 		this.serLock = new Object();
 	}
 	/* (non-Javadoc)
@@ -111,6 +113,7 @@ public class SergeantImpl implements Sergeant {
 	public void addMission(Mission m) {
 		this.serMissions.add(m);
 		m.setSergeant(this.serName);
+		this.allMissions.add(m);
 		this.assignMission(m);
 	}
 	
@@ -164,10 +167,10 @@ public class SergeantImpl implements Sergeant {
 		{
 			System.out.println("Sergeant name: " + this.serName);
 			System.out.println("Sergeant missions: ");
-			for(Mission m : this.serMissions)
+			for(Mission m : this.allMissions)
 			{
 				System.out.println ("Mission name: " +m.getName() + 
-						" Time left to completion: " + m.getTimeToCompletion());
+						" Time left to completion: " + m.getWorkTimeLeft());
 			}
 		}
 	}

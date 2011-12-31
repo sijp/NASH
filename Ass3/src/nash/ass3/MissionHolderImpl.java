@@ -85,18 +85,36 @@ public class MissionHolderImpl implements MissionHolder {
 	public Mission getMission(Sergeant s) {
 		if(this.isEmpty())
 			return null;
-		Mission m=null;
-		if (s.getPriority().equals(Sergeant.SHORTEST))
-			m=this.minLength.peek();
-		else if (s.getPriority().equals(Sergeant.LONGEST))
-			m=this.maxLength.peek();
-		else if (s.getPriority().equals(Sergeant.MINITEMS))
-			m=this.minItems.peek();
-		else
-			m=this.maxItems.peek();
 		
-		if (m!=null && s.getSkills().contains(m.getSkill().trim()))
-			return m;
+		
+		PriorityBlockingQueue<Mission> relevantQueue;
+		Vector<Mission> temp=new Vector<Mission>();
+		
+		if (s.getPriority().equals(Sergeant.SHORTEST))
+			relevantQueue=this.minLength;
+		else if (s.getPriority().equals(Sergeant.LONGEST))
+			relevantQueue=this.maxLength;
+		else if (s.getPriority().equals(Sergeant.MINITEMS))
+			relevantQueue=this.minItems;
+		else
+			relevantQueue=this.maxItems;
+		while (!relevantQueue.isEmpty())
+		{
+			Mission candidate=relevantQueue.poll();
+			temp.add(candidate);
+			WarSim.log.fine("Testing Mission "+candidate.getName()+"("+candidate.getSkill()+")");
+			if (s.getSkills().contains(candidate.getSkill()))
+			{
+				for (Mission tm : temp)
+					relevantQueue.put(tm);
+				return candidate;
+			}
+			else
+				WarSim.log.fine("The sergeant "+ s.getName()+" can't execute mission "+candidate.getName());
+		}
+		for (Mission tm : temp)
+			relevantQueue.put(tm);
+		
 		return null;
 	}
 	

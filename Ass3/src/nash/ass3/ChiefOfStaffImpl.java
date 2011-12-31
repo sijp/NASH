@@ -19,6 +19,7 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 	private Vector<Sergeant> serList;
 	private Thread theThread;
 	private boolean runFlag;
+	private Object sergeantLock=new Object();
 	
 	private ChiefOfStaffImpl()
 	{
@@ -55,39 +56,31 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 			Vector<Mission> assignable=BoardImpl.getInstance().getAssignableMissions();
 			WarSim.log.finest("updating mission holder");
 			MissionHolderImpl.getInstance().insert(assignable);
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+
 			while (this.runFlag && MissionHolderImpl.getInstance().isEmpty() == false )
 			{
-				//Sergeant pepper=this.getAvailableSergeant();
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for (Sergeant pepper : this.getSergeants())
+				synchronized (this.sergeantLock)
 				{
-					if (pepper!=null)
-						WarSim.log.finest("querying sergeant "+pepper.getName()+":"+pepper.isAvailable());
-					if (pepper!=null && pepper.isAvailable())
+					for (Sergeant pepper : this.getSergeants())
 					{
-						Mission m = MissionHolderImpl.getInstance().fetch(pepper);
-						WarSim.log.finest("we got a mission ? "+(m==null));
-						if (m!=null)
+						if (pepper!=null)
+							WarSim.log.finest("querying sergeant "+pepper.getName()+":"+pepper.isAvailable());
+						if (pepper!=null && pepper.isAvailable())
 						{
-							WarSim.log.finest("Assigning Mission "+m.getName()+ " to sergeant "+ pepper.getName() );
-							this.assignMissionToSergeant(m,pepper);
-						}
-					}	
-					
-					// Reads again the missions from the board.
-					assignable=BoardImpl.getInstance().getAssignableMissions();
-					MissionHolderImpl.getInstance().insert(assignable);
+							Mission m = MissionHolderImpl.getInstance().fetch(pepper);
+							WarSim.log.finest("we got a mission ? "+(m!=null));
+							if (m!=null)
+							{
+								WarSim.log.finest("Assigning Mission "+m.getName()+ " to sergeant "+ pepper.getName() );
+								this.assignMissionToSergeant(m,pepper);
+							}
+						}	
+						
+						// Reads again the missions from the board.
+						assignable=BoardImpl.getInstance().getAssignableMissions();
+						MissionHolderImpl.getInstance().insert(assignable);
+					}
 				}
 			}
 		}
@@ -99,13 +92,19 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		pepper.addMission(m);
 	}
 
-	private Sergeant getAvailableSergeant() {
+	/*private Sergeant getAvailableSergeant() {
 		for (int i=0;i<this.serList.size();i++)
 			if (this.serList.elementAt(i).isAvailable())
 				return this.serList.elementAt(i);
 		return null;
-	}
+	}*/
 
+	
+	public int x(int a,int b, int c, int d,int e,int f,int g)
+	{
+		return 0;
+	}
+	
 	/* (non-Javadoc)
 	 * @see nash.ass3.ChiefOfStaff#getSergeants()
 	 */
@@ -119,7 +118,10 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 	 */
 	@Override
 	public void addSergeant(Sergeant pepper) {
-		this.serList.add(pepper);
+		synchronized (this.sergeantLock) {
+			this.serList.add(pepper);	
+		}
+		
 	}
 	/* (non-Javadoc)
 	 * @see nash.ass3.ChiefOfStaff#stop()

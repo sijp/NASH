@@ -47,8 +47,10 @@ public class WarehouseImpl implements Warehouse {
 			synchronized (selectedItem.getLock())
 			{
 				try{
-					while(!selectedItem.takeItem(itemsToTake.elementAt(i).getAmount(),serName))
+					while(selectedItem.takeItem(itemsToTake.elementAt(i).getAmount(),serName)==false)
 					{
+						WarSim.log.fine("sergeant: " +serName+ " , waiting for item: "
+								+selectedItem.getName());
 						selectedItem.getLock().wait();
 					}
 				}catch(InterruptedException ie)
