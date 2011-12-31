@@ -1,0 +1,31 @@
+numberOfMissions= 5
+
+m0Name= eliminatePrimeMisinster
+m0Skill= sniper
+m0Time= 12
+m0PreRequisites= eliminateChiefofStaff
+m0Items= sniperRifle, 20, camouflageSuit, 20, AK47, 20
+
+m1Name= eliminateChiefofStaff
+m1Skill= commando
+m1Time= 48
+m1PreRequisites= destroyAirForces, destroyNavy, destroyInfantry
+m1Items= sniperRifle, 15, camouflageSuit, 15, AK47, 15
+
+m2Name= destroyAirForces
+m2Skill= pilot
+m2Time= 96
+m2PreRequisites= destroyNavy
+m2Items= F15, 20, bomber, 40
+
+m3Name= destroyNavy
+m3Skill= sailor
+m3Time= 82
+m3PreRequisites=
+m3Items= combatShip, 30, divingSuit, 40
+
+m4Name= destroyInfantry
+m4Skill= commando
+m4Time= 120
+m4PreRequisites= destroyAirForces, destroyNavy
+m4Items= TNT, 150, grenade, 40, rocketLuncher, 50, AK47, 300

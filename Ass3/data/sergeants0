@@ -1,0 +1,29 @@
+numberOfSergeants= 4
+
+s0Name= rambo
+s0NumOfThreads= 3
+s0MaxMissions=10
+s0Skills= sniper, commando
+s0workHours= 10
+s0PriorityOrder= shortestMission
+
+s1Name= jake
+s1NumOfThreads= 2
+s1MaxMissions=7
+s1Skills= pilot, commando
+s1workHours= 15
+s1PriorityOrder= longestMission
+
+s2Name= sallie
+s2NumOfThreads= 2
+s2MaxMissions=4
+s2Skills= sailor
+s2workHours= 15
+s2PriorityOrder= maxItems
+
+s3Name= john
+s3NumOfThreads= 1
+s3MaxMissions=5
+s3Skills= pilot, commando
+s3workHours= 15
+s3PriorityOrder= minItems

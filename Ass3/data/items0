@@ -1,0 +1,31 @@
+numberofItems= 10
+
+item0Name= sniperRifle
+item0Amount= 30
+
+item1Name= camouflageSuit
+item1Amount= 30
+
+item2Name= AK47
+item2Amount= 500
+
+item3Name= F15
+item3Amount= 30
+
+item4Name= bomber
+item4Amount= 50
+
+item5Name= combatShip
+item5Amount= 50
+
+item6Name= divingSuit
+item6Amount= 50
+
+item7Name= TNT
+item7Amount= 200
+
+item8Name= grenade
+item8Amount= 50
+
+item9Name= rocketLuncher
+item9Amount= 80 
