@@ -24,6 +24,7 @@ public class SergeantImpl implements Sergeant {
 	private Vector<String> serSkills;
 	private Vector<Mission> serMissions;
 	private Object serLock;
+	private boolean runFlag = true;
 	
 	public SergeantImpl(String name, int maxHours, int maxThread, String priority,
 			Vector<String> skills)
@@ -41,10 +42,6 @@ public class SergeantImpl implements Sergeant {
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
-	public void run() {
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see nash.ass3.Sergeant#getName()
@@ -171,5 +168,18 @@ public class SergeantImpl implements Sergeant {
 			}
 		}
 	}
+
+	@Override
+	public void stop() {
+		this.runFlag = false;
+	}
+
+	@Override
+	public boolean getRunFlag() 
+	{
+		return this.runFlag;
+	}
+	
+	
 
 }

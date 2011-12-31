@@ -9,7 +9,7 @@ import java.util.Vector;
  * @author nadav, shlomi
  *
  */
-public interface Sergeant extends Runnable{
+public interface Sergeant{
 	/*
 	 * global constantin (david) for the priority values.
 	 */
@@ -97,4 +97,14 @@ public interface Sergeant extends Runnable{
 	 * for each mission.
 	 */
 	public void print();
+	
+	/*
+	 * kills the sergeant, R.I.P.M.F
+	 */
+	public void stop();
+	
+	/*
+	 * returns the runflag.
+	 */
+	public boolean getRunFlag();
 }

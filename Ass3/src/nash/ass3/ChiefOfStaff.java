@@ -1,5 +1,6 @@
 package nash.ass3;
 
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -23,6 +24,12 @@ public interface ChiefOfStaff extends Runnable{
 	 * adds a sergeant to the list of sergeants under the chief of staff
 	 */
 	public void addSergeant(Sergeant pepper);
+	
+	/*
+	 * reads the properties of the properties file
+	 */
+	public void readProperties(String filename) throws IOException;
+
 	/*
 	 * stop the thread and all underlying sergeants.
 	 */

@@ -3,6 +3,10 @@
  */
 package nash.ass3;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
@@ -93,13 +97,45 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 	public void addSergeant(Sergeant pepper) {
 		this.serList.add(pepper);
 	}
-
 	/* (non-Javadoc)
 	 * @see nash.ass3.ChiefOfStaff#stop()
 	 */
 	@Override
 	public void stop() {
 		this.runFlag=false;
+		for(Sergeant s : this.serList)
+		{
+			s.stop();
+		}
+	}
+
+	@Override
+	public void readProperties(String filename) throws IOException {
+		FileInputStream in=new FileInputStream(filename);
+		Properties p=new Properties();
+		p.load(in);
+		int numberOfSergeants=Integer.parseInt(p.getProperty("numberOfSergeants"));
+		for (int i=0 ; i<numberOfSergeants ; i++)
+		{
+			String sName=p.getProperty("s"+i+"Name");
+			int numOfTheThreads = Integer.parseInt(p.getProperty("s"+i+"NumOfThreads"));
+			int maxMissions = Integer.parseInt(p.getProperty("s"+i+"MaxMissions"));
+			String sSkills = p.getProperty("s"+i+"Skills");
+			int sWorkHours = Integer.parseInt(p.getProperty("s"+i+"workHours"));
+			String sPriority = p.getProperty("s"+i+"PriorityOrder");
+			
+			StringTokenizer st = new StringTokenizer(sSkills);
+			Vector<String> vecSkills = new Vector<String>();
+			while(st.hasMoreTokens())
+			{
+				String skil = st.nextToken(", ");
+				vecSkills.add(skil);
+			}
+			
+			Sergeant sisi = new SergeantImpl(sName, sWorkHours, numOfTheThreads, sPriority, vecSkills);
+			sisi.setMaxMissions(maxMissions);
+			this.addSergeant(sisi);
+		}
 	}
 
 }

@@ -3,6 +3,7 @@
  */
 package nash.ass3;
 
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -45,4 +46,8 @@ public interface Board {
 	 * returns null otherwise
 	 */
 	public Mission getMissionByName(String misName);
+	/*
+	 * reads the properties from the properties file specified by filename.
+	 */
+	public void readProperties(String filename) throws IOException;
 }

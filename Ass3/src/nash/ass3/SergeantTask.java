@@ -39,7 +39,7 @@ public class SergeantTask implements Runnable {
 		serToDo.returnItems(misToDo.getRequiredItems());
 		if(misToDo.getWorkTimeLeft() == 0)
 			serToDo.completeMission(misToDo);
-		else
+		else if (serToDo.getRunFlag() == true)
 			serToDo.assignMission(misToDo);
 	}
 
