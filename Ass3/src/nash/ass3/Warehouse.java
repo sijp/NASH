@@ -3,6 +3,7 @@
  */
 package nash.ass3;
 
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -27,4 +28,8 @@ public interface Warehouse {
 	 * returns an item list with all the current items in the warehouse
 	 */
 	public ItemList getItems();
+	/*
+	 * reads the properties from the properties file specified by filename
+	 */
+	public void readProperties(String filename) throws IOException;
 }

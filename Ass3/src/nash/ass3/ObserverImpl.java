@@ -9,6 +9,7 @@ import java.util.Vector;
 public class ObserverImpl implements Observer
 {
 	private static ObserverImpl observer=null; 
+	private boolean runFlag=true;
 	
 	private BufferedReader in;
 	
@@ -98,8 +99,6 @@ public class ObserverImpl implements Observer
 			BoardImpl.getInstance().append(mis);
 		else
 			BoardImpl.getInstance().getMissionByName(mis.getName()).update(mis);
-		
-
 	}
 
 	@Override
@@ -127,13 +126,17 @@ public class ObserverImpl implements Observer
 
 	@Override
 	public void addItem(String cmd) {
-		// TODO Auto-generated method stub
-
+		StringTokenizer st=new StringTokenizer(cmd);
+		String itemName=st.nextToken();
+		int itemAmount=Integer.parseInt(st.nextToken());
+		ItemImpl item=new ItemImpl(itemName, itemAmount);
+		WarehouseImpl.getInstance().addItem(item);
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		ChiefOfStaffImpl.getInstance().stop();
+		this.runFlag=false;
 	}
 
 	@Override
@@ -175,9 +178,8 @@ public class ObserverImpl implements Observer
 	public void start() throws IOException{
 		
 		String cmd="";
-		while ((cmd=this.getCommand())!=null)
+		while (this.runFlag && (cmd=this.getCommand())!=null)
 		{
-			
 			try
 			{
 				this.executeCommand(cmd);

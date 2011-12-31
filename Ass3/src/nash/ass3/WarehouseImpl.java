@@ -3,6 +3,10 @@
  */
 package nash.ass3;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * @author nadavit, shlomit
  *
@@ -87,4 +91,25 @@ public class WarehouseImpl implements Warehouse {
 		return this.closet.getCopy();
 	}
 
+	
+	/*
+	 * (non-Javadoc)
+	 * @see nash.ass3.Warehouse#readProperties(java.lang.String)
+	 */
+	@Override
+	public void readProperties(String filename) throws IOException
+	{
+		FileInputStream in=new FileInputStream(filename);
+		Properties p=new Properties();
+		p.load(in);
+		int numOfItems=Integer.parseInt(p.getProperty("numberofItems"));
+		for (int i=0;i<numOfItems;i++)
+		{
+			String itemName=p.getProperty("item"+i+"Name");
+			int itemAmount=Integer.parseInt(p.getProperty("item"+i+"Amount"));
+			
+			ItemImpl item=new ItemImpl(itemName, itemAmount);
+			this.addItem(item);
+		}
+	}
 }
