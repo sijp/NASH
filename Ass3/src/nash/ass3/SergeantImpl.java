@@ -139,19 +139,22 @@ public class SergeantImpl implements Sergeant {
 	/*
 	 * return the items used by a sergeant when completing a mission
 	 */
+	
+	/*
 	public void releaseItems(ItemList returnedItems)
 	{
-		WarehouseImpl.getInstance().releaseItem(returnedItems);
+		WarehouseImpl.getInstance().releaseItem(returnedItems,this.serName);
 	}
+	*/
 	
 	public void acquireItems(ItemList list)
 	{
-		WarehouseImpl.getInstance().useItem(list);
+		WarehouseImpl.getInstance().useItem(list,this.serName);
 	}
 	
 	public void returnItems(ItemList returnedItems)
 	{
-		WarehouseImpl.getInstance().releaseItem(returnedItems);
+		WarehouseImpl.getInstance().releaseItem(returnedItems,this.serName);
 	}
 	
 	@Override

@@ -6,9 +6,9 @@ package nash.ass3;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
-import javax.sql.rowset.spi.SyncResolver;
 
 /**
  * @author Shlomi
@@ -42,33 +42,42 @@ public class BoardImpl implements Board {
 		FileInputStream in=new FileInputStream(filename);
 		Properties p=new Properties();
 		p.load(in);
-		int numOfMission=Integer.parseInt(p.getProperty("numberOfMissions"));
+		int numOfMission=Integer.parseInt(p.getProperty("numberOfMissions").trim());
 		for (int i=0;i<numOfMission;i++)
 		{
 			String mName=p.getProperty("m"+i+"Name");
 			String mSkill=p.getProperty("m"+i+"skill");
-			int mToc=Integer.parseInt(p.getProperty("m"+i+"Time"));
+			int mToc=Integer.parseInt(p.getProperty("m"+i+"Time").trim());
 			
 			Mission m=new MissionImpl(mName, mSkill, mToc);
 			String mPreMissions=p.getProperty("m"+i+"PreRequisites");
-			String[] mPreMissionsVec=mPreMissions.split(",");
-			this.addPreMissions(m,mPreMissionsVec);
-			int pos=this.preassigned.indexOf(m);
-			if (pos<0)
-				this.append(m);
-			else
+			//String[] mPreMissionsVec=mPreMissions.split(",");
+			Vector<String> mPreMissionsVec=new Vector<String>();
+			
+			if (!mPreMissions.isEmpty())
 			{
-				Mission realMission=this.preassigned.elementAt(pos);
-				realMission.update(m);
+				StringTokenizer preMissions=new StringTokenizer(mPreMissions,", ");
+				while (preMissions.hasMoreTokens())
+					mPreMissionsVec.addElement(preMissions.nextToken());
+					
+				this.addPreMissions(m,mPreMissionsVec);
+				int pos=this.preassigned.indexOf(m);
+				if (pos<0)
+					this.append(m);
+				else
+				{
+					Mission realMission=this.preassigned.elementAt(pos);
+					realMission.update(m);
+				}
 			}
 		}
 	}
 	
-	private void addPreMissions(Mission m,String [] v)
+	private void addPreMissions(Mission m,Vector<String> v)
 	{
-		for (int i=0;i<=v.length;i++)
+		for (int i=0;i<v.size();i++)
 		{
-			Mission pre=new MissionImpl(v[i], "", 0);
+			Mission pre=new MissionImpl(v.elementAt(i), "", 0);
 			int pos=this.preassigned.indexOf(pre);
 			if (pos<0)
 				this.preassigned.add(pre);

@@ -114,14 +114,14 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		FileInputStream in=new FileInputStream(filename);
 		Properties p=new Properties();
 		p.load(in);
-		int numberOfSergeants=Integer.parseInt(p.getProperty("numberOfSergeants"));
+		int numberOfSergeants=Integer.parseInt(p.getProperty("numberOfSergeants").trim());
 		for (int i=0 ; i<numberOfSergeants ; i++)
 		{
 			String sName=p.getProperty("s"+i+"Name");
-			int numOfTheThreads = Integer.parseInt(p.getProperty("s"+i+"NumOfThreads"));
-			int maxMissions = Integer.parseInt(p.getProperty("s"+i+"MaxMissions"));
+			int numOfTheThreads = Integer.parseInt(p.getProperty("s"+i+"NumOfThreads").trim());
+			int maxMissions = Integer.parseInt(p.getProperty("s"+i+"MaxMissions").trim());
 			String sSkills = p.getProperty("s"+i+"Skills");
-			int sWorkHours = Integer.parseInt(p.getProperty("s"+i+"workHours"));
+			int sWorkHours = Integer.parseInt(p.getProperty("s"+i+"workHours").trim());
 			String sPriority = p.getProperty("s"+i+"PriorityOrder");
 			
 			StringTokenizer st = new StringTokenizer(sSkills);

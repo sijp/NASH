@@ -36,7 +36,7 @@ public class WarehouseImpl implements Warehouse {
 	 * @see nash.ass3.Warehouse#useItem(nash.ass3.ItemList)
 	 */
 	@Override
-	public void useItem(ItemList itemsToTake) {
+	public void useItem(ItemList itemsToTake,String serName) {
 		for(int i = 0 ; i < itemsToTake.size() ; i++)
 		{
 			int index=this.closet.indexOf(itemsToTake.elementAt(i));
@@ -45,7 +45,7 @@ public class WarehouseImpl implements Warehouse {
 			synchronized (selectedItem.getLock())
 			{
 				try{
-					while(!selectedItem.takeItem(itemsToTake.elementAt(i).getAmount()))
+					while(!selectedItem.takeItem(itemsToTake.elementAt(i).getAmount(),serName))
 					{
 						selectedItem.getLock().wait();
 					}
@@ -63,12 +63,12 @@ public class WarehouseImpl implements Warehouse {
 	 * @see nash.ass3.Warehouse#releaseItem(nash.ass3.ItemList)
 	 */
 	@Override
-	public void releaseItem(ItemList itemToReturn) {
+	public void releaseItem(ItemList itemToReturn,String serName) {
 		for(int i = 0 ; i < itemToReturn.size() ; i ++)
 		{
 			int index = this.closet.indexOf(itemToReturn.elementAt(i));
 			ItemImpl selectedItem = this.closet.elementAt(index);
-			selectedItem.returnItems(itemToReturn.elementAt(i).getAmount());
+			selectedItem.returnItems(itemToReturn.elementAt(i).getAmount(),serName);
 			selectedItem.getLock().notify();
 		}
 
@@ -102,11 +102,11 @@ public class WarehouseImpl implements Warehouse {
 		FileInputStream in=new FileInputStream(filename);
 		Properties p=new Properties();
 		p.load(in);
-		int numOfItems=Integer.parseInt(p.getProperty("numberofItems"));
+		int numOfItems=Integer.parseInt(p.getProperty("numberofItems").trim());
 		for (int i=0;i<numOfItems;i++)
 		{
 			String itemName=p.getProperty("item"+i+"Name");
-			int itemAmount=Integer.parseInt(p.getProperty("item"+i+"Amount"));
+			int itemAmount=Integer.parseInt(p.getProperty("item"+i+"Amount").trim());
 			
 			ItemImpl item=new ItemImpl(itemName, itemAmount);
 			this.addItem(item);

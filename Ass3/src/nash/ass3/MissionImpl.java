@@ -5,7 +5,6 @@ package nash.ass3;
 
 import java.util.Vector;
 
-import javax.sql.rowset.spi.SyncResolver;
 
 /*
  * 
@@ -13,7 +12,6 @@ import javax.sql.rowset.spi.SyncResolver;
 
 public class MissionImpl implements Mission
 {
-	
 	String skill;
 	String name;
 	int timeToCompletion;

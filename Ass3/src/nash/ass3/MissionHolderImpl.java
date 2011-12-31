@@ -2,7 +2,6 @@
  * 
  */
 package nash.ass3;
-import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
 /**

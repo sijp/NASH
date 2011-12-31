@@ -31,8 +31,8 @@ public class ObserverImpl implements Observer
 		Vector<Mission> toPrint = BoardImpl.getInstance().getCompletedMissions();
 		for(Mission m : toPrint)
 		{
-			//TODO: print for mission
 			m.print();
+			System.out.println();
 		}
 
 	}
@@ -41,22 +41,32 @@ public class ObserverImpl implements Observer
 	public void printIncompleteMissions() {
 		Vector<Mission> toPrint = BoardImpl.getInstance().getIncompletedMissions();
 		for(Mission m : toPrint)
+		{
 			m.print();
+			System.out.println();
+		}
 	}
 
 	@Override
 	public void printSergeants() {
 		Vector<Sergeant> toPrint = ChiefOfStaffImpl.getInstance().getSergeants();
 		for(Sergeant s : toPrint)
+		{
 			s.print();
+			System.out.println();
+		}
 
 	}
 
 	@Override
 	public void printItems() {
+		System.out.println("PRINTINTG");
 		ItemList toPrint = WarehouseImpl.getInstance().getItems();
 		for(Item i : toPrint)
+		{
 			i.print();
+			System.out.println();
+		}
 	}
 
 	@Override
@@ -66,10 +76,14 @@ public class ObserverImpl implements Observer
 		
 		String misName=st.nextToken();
 		String misSkill=st.nextToken();
-		int misTime=Integer.parseInt(st.nextToken(", "));
-		String misItems=st.nextToken(", ");
-		
+		int misTime=Integer.parseInt(st.nextToken(",").trim());
+		st.nextToken(" ");
+		System.out.println(misTime);
+		String misItems=st.nextToken(",");
+		System.out.println(misItems);
+		st.nextToken(" ");
 		StringTokenizer itemsTokenizer=new StringTokenizer(misItems);
+		
 		ItemList items=new ItemList();
 		while (itemsTokenizer.hasMoreTokens())
 		{
@@ -78,6 +92,7 @@ public class ObserverImpl implements Observer
 			items.addElement(new ItemImpl(itemName,itemCount));
 		}
 
+		
 		Mission mis=new MissionImpl(misName,misSkill,misTime);
 		while (st.hasMoreTokens())
 		{
@@ -106,8 +121,8 @@ public class ObserverImpl implements Observer
 		StringTokenizer st=new StringTokenizer(cmd);
 		
 		String serName=st.nextToken();
-		String numOfThreads=st.nextToken();
-		String maxNumOfMissions=st.nextToken(", ");
+		int numOfThreads=Integer.parseInt(st.nextToken().trim());
+		int maxNumOfMissions=Integer.parseInt(st.nextToken(", ").trim());
 		String serSkills=st.nextToken(", ");
 		
 		StringTokenizer skillsTokenizer=new StringTokenizer(serSkills);
@@ -115,11 +130,12 @@ public class ObserverImpl implements Observer
 		while (skillsTokenizer.hasMoreTokens())
 			vecSkills.add(skillsTokenizer.nextToken());
 		
-		String workHours=st.nextToken();
+		st.nextToken(", ");
+		int workHours=Integer.parseInt(st.nextToken().trim());
 		String priorityOrder=st.nextToken();
 		
-		Sergeant s=new SergeantImpl(serName, Integer.parseInt(workHours), Integer.parseInt(numOfThreads), priorityOrder, vecSkills);
-		s.setMaxMissions(Integer.parseInt(maxNumOfMissions));
+		Sergeant s=new SergeantImpl(serName, workHours, numOfThreads, priorityOrder, vecSkills);
+		s.setMaxMissions(maxNumOfMissions);
 		
 		ChiefOfStaffImpl.getInstance().addSergeant(s);
 	}
@@ -146,7 +162,9 @@ public class ObserverImpl implements Observer
 			throw new Exception("We will ignore this, this time.");
 		
 		String newCmd = st.nextToken();
-		cmd=st.nextToken("\n");
+		if (cmd.length()>newCmd.length())
+			cmd=cmd.substring(newCmd.length()+1);
+		
 		if(newCmd.equals(Observer.COMPLETEMISSIONS))
 			this.printCompleteMissions();
 		else if (newCmd.equals(Observer.INCOMPLETEMISSIONS))
@@ -186,6 +204,7 @@ public class ObserverImpl implements Observer
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 				System.out.println(e.getMessage());
 			}
 			

@@ -26,7 +26,17 @@ public class WarSim {
 		{
 			System.out.println(ioe.getMessage());
 		}
+		ObserverImpl.getInstance().printItems();
+		ObserverImpl.getInstance().printSergeants();
+		ObserverImpl.getInstance().printIncompleteMissions();
 
+		try
+		{
+			ObserverImpl.getInstance().start();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
