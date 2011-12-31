@@ -73,14 +73,14 @@ public class BoardImpl implements Board {
 			if (pos<0)
 				this.preassigned.add(pre);
 			else pre=this.preassigned.elementAt(pos);
-			pre.addPreMission(pre);
+			m.addPreMission(pre);
 		}
 	}
 	
 	/*
 	 * appends a mission to the board
 	 */
-	protected void append(Mission m)
+	public void append(Mission m)
 	{
 		this.preassigned.add(m);
 	}
@@ -170,5 +170,33 @@ public class BoardImpl implements Board {
 				this.completed.add(m);
 			}
 		}
+	}
+
+	@Override
+	public boolean isExist(Mission m) {
+		if(this.preassigned.indexOf(m) < 0  && this.queued.indexOf(m) < 0 &&
+				this.executed.indexOf(m) < 0 && this.completed.indexOf(m) < 0)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public Mission getMissionByName(String misName) {
+		Mission misExist = new MissionImpl(misName,"", 0);
+		if(this.preassigned.indexOf(misExist) >= 0)
+			return this.preassigned.elementAt(this.preassigned.indexOf(misExist));
+		
+		if(this.queued.indexOf(misExist) >= 0)
+			return this.queued.elementAt(this.queued.indexOf(misExist));
+		
+		if(this.executed.indexOf(misExist) >= 0)
+			return this.executed.elementAt(this.executed.indexOf(misExist));
+		
+		if(this.completed.indexOf(misExist) >= 0)
+			return this.completed.elementAt(this.completed.indexOf(misExist));
+		//if doesn't exist in the bored
+		return null;
 	}
 }
