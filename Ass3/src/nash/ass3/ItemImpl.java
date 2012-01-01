@@ -33,17 +33,14 @@ public class ItemImpl implements Item {
 		this.signedSergeants = new Hashtable<String , Integer>();
 	}
 	
-	/* 
-	 *
-	 */
+
 	@Override
 	public boolean takeItem(int amount , String serName) {
-		Integer itemAmountInteger;
 		synchronized (this.lock) {
 			if (this.getAmount() >= amount)
 			{
 				this.itemAmount = this.itemAmount - amount;
-				itemAmountInteger = new Integer(this.signedSergeants.get(serName));
+				Integer itemAmountInteger= this.signedSergeants.get(serName);
 				int am=0;
 				if (itemAmountInteger!=null)
 					am=itemAmountInteger.intValue();

@@ -36,8 +36,8 @@ public class SergeantTask implements Runnable {
 		try
 		{
 			WarSim.LOG.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
-			final long thousend=1000;
-			Thread.sleep( ((long)minWorkTime) * thousend);
+			final long thousand=100;
+			Thread.sleep( ((long)minWorkTime) * thousand);
 			WarSim.LOG.fine("Taking a nap :" + this.misToDo.getName());
 		}
 		catch(InterruptedException ie)
