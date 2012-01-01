@@ -15,9 +15,12 @@ public class ObserverImpl implements Observer
 	
 	private ObserverImpl()
 	{
-		in=new BufferedReader(new InputStreamReader(System.in));
+		this.in=new BufferedReader(new InputStreamReader(System.in));
 	}
-	
+	/**
+	 * gets the singleton instance of this observer
+	 * @return the singleton
+	 */
 	public static synchronized Observer getInstance()
 	{
 		if (ObserverImpl.observer==null)
@@ -191,7 +194,7 @@ public class ObserverImpl implements Observer
 	
 	private String getCommand() throws IOException
 	{
-		String ret=in.readLine();
+		String ret=this.in.readLine();
 		return ret;
 	}
 

@@ -18,6 +18,12 @@ public class ItemImpl implements Item {
 	private Object lock;
 	private Hashtable<String, Integer> signedSergeants;
 	
+	/**
+	 * 
+	 * @param name item name
+	 * @param amount item amount
+	 */
+	
 	public ItemImpl(String name, int amount)
 	{
 		this.itemName = name;
@@ -32,15 +38,15 @@ public class ItemImpl implements Item {
 	 */
 	@Override
 	public boolean takeItem(int amount , String serName) {
-		Integer itemAmount;
+		Integer itemAmountInteger;
 		synchronized (this.lock) {
 			if (this.getAmount() >= amount)
 			{
 				this.itemAmount = this.itemAmount - amount;
-				itemAmount = this.signedSergeants.get(serName);
+				itemAmountInteger = new Integer(this.signedSergeants.get(serName));
 				int am=0;
-				if (itemAmount!=null)
-					am=itemAmount.intValue();
+				if (itemAmountInteger!=null)
+					am=itemAmountInteger.intValue();
 				am+=amount;
 				Integer newAmount=new Integer(am);
 				this.signedSergeants.put(serName, newAmount);
@@ -49,7 +55,10 @@ public class ItemImpl implements Item {
 		}
 		return false;
 	}
-	
+	/**
+	 * returns the lock for this object
+	 * @return the lock for this object
+	 */
 	public Object getLock()
 	{
 		return this.lock;
@@ -66,8 +75,8 @@ public class ItemImpl implements Item {
 		synchronized (this.lock) 
 		{
 			this.itemAmount = this.itemAmount + amount;
-			Integer itemAmount = this.signedSergeants.get(serName);
-			Integer newAmount = new Integer(itemAmount.intValue() - amount);
+			Integer itemAmountInteger = this.signedSergeants.get(serName);
+			Integer newAmount = new Integer(itemAmountInteger.intValue() - amount);
 			if (newAmount.intValue() != 0)
 				this.signedSergeants.put(serName, newAmount);
 			else

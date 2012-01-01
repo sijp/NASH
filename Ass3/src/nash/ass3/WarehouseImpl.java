@@ -15,18 +15,22 @@ public class WarehouseImpl implements Warehouse {
 	private static Warehouse theWarehouse = null;
 	ItemList closet;
 	
-	/*
+	/**
 	 * returns the singleton instance of the Warehouse.
 	 * it's synchronized for thread-safety.
+	 * 
+	 * @return the singleton of this class
 	 */
-	
 	public static synchronized Warehouse getInstance()
 	{
 		if(theWarehouse == null)
 			theWarehouse = new WarehouseImpl();
 		return theWarehouse;
 	}
-	
+
+	/**
+	 * 
+	 */
 	private WarehouseImpl()
 	{
 		this.closet = new ItemList();
@@ -37,10 +41,10 @@ public class WarehouseImpl implements Warehouse {
 	 */
 	@Override
 	public void useItem(ItemList itemsToTake,String serName) {
-		WarSim.log.fine("Sergeant "+serName+" is in the warehouse needs "+itemsToTake.size()+" items");
+		WarSim.LOG.fine("Sergeant "+serName+" is in the warehouse needs "+itemsToTake.size()+" items");
 		for(int i = 0 ; i < itemsToTake.size() ; i++)
 		{
-			WarSim.log.fine("sergeant "+serName+" requests "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
+			WarSim.LOG.fine("sergeant "+serName+" requests "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
 			int index=this.closet.indexOf(itemsToTake.elementAt(i));
 			ItemImpl selectedItem =this.closet.elementAt(index);
 			
@@ -49,7 +53,7 @@ public class WarehouseImpl implements Warehouse {
 				try{
 					while(selectedItem.takeItem(itemsToTake.elementAt(i).getAmount(),serName)==false)
 					{
-						WarSim.log.fine("sergeant: " +serName+ " , waiting for item: "
+						WarSim.LOG.fine("sergeant: " +serName+ " , waiting for item: "
 								+selectedItem.getName());
 						selectedItem.getLock().wait();
 					}
@@ -58,7 +62,7 @@ public class WarehouseImpl implements Warehouse {
 					ie.printStackTrace();
 				}
 			}
-			WarSim.log.fine("sergeant "+serName+" took "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
+			WarSim.LOG.fine("sergeant "+serName+" took "+itemsToTake.elementAt(i).getName()+"("+itemsToTake.elementAt(i).getAmount()+")");
 			
 		}
 		//exit for

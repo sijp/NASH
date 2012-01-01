@@ -27,23 +27,28 @@ public class SergeantImpl implements Sergeant {
 	private Object serLock;
 	private boolean runFlag = true;
 	
-	public SergeantImpl(String name, int maxHours, int maxThread, String priority,
+	/**
+	 * 
+	 * @param name - the name
+	 * @param _maxHours - max
+	 * @param _maxThread - max
+	 * @param priority - priority
+	 * @param skills - skilss
+	 */
+	public SergeantImpl(String name, int _maxHours, int _maxThread, String priority,
 			Vector<String> skills)
 	{
 		this.serName = name;
-		this.maxHours = maxHours;
-		this.maxThread = maxThread;
+		this.maxHours = _maxHours;
+		this.maxThread = _maxThread;
 		this.serPriority = priority;
 		this.serSkills = skills;
-		missionExecutor = Executors.newFixedThreadPool(maxThread);
+		this.missionExecutor = Executors.newFixedThreadPool(this.maxThread);
 		this.maxMission = 0;
 		this.serMissions = new Vector<Mission>();
 		this.allMissions = new Vector<Mission>();
 		this.serLock = new Object();
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
 
 	/* (non-Javadoc)
 	 * @see nash.ass3.Sergeant#getName()
@@ -69,6 +74,7 @@ public class SergeantImpl implements Sergeant {
 		return this.maxMission;
 	}
 	
+	@Override
 	public void setMaxMissions(int max)
 	{
 		this.maxMission = this.maxMission + max;
@@ -117,6 +123,7 @@ public class SergeantImpl implements Sergeant {
 		this.assignMission(m);
 	}
 	
+	@Override
 	public void completeMission(Mission m)
 	{
 		BoardImpl.getInstance().levelUp(m);
@@ -139,22 +146,14 @@ public class SergeantImpl implements Sergeant {
 		return (this.maxMission > this.serMissions.size());
 	}
 	
-	/*
-	 * return the items used by a sergeant when completing a mission
-	 */
 	
-	/*
-	public void releaseItems(ItemList returnedItems)
-	{
-		WarehouseImpl.getInstance().releaseItem(returnedItems,this.serName);
-	}
-	*/
-	
+	@Override
 	public void acquireItems(ItemList list)
 	{
 		WarehouseImpl.getInstance().useItem(list,this.serName);
 	}
 	
+	@Override
 	public void returnItems(ItemList returnedItems)
 	{
 		WarehouseImpl.getInstance().releaseItem(returnedItems,this.serName);

@@ -21,7 +21,11 @@ public class BoardImpl implements Board {
 	private static Object lockLists= new Object();
 	private Vector<Mission> preassigned, queued, executed, completed;
 	
-	
+	/**
+	 * gets the singleton object
+	 * 
+	 * @return the board's singleton
+	 */
 	public static synchronized Board getInstance()
 	{
 		if (BoardImpl.board==null)
@@ -29,6 +33,9 @@ public class BoardImpl implements Board {
 		return BoardImpl.board;
 	}
 	
+	/**
+	 * default constructor
+	 */
 	private BoardImpl() 
 	{
 		this.preassigned=new Vector<Mission>();
@@ -37,6 +44,8 @@ public class BoardImpl implements Board {
 		this.completed=new Vector<Mission>();
 	}
 	
+	
+	@Override
 	public void readProperties(String filename) throws IOException
 	{
 		FileInputStream in=new FileInputStream(filename);
@@ -66,7 +75,7 @@ public class BoardImpl implements Board {
 			String mPreMissions=p.getProperty("m"+i+"PreRequisites");
 			//String[] mPreMissionsVec=mPreMissions.split(",");
 			Vector<String> mPreMissionsVec=new Vector<String>();
-			WarSim.log.fine("Adding to Mission '"+mName+"' the preMissions: "+mPreMissions);
+			WarSim.LOG.fine("Adding to Mission '"+mName+"' the preMissions: "+mPreMissions);
 			
 			if (!mPreMissions.isEmpty())
 			{
@@ -78,17 +87,17 @@ public class BoardImpl implements Board {
 			}
 			
 					
-			WarSim.log.fine("number of premissions of "+m.getName()+":" + m.getPreMissions().size());
+			WarSim.LOG.fine("number of premissions of "+m.getName()+":" + m.getPreMissions().size());
 			int pos=this.preassigned.indexOf(m);
-			WarSim.log.fine("searching if we encountered "+m.getName()+" already:"+pos);
+			WarSim.LOG.fine("searching if we encountered "+m.getName()+" already:"+pos);
 			if (pos<0)
 				this.append(m);
 			else
 			{
 				Mission realMission=this.preassigned.elementAt(pos);
-				WarSim.log.fine("Mission premission amount before:" + realMission.getPreMissions().size());					
+				WarSim.LOG.fine("Mission premission amount before:" + realMission.getPreMissions().size());					
 				realMission.update(m);
-				WarSim.log.fine("Mission premission amount after:" + realMission.getPreMissions().size());
+				WarSim.LOG.fine("Mission premission amount after:" + realMission.getPreMissions().size());
 			}
 		}
 		String s="";
@@ -96,9 +105,14 @@ public class BoardImpl implements Board {
 		{
 			s+=m.getName()+":"+m.getPreMissions().size()+"\n";
 		}
-		WarSim.log.fine(s);
+		WarSim.LOG.fine(s);
 	}
 	
+	/**
+	 * 
+	 * @param m - mission
+	 * @param v - vector of preMissions name
+	 */
 	private void addPreMissions(Mission m,Vector<String> v)
 	{
 		for (int i=0;i<v.size();i++)
@@ -113,8 +127,10 @@ public class BoardImpl implements Board {
 		}
 	}
 	
-	/*
+	/**
 	 * appends a mission to the board
+	 * 
+	 * @param m - the mission
 	 */
 	public void append(Mission m)
 	{
@@ -140,7 +156,7 @@ public class BoardImpl implements Board {
 					toAdd=false;
 			if (toAdd)
 			{
-				WarSim.log.fine("Found a mission ready to execute:"+m.getName()+
+				WarSim.LOG.fine("Found a mission ready to execute:"+m.getName()+
 						" size: "+m.getPreMissions().size());
 				ret.add(m);
 			}
@@ -176,6 +192,7 @@ public class BoardImpl implements Board {
 		return ret;
 	}
 	
+	@Override
 	public boolean markAsComplete(Mission m, Sergeant pepper)
 	{
 		boolean ret=this.executed.remove(m);

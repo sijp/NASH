@@ -4,7 +4,6 @@
 package nash.ass3;
 
 import java.util.Comparator;
-import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * @author shlomi

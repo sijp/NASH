@@ -25,17 +25,20 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 	{
 		this.serList=new Vector<Sergeant>();
 		this.runFlag=true;
-		theThread=new Thread(this);
+		this.theThread=new Thread(this);
 	}
 	
+	@Override
 	public void start()
 	{
-		theThread.start();
+		this.theThread.start();
 	}
 	
-	/*
+	/**
 	 * returns the singleton instance of the Warehouse.
 	 * it's synchronized for thread-safety.
+	 * 
+	 * @return the singleton object
 	 */
 	public static synchronized ChiefOfStaff getInstance()
 	{
@@ -54,7 +57,7 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		{
 				
 			Vector<Mission> assignable=BoardImpl.getInstance().getAssignableMissions();
-			WarSim.log.finest("updating mission holder");
+			WarSim.LOG.finest("updating mission holder");
 			MissionHolderImpl.getInstance().insert(assignable);
 			
 
@@ -65,14 +68,14 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 					for (Sergeant pepper : this.getSergeants())
 					{
 						if (pepper!=null)
-							WarSim.log.finest("querying sergeant "+pepper.getName()+":"+pepper.isAvailable());
+							WarSim.LOG.finest("querying sergeant "+pepper.getName()+":"+pepper.isAvailable());
 						if (pepper!=null && pepper.isAvailable())
 						{
 							Mission m = MissionHolderImpl.getInstance().fetch(pepper);
-							WarSim.log.finest("we got a mission ? "+(m!=null));
+							WarSim.LOG.finest("we got a mission ? "+(m!=null));
 							if (m!=null)
 							{
-								WarSim.log.finest("Assigning Mission "+m.getName()+ " to sergeant "+ pepper.getName() );
+								WarSim.LOG.finest("Assigning Mission "+m.getName()+ " to sergeant "+ pepper.getName() );
 								this.assignMissionToSergeant(m,pepper);
 							}
 						}	
@@ -99,11 +102,6 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		return null;
 	}*/
 
-	
-	public int x(int a,int b, int c, int d,int e,int f,int g)
-	{
-		return 0;
-	}
 	
 	/* (non-Javadoc)
 	 * @see nash.ass3.ChiefOfStaff#getSergeants()
@@ -133,7 +131,7 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		{
 			s.stop();
 		}
-		WarSim.log.finest("stopping chief of staff");
+		WarSim.LOG.finest("stopping chief of staff");
 	}
 
 	@Override

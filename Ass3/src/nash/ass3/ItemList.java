@@ -15,6 +15,9 @@ public class ItemList extends Vector<ItemImpl>
 	private static final long serialVersionUID = 1L;
 	
 	ItemComparator itemComp;
+	/**
+	 * 
+	 */
 	public ItemList()
 	{
 		super();
@@ -27,12 +30,15 @@ public class ItemList extends Vector<ItemImpl>
 		if (this.indexOf(item) < 0)
 		{
 			super.addElement(item);
-			Collections.sort(this, itemComp);
+			Collections.sort(this, this.itemComp);
 		}
 		else
 			this.elementAt(this.indexOf(item)).add(item.getAmount());
 		}
-	
+	/**
+	 * 
+	 * @return a copy of this item list
+	 */
 	public ItemList getCopy()
 	{
 		ItemList itemsCopy = new ItemList();

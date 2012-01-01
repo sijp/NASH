@@ -15,28 +15,30 @@ import java.util.logging.Logger;
 public class WarSim
 {
 	
-	public static final Logger log=Logger.getLogger("WarLord");
+	public static final Logger LOG=Logger.getLogger("WarLord");
 
 	/**
-	 * @param args
+	 * the main function
+	 * 
+	 * @param args - prog args
 	 */
 	
 	public static void main(String[] args)
 	{
 		FileHandler fh=null;
-		final int MISSIONS=0,SERGEANT=1,ITEMS=2,LOG=3;
+		final int MISSIONS=0,SERGEANT=1,ITEMS=2,LOGFILE=3;
 		
 		try
 		{
-			fh=new FileHandler(args[LOG]);
+			fh=new FileHandler(args[LOGFILE]);
 		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
 		
-		WarSim.log.addHandler(fh);
-		WarSim.log.setLevel(Level.FINEST);
+		WarSim.LOG.addHandler(fh);
+		WarSim.LOG.setLevel(Level.FINEST);
 		
 		try
 		{
@@ -52,9 +54,9 @@ public class WarSim
 
 		try
 		{
-			WarSim.log.finest("Starting Cheif of Staff Life Cycle");
+			WarSim.LOG.finest("Starting Cheif of Staff Life Cycle");
 			ChiefOfStaffImpl.getInstance().start();
-			WarSim.log.finest("Starting Observer");
+			WarSim.LOG.finest("Starting Observer");
 			ObserverImpl.getInstance().start();
 		}
 		catch (IOException e) {

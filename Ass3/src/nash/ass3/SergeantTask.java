@@ -12,6 +12,12 @@ public class SergeantTask implements Runnable {
 	Mission misToDo;
 	Sergeant serToDo;
 	
+
+	/**
+	 * constructor	
+	 * @param mis - the mission
+	 * @param ser - the sergeant
+	 */
 	public SergeantTask(Mission mis, Sergeant ser)
 	{
 		this.misToDo = mis;
@@ -24,33 +30,33 @@ public class SergeantTask implements Runnable {
 	@Override
 	public void run() 
 	{
-		this.serToDo.acquireItems(misToDo.getRequiredItems());
-		int minWorkTime = Math.min(misToDo.getWorkTimeLeft(), serToDo.getMaxWorkHours());
-		WarSim.log.fine("Hello I am "+serToDo.getName()+" mistodo:"+misToDo.getWorkTimeLeft()+ "sertodo:"+serToDo.getMaxWorkHours());
+		this.serToDo.acquireItems(this.misToDo.getRequiredItems());
+		int minWorkTime = Math.min(this.misToDo.getWorkTimeLeft(), this.serToDo.getMaxWorkHours());
+		WarSim.LOG.fine("Hello I am "+this.serToDo.getName()+" this.mistodo:"+this.misToDo.getWorkTimeLeft()+ "sertodo:"+this.serToDo.getMaxWorkHours());
 		try
 		{
-			WarSim.log.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
+			WarSim.LOG.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
 			final long thousend=1000;
 			Thread.sleep( ((long)minWorkTime) * thousend);
-			WarSim.log.fine("Taking a nap :" + this.misToDo.getName());
+			WarSim.LOG.fine("Taking a nap :" + this.misToDo.getName());
 		}
 		catch(InterruptedException ie)
 		{
-			System.out.println("Mission:"+misToDo.getName()+" Time left:"+misToDo.getWorkTimeLeft());
+			System.out.println("Mission:"+this.misToDo.getName()+" Time left:"+this.misToDo.getWorkTimeLeft());
 			ie.printStackTrace();
 		}
 		
-		misToDo.addWorkTime(minWorkTime);
-		serToDo.returnItems(misToDo.getRequiredItems());
-		if(misToDo.getWorkTimeLeft() == 0)
+		this.misToDo.addWorkTime(minWorkTime);
+		this.serToDo.returnItems(this.misToDo.getRequiredItems());
+		if(this.misToDo.getWorkTimeLeft() == 0)
 		{
-			WarSim.log.fine("yay we are done! :" + this.misToDo.getName());
-			serToDo.completeMission(misToDo);
+			WarSim.LOG.fine("yay we are done! :" + this.misToDo.getName());
+			this.serToDo.completeMission(this.misToDo);
 		}
-		else if (serToDo.getRunFlag() == true)
+		else if (this.serToDo.getRunFlag() == true)
 		{
-			WarSim.log.fine("reassigning the Mission to myself:" + this.misToDo.getName());
-			serToDo.assignMission(misToDo);
+			WarSim.LOG.fine("reassigning the Mission to myself:" + this.misToDo.getName());
+			this.serToDo.assignMission(this.misToDo);
 		}
 	}
 

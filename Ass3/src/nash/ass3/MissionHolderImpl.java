@@ -12,14 +12,16 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class MissionHolderImpl implements MissionHolder {
 	private PriorityBlockingQueue<Mission> minLength, maxLength, minItems, maxItems;
 	
-	/*
+	/**
 	 * allows only one instance of a missionHolder.
 	 */
 	private static MissionHolder missionHolder;
 	
-	/*
+	/**
 	 * returns the singleton instance of the MissionHolder.
 	 * it's synchronized for thread-safety.
+	 * 
+	 * @return the singleton
 	 */
 	
 	public static synchronized MissionHolder getInstance()
@@ -30,17 +32,17 @@ public class MissionHolderImpl implements MissionHolder {
 		}
 		return missionHolder;
 	}
-	/*
+	/**
 	*constructor of missionHolder
 	*construct 4 priority queue for: max length and min length of the mission
 	*and min items and max items of the amount of the items needed.
 	*/
 	private MissionHolderImpl()
 	{
-		this.minLength = new PriorityBlockingQueue<Mission>(MissionHolder.initSize,new MinLengthComparator());
-		this.maxLength = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MaxLengthComparator());
-		this.minItems = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MinItemsComparator());
-		this.maxItems = new PriorityBlockingQueue<Mission>(MissionHolder.initSize, new MaxItemsComparator());
+		this.minLength = new PriorityBlockingQueue<Mission>(MissionHolder.INITSIZE,new MinLengthComparator());
+		this.maxLength = new PriorityBlockingQueue<Mission>(MissionHolder.INITSIZE, new MaxLengthComparator());
+		this.minItems = new PriorityBlockingQueue<Mission>(MissionHolder.INITSIZE, new MinItemsComparator());
+		this.maxItems = new PriorityBlockingQueue<Mission>(MissionHolder.INITSIZE, new MaxItemsComparator());
 	}
 	
 	int size = 0;
@@ -102,7 +104,7 @@ public class MissionHolderImpl implements MissionHolder {
 		{
 			Mission candidate=relevantQueue.poll();
 			temp.add(candidate);
-			WarSim.log.fine("Testing Mission "+candidate.getName()+"("+candidate.getSkill()+")");
+			WarSim.LOG.fine("Testing Mission "+candidate.getName()+"("+candidate.getSkill()+")");
 			if (s.getSkills().contains(candidate.getSkill()))
 			{
 				for (Mission tm : temp)
@@ -110,7 +112,7 @@ public class MissionHolderImpl implements MissionHolder {
 				return candidate;
 			}
 			else
-				WarSim.log.fine("The sergeant "+ s.getName()+" can't execute mission "+candidate.getName());
+				WarSim.LOG.fine("The sergeant "+ s.getName()+" can't execute mission "+candidate.getName());
 		}
 		for (Mission tm : temp)
 			relevantQueue.put(tm);
@@ -127,14 +129,19 @@ public class MissionHolderImpl implements MissionHolder {
 		this.minItems.remove(m);
 		this.maxItems.remove(m);
 		s+=!(this.minLength.contains(m)||this.maxLength.contains(m));
-		WarSim.log.fine(s);
+		WarSim.LOG.fine(s);
 	}
 	
-	
+	/*
+	 * 
+	 */
+	@Override
 	public int getSize(){
 		return this.minLength.size();
 	}
-	
+	/**
+	 * 
+	 */
 	public void clear()
 	{
 		this.minLength.clear();

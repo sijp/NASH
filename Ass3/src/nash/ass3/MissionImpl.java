@@ -22,17 +22,25 @@ public class MissionImpl implements Mission
 	private String sergeantSignature;
 	private Object misLock;
 	
+	/**
+	 * 
+	 */
 	public MissionImpl()
 	{
 		this("Anonymous",null,0);
 	}
-	
-	public MissionImpl(String name,String skill,int toc)
+	/**
+	 * 
+	 * @param _name - the name of the mission
+	 * @param _skill - the req skill
+	 * @param _toc - the time to complete
+	 */ 
+	public MissionImpl(String _name,String _skill,int _toc)
 	{
-		this.name=name;
-		this.skill=skill;
-		this.timeToCompletion=toc;
-		System.out.println(name+":"+toc);
+		this.name=_name;
+		this.skill=_skill;
+		this.timeToCompletion=_toc;
+		System.out.println(this.name+":"+_toc);
 		this.requiredItems=new ItemList();
 		this.preMissions=new Vector<Mission>();
 		this.status=Mission.PREASSIGNED;
@@ -82,9 +90,9 @@ public class MissionImpl implements Mission
 	}
 
 	@Override 
-	public void setStatus(String status)
+	public void setStatus(String _status)
 	{
-		this.status=status;
+		this.status=_status;
 	}
 	
 	@Override 
@@ -185,6 +193,7 @@ public class MissionImpl implements Mission
 		return sum;
 	}
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if (o instanceof MissionImpl)
