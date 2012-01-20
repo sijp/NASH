@@ -76,12 +76,18 @@
 			int tmp = 0;
 			try
 			{
-
+				while (bytesToRead > tmp)
+				{
+					//frame + tmp = &frame[tmp] , pointers arithmetics
+					tmp = tmp + this->socket_.receiveBytes(frame + tmp , bytesToRead - tmp);
+				}
 			}
-			catch(Exception error)
+			catch(Exception & error)
 			{
-				cout<<
+				cout<<"receive faild (Error: " << error.msg << ")" << endl;
+				return false;
 			}
+			return true;
 		}
 
 		/*
@@ -89,11 +95,26 @@
 		 */
 	    // Read an Ascii line from the server
 	    // Returns false in case connection closed before a newline can be read.
-	    bool Employee::getLineAscii(string& line);
+	    bool Employee::getLineAscii(string& line)
+	    {
+	    	try
+	    	{
+	    		getline(this->inputStream_ , line);
+	    	}
+	    	catch (Exception & error)
+	    	{
+	    		cout<<"receive faild (Error: " << error.msg << ")" << endl;
+	    		return false;
+	    	}
+	    	return true;
+	    }
 
 	    // Get Ascii data from the server until the null character
 	    // Returns false in case connection closed before null can be read.
-	    bool Employee::getFrameAscii(string& frame);
+	    bool Employee::getFrameAscii(string& frame)
+	    {
+
+	    }
 
 	    // Send message to the remote host.
 	    // Returns false in case connection is closed before all the data is sent.
@@ -101,7 +122,21 @@
 
 		// Send a fixed number of bytes from the client - blocking.
 	    // Returns false in case the connection is closed before bytesToWrite bytes can be read.
-	    bool Employee::sendBytes(const char frame[], int bytesToWrite);
+	    bool Employee::sendBytes(const char frame[], int bytesToWrite)
+	    {
+	    	int tmp = 0;
+	    	try
+	    	{
+	    		while (bytesToWrite > tmp)
+	    		{
+	    			tmp = tmp + this->socket_.sendBytes(frame + tmp , bytesToWrite - tmp);
+	    		}
+	    	}
+	    	catch(Exception & error)
+	    	{
+	    		cout<<"send failed (Error: " << error.msg <<")" <<endl;
+	    	}
+	   	}
 
 	    // Close down the connection properly.
 	    void Employee::close();
