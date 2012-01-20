@@ -3,7 +3,7 @@
 // Author      : nadav and shlomi
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description :
 //============================================================================
 #include "../include/Employee.h"
 
@@ -55,9 +55,9 @@
 					this->sa_.host().toString() << ":"<<this->sa_.port() <<endl;
 			try
 			{
-				this->socket_.connect(this->sa_);
+				this->socket_.connect(this->sa_); //sa_: socketAddress of the host
 			}
-			catch (Poco::Exception error)
+			catch (Poco::Exception & error)
 			{
 				cout<<"connection failed"<<endl;
 				return false;
@@ -68,8 +68,21 @@
 		/*
 		 * read a fixed number of bytes from the server
 		 * returns false in case the connection is not ready.
+		 * in each iteration of the while loop, we read from the socket
+		 * as much as we can into the frame[].
 		 */
-		bool Employee::getBytes(char frame[] , int bytesToRead);
+		bool Employee::getBytes(char frame[] , int bytesToRead)
+		{
+			int tmp = 0;
+			try
+			{
+
+			}
+			catch(Exception error)
+			{
+				cout<<
+			}
+		}
 
 		/*
 		 *

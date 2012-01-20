@@ -39,6 +39,7 @@ bool EchoClient::getBytes(char frame[], int bytesToRead) {
     int tmp = 0;
     try {
         while ( bytesToRead > tmp ) {
+        	//******* soposed to br bytesToRead-tmp
             tmp += sock_.receiveBytes(frame + tmp, bytesToRead);
         }
     } catch (Exception error) {
