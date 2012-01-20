@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * @author Shlomi, Nadavi
- *
+ *command line interface bettween the user and the board.
  *	
  */
 public interface Observer {

@@ -8,7 +8,7 @@ import java.util.Vector;
 
 /**
  * @author shlomi,nadavi
- *
+ * board of the game
  */
 public interface Board {
 	

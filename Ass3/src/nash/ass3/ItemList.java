@@ -8,7 +8,7 @@ import java.util.Vector;
 
 /**
  * @author nadav, shlomi
- *
+ * a data structure that contains items, sorted by name.
  */
 public class ItemList extends Vector<ItemImpl> 
 {

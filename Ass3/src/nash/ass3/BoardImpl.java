@@ -12,7 +12,7 @@ import java.util.Vector;
 
 /**
  * @author Shlomi
- *
+ * the board of the game
  */
 public class BoardImpl implements Board {
 

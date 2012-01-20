@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
+/**
+ * 
+ * @author shlomi and nadav
+ *implemantation of Observer
+ */
 public class ObserverImpl implements Observer
 {
 	private static ObserverImpl observer=null; 
@@ -126,15 +130,15 @@ public class ObserverImpl implements Observer
 		
 		String serName=st.nextToken();
 		int numOfThreads=Integer.parseInt(st.nextToken().trim());
-		int maxNumOfMissions=Integer.parseInt(st.nextToken(", ").trim());
-		String serSkills=st.nextToken(", ");
+		int maxNumOfMissions=Integer.parseInt(st.nextToken(",").trim());
+		String serSkills=st.nextToken(",");
 		
-		StringTokenizer skillsTokenizer=new StringTokenizer(serSkills);
+		StringTokenizer skillsTokenizer=new StringTokenizer(serSkills.trim());
 		Vector<String> vecSkills=new Vector<String>();
 		while (skillsTokenizer.hasMoreTokens())
 			vecSkills.add(skillsTokenizer.nextToken());
 		
-		st.nextToken(", ");
+		st.nextToken(" ");
 		int workHours=Integer.parseInt(st.nextToken().trim());
 		String priorityOrder=st.nextToken();
 		
@@ -157,7 +161,9 @@ public class ObserverImpl implements Observer
 	public void stop()
 	{
 		ChiefOfStaffImpl.getInstance().stop();
+		WarehouseImpl.getInstance().stop();
 		this.runFlag=false;
+		System.out.println("System has been terminated");
 	}
 
 	@Override
@@ -179,14 +185,26 @@ public class ObserverImpl implements Observer
 			this.printSergeants();
 		else if (newCmd.equals(Observer.WAREHOUSE))
 			this.printItems();
-		else if (newCmd.equals(Observer.ADDMISSION))
-			this.addMission(cmdSub);
-		else if (newCmd.equals(Observer.ADDSERGEANT))
-			this.addSergeant(cmdSub);
-		else if (newCmd.equals(Observer.ADDITEM))
-			this.addItem(cmdSub);
 		else if (newCmd.equals(Observer.STOP))
 			this.stop();
+		else if (newCmd.equals(Observer.ADDMISSION))
+		{
+			if (BoardImpl.getInstance().isCompleted()==true)
+				throw new Exception("The War is already over, go home");
+			this.addMission(cmdSub);
+		}
+		else if (newCmd.equals(Observer.ADDSERGEANT))
+		{
+			if (BoardImpl.getInstance().isCompleted()==true)
+				throw new Exception("The War is already over, go home");
+			this.addSergeant(cmdSub);
+		}
+		else if (newCmd.equals(Observer.ADDITEM))
+		{
+			if (BoardImpl.getInstance().isCompleted()==true)
+				throw new Exception("The War is already over, go home");
+			this.addItem(cmdSub);
+		}
 		else
 			throw new Exception("Unknown Command");
 
@@ -210,7 +228,6 @@ public class ObserverImpl implements Observer
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
 				System.out.println(e.getMessage());
 			}
 			

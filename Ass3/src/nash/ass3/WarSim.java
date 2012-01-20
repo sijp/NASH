@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  * @author nadav , shlomi
- *
+ * main class, starts the war, and ends it.
  */
 public class WarSim
 {
@@ -45,7 +45,6 @@ public class WarSim
 			BoardImpl.getInstance().readProperties(args[MISSIONS]);
 			ChiefOfStaffImpl.getInstance().readProperties(args[SERGEANT]);
 			WarehouseImpl.getInstance().readProperties(args[ITEMS]);
-			ObserverImpl.getInstance().printIncompleteMissions();
 		}
 		catch (IOException ioe)
 		{

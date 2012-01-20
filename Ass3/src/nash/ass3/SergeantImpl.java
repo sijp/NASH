@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 /**
  * @author nadav, shlom
- *
+ *implemantation for the sergeant interface
  */
 public class SergeantImpl implements Sergeant {
 	
@@ -135,7 +135,8 @@ public class SergeantImpl implements Sergeant {
 	@Override
 	public void assignMission(Mission m) {
 		SergeantTask task = new SergeantTask(m, this);
-		this.missionExecutor.execute(task);
+		if (this.runFlag)
+			this.missionExecutor.execute(task);
 	}
 
 	/* (non-Javadoc)

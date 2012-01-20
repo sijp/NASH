@@ -6,8 +6,10 @@ package nash.ass3;
 import java.util.Vector;
 
 
-/*
+/**
  * 
+ * @author shlomi vs nadav
+ *implementation of the mission object
  */
 
 public class MissionImpl implements Mission
@@ -40,7 +42,6 @@ public class MissionImpl implements Mission
 		this.name=_name;
 		this.skill=_skill;
 		this.timeToCompletion=_toc;
-		System.out.println(this.name+":"+_toc);
 		this.requiredItems=new ItemList();
 		this.preMissions=new Vector<Mission>();
 		this.status=Mission.PREASSIGNED;
@@ -123,8 +124,6 @@ public class MissionImpl implements Mission
 
 	@Override 
 	public void update(Mission m) {
-		System.out.println("updating "+m.getName());
-		System.out.println(this.getTimeToCompletion()+"<-"+m.getTimeToCompletion());
 		this.name=m.getName();
 		this.skill=m.getSkill();
 		this.timeToCompletion=m.getTimeToCompletion();

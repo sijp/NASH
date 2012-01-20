@@ -47,6 +47,10 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 		return ChiefOfStaffImpl.chiefOfStaff;
 	}
 	
+	/**
+	 * searchs for new assignabke missions to put in the mission holder
+	 * assigns the missions from the mission holder to sergeants according to their priorities and skills
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
@@ -59,7 +63,6 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 			Vector<Mission> assignable=BoardImpl.getInstance().getAssignableMissions();
 			WarSim.LOG.finest("updating mission holder");
 			MissionHolderImpl.getInstance().insert(assignable);
-			
 
 			while (this.runFlag && MissionHolderImpl.getInstance().isEmpty() == false )
 			{
@@ -87,20 +90,14 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 				}
 			}
 		}
-		System.out.println("All missions are done");
+		if (BoardImpl.getInstance().isCompleted())
+			System.out.println("All missions are done");
 	}
 
 	private void assignMissionToSergeant(Mission m, Sergeant pepper) {
 		BoardImpl.getInstance().levelUp(m);
 		pepper.addMission(m);
 	}
-
-	/*private Sergeant getAvailableSergeant() {
-		for (int i=0;i<this.serList.size();i++)
-			if (this.serList.elementAt(i).isAvailable())
-				return this.serList.elementAt(i);
-		return null;
-	}*/
 
 	
 	/* (non-Javadoc)
@@ -146,7 +143,7 @@ public class ChiefOfStaffImpl implements ChiefOfStaff {
 			int numOfTheThreads = Integer.parseInt(p.getProperty("s"+i+"NumOfThreads").trim());
 			int maxMissions = Integer.parseInt(p.getProperty("s"+i+"MaxMissions").trim());
 			String sSkills = p.getProperty("s"+i+"Skills");
-			int sWorkHours = Integer.parseInt(p.getProperty("s"+i+"workHours").trim());
+			int sWorkHours = Integer.parseInt(p.getProperty("s"+i+"WorkHours").trim());
 			String sPriority = p.getProperty("s"+i+"PriorityOrder");
 			
 			StringTokenizer st = new StringTokenizer(sSkills);

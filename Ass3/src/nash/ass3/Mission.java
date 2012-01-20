@@ -3,7 +3,7 @@ import java.util.Vector;
 
 /**
  * @author Nadav lord of Middle Earth and Shlomi
- *
+ * mission interface
  */
 
 public interface Mission{

@@ -6,9 +6,6 @@ import java.util.Vector;
 /**
  * @author shlomi,nadavi
  *
- */
-
-/*
  * Scans the board element for missions which can be executed.
  * adds thems to the missionholder
  * distributes the missions from the missionholder to different sergeants according

@@ -7,7 +7,8 @@ import java.util.Vector;
 
 /**
  * @author nadav, shlomi
- *
+ * sergeant-contains pool of threads that issues missions
+ * updating board after completing a mission 
  */
 public interface Sergeant{
 	/**

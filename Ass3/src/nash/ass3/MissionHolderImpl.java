@@ -6,7 +6,7 @@ import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
 /**
  * @author nadav , shlomi
- *
+ * implementation of the Tikia of missions
  */
 
 public class MissionHolderImpl implements MissionHolder {

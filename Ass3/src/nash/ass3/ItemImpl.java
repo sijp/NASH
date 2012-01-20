@@ -8,7 +8,7 @@ import java.util.Hashtable;
 
 /**
  * @author nadavit, shlomit
- *
+ * item interface implamintation
  */
 public class ItemImpl implements Item {
 

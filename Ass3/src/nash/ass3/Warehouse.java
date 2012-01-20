@@ -7,6 +7,7 @@ import java.io.IOException;
 
 /**
  * @author Shlomi & Nadavi
+ * interface for the warehouse, holds all the items
  */
 
 public interface Warehouse {
@@ -44,4 +45,9 @@ public interface Warehouse {
 	 * @throws IOException  if IO exception occurs
 	 */
 	public void readProperties(String filename) throws IOException;
+	
+	/**
+	 * 
+	 */
+	public void stop();
 }

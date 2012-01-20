@@ -6,7 +6,8 @@ package nash.ass3;
 import java.util.Comparator;
 
 /**
- * @author shlomi
+ * @author shlomi nadav
+ * comperator for max value of int
  *
  */
 public class MaxLengthComparator implements Comparator<Mission> {

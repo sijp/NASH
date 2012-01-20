@@ -6,7 +6,8 @@ package nash.ass3;
 import java.util.Comparator;
 
 /**
- * @author shlomi
+ * @author shlomi nadav
+ * comperator for min value of #items
  *
  */
 public class MinItemsComparator implements Comparator<Mission> {

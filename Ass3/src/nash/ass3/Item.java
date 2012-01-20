@@ -2,7 +2,7 @@ package nash.ass3;
 
 /**
  * @author Nadav and Shlomi
- *
+ * each item object contains a distinct name and amount
  */
 public interface Item {
 	

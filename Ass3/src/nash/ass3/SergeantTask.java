@@ -5,7 +5,7 @@ package nash.ass3;
 
 /**
  * @author nadav , shlomi
- *
+ * a class that deals with the thread of the sergeant.
  */
 public class SergeantTask implements Runnable {
 
@@ -31,32 +31,34 @@ public class SergeantTask implements Runnable {
 	public void run() 
 	{
 		this.serToDo.acquireItems(this.misToDo.getRequiredItems());
-		int minWorkTime = Math.min(this.misToDo.getWorkTimeLeft(), this.serToDo.getMaxWorkHours());
-		WarSim.LOG.fine("Hello I am "+this.serToDo.getName()+" this.mistodo:"+this.misToDo.getWorkTimeLeft()+ "sertodo:"+this.serToDo.getMaxWorkHours());
-		try
+		if (this.serToDo.getRunFlag())
 		{
-			WarSim.LOG.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
-			final long thousand=100;
-			Thread.sleep( ((long)minWorkTime) * thousand);
-			WarSim.LOG.fine("Taking a nap :" + this.misToDo.getName());
-		}
-		catch(InterruptedException ie)
-		{
-			System.out.println("Mission:"+this.misToDo.getName()+" Time left:"+this.misToDo.getWorkTimeLeft());
-			ie.printStackTrace();
-		}
-		
-		this.misToDo.addWorkTime(minWorkTime);
-		this.serToDo.returnItems(this.misToDo.getRequiredItems());
-		if(this.misToDo.getWorkTimeLeft() == 0)
-		{
-			WarSim.LOG.fine("yay we are done! :" + this.misToDo.getName());
-			this.serToDo.completeMission(this.misToDo);
-		}
-		else if (this.serToDo.getRunFlag() == true)
-		{
-			WarSim.LOG.fine("reassigning the Mission to myself:" + this.misToDo.getName());
-			this.serToDo.assignMission(this.misToDo);
+			int minWorkTime = Math.min(this.misToDo.getWorkTimeLeft(), this.serToDo.getMaxWorkHours());
+			WarSim.LOG.fine("Hello I am "+this.serToDo.getName()+" this.mistodo:"+this.misToDo.getWorkTimeLeft()+ "sertodo:"+this.serToDo.getMaxWorkHours());
+			try
+			{
+				WarSim.LOG.fine("starting executing Mission ("+minWorkTime+"):" + this.misToDo.getName());
+				final long thousand=1000;
+				Thread.sleep( ((long)minWorkTime) * thousand);
+				WarSim.LOG.fine("Taking a nap :" + this.misToDo.getName());
+			}
+			catch(InterruptedException ie)
+			{
+				ie.printStackTrace();
+			}
+			
+			this.misToDo.addWorkTime(minWorkTime);
+			this.serToDo.returnItems(this.misToDo.getRequiredItems());
+			if(this.misToDo.getWorkTimeLeft() == 0)
+			{
+				WarSim.LOG.fine("yay we are done! :" + this.misToDo.getName());
+				this.serToDo.completeMission(this.misToDo);
+			}
+			else if (this.serToDo.getRunFlag() == true)
+			{
+				WarSim.LOG.fine("reassigning the Mission to myself:" + this.misToDo.getName());
+				this.serToDo.assignMission(this.misToDo);
+			}
 		}
 	}
 

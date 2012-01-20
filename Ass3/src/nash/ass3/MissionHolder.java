@@ -1,7 +1,11 @@
 package nash.ass3;
 
 import java.util.Vector;
-
+/**
+ * 
+ * @author shlomi the fat and angry (on nadav) hobit.
+ * a Tikia of missions, used by the chief of staff
+ */
 public interface MissionHolder {
 /**
  * @inv: all Mission holders sorted by the appropiate key.
