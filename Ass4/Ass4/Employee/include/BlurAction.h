@@ -10,10 +10,17 @@
 
 #include "../include/GraphicAction.h"
 
+using namespace cv;
+
 class BlurAction:public GraphicAction
 {
+	private:
+		Size ksize;
+		double sigmaX;
+		double sigmaY;
 	public:
-		virtual void process();
+		BlurAction(Size,double,double);
+		virtual void process(const Mat &src,Mat &dst);
 		virtual ~BlurAction();
 };
 

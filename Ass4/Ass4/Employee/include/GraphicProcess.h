@@ -17,13 +17,14 @@ using namespace std;
 
 class GraphicProcess
 {
+	
 	private:
 		Mat &image;
-		vector<GraphicAction> actions;
+		vector<GraphicAction *> actions;
 	public:
-		GraphicProcess(Mat &img);
-		void addAction(GraphicAction &a);
-		Mat &process();
+		GraphicProcess(Mat &m);
+		void addAction(GraphicAction *a);
+		virtual void process(Mat &dst);
 };
 
 #endif /* GRAPHICPROCESSER_H_ */
