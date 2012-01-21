@@ -28,29 +28,29 @@
 		{
 			while(this->toRun)
 			{
-				char *data = this->getJob();
+				HttpLineInterperter resConfiguration;
+				char *data = this->getJob(&resConfiguration);
 				if(data == NULL)
 					sleep(30000);
 				else
-					this->doJob(data);
+					this->doJob(data , &resConfiguration);
 			}
 		}
 
 		/*
 			 * get a job description in an xml representation
 		 */
-		char* Employee::getJob()
+		char* Employee::getJob(HttpLineInterperter *resConfiguration)
 		{
 			this->send("POST /jobs/get-new-job HTTP/1.1");
 			this->send("");
-			HttpLineInterperter resConfiguration;
 			string s;
 			while(this->getLineAscii(s) && s.size()>1)
 				{
-					resConfiguration.insertLine(s);
+					resConfiguration->insertLine(s);
 				}
 			//init a new byte array in the size of the content length
-			int byteLength = atoi(resConfiguration.getContentLength().c_str());
+			int byteLength = atoi(resConfiguration->getContentLength().c_str());
 			char* dataByte = new char[byteLength];
 
 			this->getBytes(dataByte , byteLength);
@@ -61,9 +61,22 @@
 		/*
 		 *gets the xml, decode it and process it
 		 */
-		void Employee::doJob(char* data)
+		void Employee::doJob(char* data , HttpLineInterperter *resConfiguration)
 		{
-
+			//convert the bytes data into string
+			//assuming the srcEncoding and encoding are the same type
+			string strData(data , resConfiguration->getContentLength());
+			JobXmlParser xmlDecoder(strData);
+			xmlDecoder.parseXml();
+			xmlDecoder.parseDocument();
+			Job job = xmlDecoder.getJob();
+			bool flag;
+			flag = job.download(this , resConfiguration);
+			if (flag)
+			{
+				job.process();
+				job.upload(this , resConfiguration);
+			}
 		}
 
 		/*
@@ -186,7 +199,9 @@
 	    	catch(Exception & error)
 	    	{
 	    		cout<<"send failed (Error: " << error.msg <<")" <<endl;
+	    		return false;
 	    	}
+	    	return true;
 	   	}
 
 	    // Close down the connection properly.
@@ -196,7 +211,7 @@
 	    	{
 	    		this->socket_.shutdown();
 	    	}
-	    	catch(Exception error)
+	    	catch(Exception & error)
 	    	{
 	    		cout<<"closing faild, connection already closed"<<endl;
 	    	}

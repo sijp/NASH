@@ -22,6 +22,8 @@
 //#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
+#include "../include/JobXmlParser.h"
+
 using namespace std;
 using namespace cv;
 
@@ -56,7 +58,7 @@ class Employee
 		/*
 			 *gets the xml, decode it and process it
 		 */
-		void doJob(char *data);
+		void doJob(char *data , HttpLineInterperter *resConfiguration);
 
 		/*
 		 * connecting to the manager, using port_ and host_;
