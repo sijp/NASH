@@ -22,7 +22,7 @@
 //#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "../include/JobXmlParser.h"
+#include "../include/JobXMLParser.h"
 
 using namespace std;
 using namespace cv;
@@ -53,7 +53,7 @@ class Employee
 		/*
 		 * get a job description in an xml representation
 		 */
-		char* getJob();
+		char* getJob(HttpLineInterperter *resConfiguration);
 
 		/*
 			 *gets the xml, decode it and process it

@@ -66,16 +66,16 @@
 			//convert the bytes data into string
 			//assuming the srcEncoding and encoding are the same type
 			string strData(data , resConfiguration->getContentLength());
-			JobXmlParser xmlDecoder(strData);
-			xmlDecoder.parseXml();
+			JobXMLParser xmlDecoder(strData);
+			xmlDecoder.parseXML();
 			xmlDecoder.parseDocument();
 			Job job = xmlDecoder.getJob();
 			bool flag;
-			flag = job.download(this , resConfiguration);
+			flag = job.download(*this , resConfiguration);
 			if (flag)
 			{
 				job.process();
-				job.upload(this , resConfiguration);
+				job.upload(*this , resConfiguration);
 			}
 		}
 
