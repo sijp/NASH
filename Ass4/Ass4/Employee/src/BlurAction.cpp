@@ -10,13 +10,13 @@
 
 using namespace cv;
 
-BlurAction::BlurAction(Size ks,double sx,double sy):ksize(ks),sigmaX(sx),sigmaY(sy)
+BlurAction::BlurAction(Size ks,double sx,double sy, int bt):ksize(ks),sigmaX(sx),sigmaY(sy),borderType(bt)
 {
 }
 
 void BlurAction::process(const Mat &src,Mat &dst)
 {
-	GaussianBlur(src,dst,this->ksize,this->sigmaX,this->sigmaY);
+	GaussianBlur(src,dst,this->ksize,this->sigmaX,this->sigmaY,this->borderType);
 }
 
 BlurAction::~BlurAction()

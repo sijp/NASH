@@ -116,6 +116,7 @@ GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode)
 {
 	double Fx,Fy;
 	string inter;
+	int interValue=INTER_LINEAR;
 	Poco::XML::AutoPtr<Poco::XML::Node *> prop = docIteratorNode->firstChild();
 	
 	while (prop!=NULL)
@@ -128,26 +129,61 @@ GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode)
 			inter=prop->getNodeValue();
 	}
 	
-	
-	
+	if (inter=="INTER_NEAREST")
+		interValue=INTER_NEAREST;
+	else if (inter=="INTER_LINEAR")
+		interValue=INTER_LINEAR;
+	else if (inter=="INTER_AREA")
+		interValue=INTER_AREA;
+	else if (inter=="INTER_CUBIC")
+		interValue=INTER_CUBIC;
+	else if (inter=="INTER_LANCZOS4")
+		interValue=INTER_LANCZOS4;
+		
+	return new ResizeAction(Size(5,5), Fx,Fy, interValue);
 	
 }
 
 GraphicAction *getGaussianBlurAction(Poco::XML::Node* docIteratorNode)
 {
-	string code;
-	Poco::XML::AutoPtr<Poco::XML::NodeList> childrenList = docIteratorNode->childNodes();
-	if (childrenList->item(0)->firstChild()->getNodeValue() == "code")
+	Size ksize;
+	int Sx,Sy;
+	string borderType;
+	Poco::XML::AutoPtr<Poco::XML::Node *> prop = docIteratorNode->firstChild();
+	
+	while (prop!=NULL)
 	{
-		code=childrenList->item(0)->firstChild()->getNodeValue();
-		return new GrayAction(code);
+		if (prop->nodeName()=="kSize")
+		{
+			int ks=atoi(prop->getNodeValue());
+			ksize=Size(ks,ks);
+		}
+		else if (prop->nodeName()=="SigmaX")
+			Sx=atoi(prop->getNodeValue());
+		else if (prop->nodeName()=="SigmaY")
+			Sy=atoi(prop->getNodeValue());
+		else if (prop->nodeName()=="borderType")
+			borderType=prop->getNodeValue();
 	}
-	return NULL;
+		
+	if (borderType=="BORDER_CONSTANT")
+		borderTypeValue=BORDER_CONSTANT;
+	else if (borderType=="BORDER_DEFAULT")
+		borderTypeValue=BORDER_DEFAULT;
+	else if (borderType=="BORDER_ISOLATED")
+		borderTypeValue=BORDER_ISOLATED;
+	else if (borderType=="BORDER_REFLECT")
+		borderTypeValue=BORDER_REFLECT;
+	else if (borderType=="BORDER_REFLECT_101")
+		borderTypeValue=BORDER_REFLECT_101;
+	else if (borderType=="BORDER_REPLICATE")
+		borderTypeValue=BORDER_REPLICATE;
+	else if (borderType=="BORDER_TRANSPARENT")
+		borderTypeValue=BORDER_TRANSPARENT;
+	else if (borderType=="BORDER_WRAP")
+		borderTypeValue=BORDER_WRAP;
+		
+	return new BlurAction(ksize,Sx,Sy,borderTypeValue);
 }
-
-
-
-
-
 
 

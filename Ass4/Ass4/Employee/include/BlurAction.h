@@ -18,8 +18,9 @@ class BlurAction:public GraphicAction
 		Size ksize;
 		double sigmaX;
 		double sigmaY;
+		int borderType;
 	public:
-		BlurAction(Size,double,double);
+		BlurAction(Size,double,double,int);
 		virtual void process(const Mat &src,Mat &dst);
 		virtual ~BlurAction();
 };
