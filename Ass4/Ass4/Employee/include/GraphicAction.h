@@ -17,6 +17,7 @@ class GraphicAction
 {
 	public:
 		virtual void process(const Mat &src,Mat &dst)=0;
+		virtual void getName()=0;
 };
 
 

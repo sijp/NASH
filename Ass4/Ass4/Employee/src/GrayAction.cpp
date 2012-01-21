@@ -7,12 +7,13 @@
 
 #include "../include/GrayAction.h"
 #include <opencv2/imgproc/imgproc.hpp>
-
+#include <iostream>
+using namespace std;
 using namespace cv;
 
 GrayAction::GrayAction( int _code):code(_code)
 {
-
+	cout<<"GrayAction:"<<_code<<endl;
 }
 
 void GrayAction::process(const Mat &src,Mat &dst)
@@ -22,5 +23,10 @@ void GrayAction::process(const Mat &src,Mat &dst)
 
 GrayAction::~GrayAction()
 {
+}
+
+void GrayAction::getName()
+{
+	cout<<"GrayAction"<<endl;
 }
 

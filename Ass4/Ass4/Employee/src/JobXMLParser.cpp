@@ -66,7 +66,6 @@ void JobXMLParser::parseDocument()
 	string iRep="";
 	string oRep="";
 	
-	Job job;
 	
 	Poco::XML::NodeIterator docIterator(Poco::XML::NodeIterator(fDom, Poco::XML::NodeFilter::SHOW_ALL));
 	Poco::XML::Node* docIteratorNode;
@@ -75,21 +74,29 @@ void JobXMLParser::parseDocument()
 	while (docIteratorNode)
 	{
 		if (docIteratorNode->nodeName() == "InputRepresentation")
-			iRep=docIteratorNode->getNodeValue();
+		{
+			iRep=((Poco::XML::Element *)docIteratorNode)->getAttribute("id");
+
+		}
 		else if (docIteratorNode->nodeName() == "OutputRepresentation")
-			oRep=docIteratorNode->getNodeValue();
-		else if (docIteratorNode->nodeName() == "effectList")
+			oRep=((Poco::XML::Element *)docIteratorNode)->getAttribute("id");
+		else if (docIteratorNode->nodeName() == "effectsList")
 			this->addEffects(docIteratorNode);
 		docIteratorNode = docIterator.nextNode();
 	}
+	this->job.setRepDownload(iRep);
+	this->job.setRepUpload(oRep);
 }
 
 void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 {
-	Poco::XML::Node * effect = docIteratorNode->firstChild();
-	while (effect!=NULL)
+	Poco::XML::NodeList * effects = docIteratorNode->childNodes();
+	int i;
+	for (i=0;i<effects->length();i++)
 	{
 		GraphicAction *ga;
+		Poco::XML::Node *effect=effects->item(i);
+		cout<<"fx:"<<effect->nodeName()<<endl;
 		if(effect->nodeName() == "cvtColor")
 			ga=this->getGrayAction(effect);
 		else if(effect->nodeName() == "resize")
@@ -98,7 +105,6 @@ void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 			ga=this->getGaussianBlurAction(effect);
 		this->job.addEffect(ga);
 		
-		effect = docIteratorNode->firstChild();
 	}
 }
 
@@ -106,11 +112,10 @@ GraphicAction* JobXMLParser::getGrayAction(Poco::XML::Node* docIteratorNode)
 {
 	string code;
 	Poco::XML::AutoPtr<Poco::XML::NodeList> childrenList = docIteratorNode->childNodes();
-	if (childrenList->item(0)->firstChild()->getNodeValue() == "code")
+	if (childrenList->item(0)->nodeName() == "code")
 	{
 		code=childrenList->item(0)->firstChild()->getNodeValue();
-		if (code=="CV_RGB2GRAY")
-			return new GrayAction(CV_RGB2GRAY);
+		return new GrayAction(CV_RGB2GRAY);
 	}
 	return NULL;
 }
@@ -120,16 +125,18 @@ GraphicAction *JobXMLParser::getResizeAction(Poco::XML::Node* docIteratorNode)
 	double Fx,Fy;
 	string inter;
 	int interValue=INTER_LINEAR;
-	Poco::XML::Node * prop = docIteratorNode->firstChild();
-	
-	while (prop!=NULL)
+	Poco::XML::AutoPtr<Poco::XML::NodeList> props = docIteratorNode->childNodes();
+	int i;
+	for (i=0;i<props->length();i++)
 	{
+		Poco::XML::Node *prop=props->item(i);
 		if (prop->nodeName()=="scaleFactorX")
-			Fx=atoi(prop->getNodeValue().c_str());
+			Fx=atof(prop->firstChild()->getNodeValue().c_str());
 		else if (prop->nodeName()=="scaleFactorY")
-			Fy=atoi(prop->getNodeValue().c_str());
-		else if (prop->nodeName()=="scaleFactorX")
-			inter=prop->getNodeValue();
+			Fy=atof(prop->firstChild()->getNodeValue().c_str());
+		else if (prop->nodeName()=="interpolation")
+			inter=prop->firstChild()->getNodeValue();
+		
 	}
 	
 	if (inter=="INTER_NEAREST")
@@ -153,21 +160,23 @@ GraphicAction *JobXMLParser::getGaussianBlurAction(Poco::XML::Node* docIteratorN
 	int Sx,Sy;
 	string borderType;
 	int borderTypeValue;
-	Poco::XML::Node * prop = docIteratorNode->firstChild();
-	
-	while (prop!=NULL)
+	Poco::XML::AutoPtr<Poco::XML::NodeList> props = docIteratorNode->childNodes();
+	int i;
+	for (i=0;i<props->length();i++)
 	{
+
+		Poco::XML::Node *prop=props->item(i);
 		if (prop->nodeName()=="kSize")
 		{
-			int ks=atoi(prop->getNodeValue().c_str());
+			int ks=atoi(prop->firstChild()->getNodeValue().c_str());
 			ksize=Size(ks,ks);
 		}
-		else if (prop->nodeName()=="SigmaX")
-			Sx=atoi(prop->getNodeValue().c_str());
-		else if (prop->nodeName()=="SigmaY")
-			Sy=atoi(prop->getNodeValue().c_str());
+		else if (prop->nodeName()=="sigmaX")
+			Sx=atoi(prop->firstChild()->getNodeValue().c_str());
+		else if (prop->nodeName()=="sigmaY")
+			Sy=atoi(prop->firstChild()->getNodeValue().c_str());
 		else if (prop->nodeName()=="borderType")
-			borderType=prop->getNodeValue();
+			borderType=prop->firstChild()->getNodeValue();
 	}
 		
 	if (borderType=="BORDER_CONSTANT")

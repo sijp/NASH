@@ -21,6 +21,7 @@ class GrayAction:public GraphicAction
 		GrayAction(int);
 		virtual void process(const Mat &src,Mat &dst);
 		virtual ~GrayAction();
+		virtual void getName();
 };
 
 #endif /* GRAYACTION_H_ */

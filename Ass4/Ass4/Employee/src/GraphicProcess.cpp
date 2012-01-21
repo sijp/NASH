@@ -6,6 +6,8 @@
  */
 
 #include "../include/GraphicProcess.h"
+#include <iostream>
+using namespace std;
 
 GraphicProcess::GraphicProcess():image(NULL)
 {
@@ -40,5 +42,16 @@ GraphicProcess::~GraphicProcess()
 	for (i=0;i<actions.size();i++)
 	{
 		delete actions[i];
+	}
+}
+
+void GraphicProcess::print()
+{
+	cout<<"actions:"<<endl;
+	int i;
+	for (i=0;i<this->actions.size();i++)
+	{
+		cout<<i<<":";
+		actions[i]->getName();
 	}
 }

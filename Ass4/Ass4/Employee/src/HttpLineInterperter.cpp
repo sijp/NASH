@@ -6,6 +6,8 @@
  */
 
 #include <string>
+#include <iostream>
+#include <stdlib.h>
 #include "../include/HttpLineInterperter.h"
 
 
@@ -35,8 +37,8 @@
 			this->resResource = subEnd;
 		else if (subStart == "Content-Type:")
 			this->resContentType = subEnd;
-		else if (subStart == "Content-length:")
-			this->resContentLength = 10;
+		else if (subStart == "Content-Length:")
+			this->resContentLength = atoi(subEnd.c_str());
 	}
 	/*
 	 *

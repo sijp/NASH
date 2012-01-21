@@ -54,12 +54,12 @@ class Employee
 		/*
 		 * get a job description in an xml representation
 		 */
-		char *getJob (HttpLineInterperter *);
+		uchar *getJob (HttpLineInterperter *);
 
 		/*
 			 *gets the xml, decode it and process it
 		 */
-		void doJob(char * , HttpLineInterperter *);
+		void doJob(uchar * , HttpLineInterperter *);
 
 		/*
 		 * connecting to the manager, using port_ and host_;
@@ -70,7 +70,7 @@ class Employee
 		 * read a fixed number of bytes from the server
 		 * returns false in case the connection is not ready.
 		 */
-		bool getBytes(char frame[] , int bytesToRead);
+		bool getBytes(uchar frame[] , int bytesToRead);
 
 		/*
 		 *
@@ -89,10 +89,12 @@ class Employee
 
 		// Send a fixed number of bytes from the client - blocking.
 	    // Returns false in case the connection is closed before bytesToWrite bytes can be read.
-	    bool sendBytes(const char frame[], int bytesToWrite);
+	    bool sendBytes(const uchar frame[], int bytesToWrite);
 
 	    // Close down the connection properly.
 	    void close();
+	    //returns the host name
+	    string getHost();
 
 	    /*
 	     * destructor

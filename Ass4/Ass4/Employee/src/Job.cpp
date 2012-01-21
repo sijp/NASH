@@ -22,21 +22,25 @@
 		{
 			string downloadRequest = "GET /photos/" +
 									resConfiguration->getResource() +
-									"?rep=" + this->repDownload +
-									" HTTP/1.1\n";
+									"/index.php?rep=" + this->repDownload +
+									" HTTP/1.1";
+			cout<<downloadRequest<<endl;
 			employee.send(downloadRequest);
+			employee.send("Host: "+employee.getHost()+"\n");
+/*			
 			HttpLineInterperter downResponsetInterperter;
 			string s;
-			while(employee.getLineAscii(s) && s.size()>1)
-				{
-					downResponsetInterperter.insertLine(s);
-				}
+			while(employee.getFrameAscii(s) && s.size()>1)
+			{
+				downResponsetInterperter.insertLine(s);
+				s.clear();
+			}
 			//if we succeded in downloading the image
 			if(downResponsetInterperter.getStatus() == "200")
 			{
 				//init a new byte array in the size of the content length
 				int byteLength = downResponsetInterperter.getContentLength();
-				char* dataByte = new char[byteLength];
+				uchar* dataByte = new uchar[byteLength];
 				employee.getBytes(dataByte , byteLength);
 				//dataBytes holds the bytes for the image
 				this->mimeType = downResponsetInterperter.getContentType();
@@ -47,7 +51,7 @@
 				this->gP.setImage(&(this->image));
 
 				return true;
-			}
+			}*/
 			return false;
 		}
 
@@ -81,7 +85,7 @@
 			string imgExt = this->mimeType.substr(pos+1);
 			vector<uchar> vecByte;
 			imencode(imgExt , this->editedImage , vecByte);
-			char* buf = vecByte.data();
+			uchar* buf = vecByte.data();
 			employee.sendBytes(buf , this->editedImage.elemSize());
 		}
 
@@ -104,4 +108,10 @@
 		void Job::addEffect(GraphicAction *action)
 		{
 			this->gP.addAction(action);
+		}
+		
+		void Job::print()
+		{
+			cout<<repDownload<<endl<<repUpload<<endl;
+			gP.print();
 		}

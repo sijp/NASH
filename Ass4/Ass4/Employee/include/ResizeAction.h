@@ -23,6 +23,7 @@ class ResizeAction:public GraphicAction
 		ResizeAction(Size dsize, double fx=0, double fy=0, int i=INTER_LINEAR);
 		virtual void process(const Mat &src,Mat &dst);
 		virtual ~ResizeAction();
+		virtual void getName();
 };
 
 #endif /* GRAYACTION_H_ */

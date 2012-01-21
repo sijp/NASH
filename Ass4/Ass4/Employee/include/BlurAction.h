@@ -23,6 +23,7 @@ class BlurAction:public GraphicAction
 		BlurAction(Size,double,double,int);
 		virtual void process(const Mat &src,Mat &dst);
 		virtual ~BlurAction();
+		virtual void getName();
 };
 
 #endif /* BLURACTION_H_ */

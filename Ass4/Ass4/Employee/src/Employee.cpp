@@ -19,6 +19,11 @@
 		{
 
 		}
+		
+		string Employee::getHost()
+		{
+			return this->sa_.host().toString();
+		}
 
 		/*
 		 * a loop that checks if there is a job waiting
@@ -29,7 +34,7 @@
 			while(this->toRun)
 			{
 				HttpLineInterperter resConfiguration;
-				char *data = this->getJob(&resConfiguration);
+				uchar *data = this->getJob(&resConfiguration);
 				if(data == NULL)
 					sleep(30000);
 				else
@@ -40,20 +45,23 @@
 		/*
 			 * get a job description in an xml representation
 		 */
-		char* Employee::getJob(HttpLineInterperter *resConfiguration)
+		uchar* Employee::getJob(HttpLineInterperter *resConfiguration)
 		{
-			this->send("POST /jobs/get-new-job HTTP/1.1");
+			this->send("POST /jobs/get-new-job/index.php HTTP/1.1");
+			this->send("Host: "+host_);
 			this->send("");
 			string s;
-			while(this->getLineAscii(s) && s.size()>1)
+			while(this->getFrameAscii(s) && s.size()>1)
 				{
 					resConfiguration->insertLine(s);
+					s.clear();
 				}
 			//init a new byte array in the size of the content length
 			int byteLength = resConfiguration->getContentLength();
-			char* dataByte = new char[byteLength];
+			uchar* dataByte = new uchar[byteLength];
 
 			this->getBytes(dataByte , byteLength);
+			cout<<dataByte<<endl;
 			return dataByte;
 
 		}
@@ -61,21 +69,21 @@
 		/*
 		 *gets the xml, decode it and process it
 		 */
-		void Employee::doJob(char* data , HttpLineInterperter *resConfiguration)
+		void Employee::doJob(uchar* data , HttpLineInterperter *resConfiguration)
 		{
 			//convert the bytes data into string
 			//assuming the srcEncoding and encoding are the same type
-			string strData(data , resConfiguration->getContentLength());
+			string strData((char *)data , resConfiguration->getContentLength());
 			JobXMLParser xmlDecoder(strData);
 			xmlDecoder.parseXML();
 			xmlDecoder.parseDocument();
-			/*Job job = xmlDecoder.getJob();
+			Job job = xmlDecoder.getJob();
 			bool flag;
-			flag = job.download(*(this) , *resConfiguration);
-			if (flag)
+			flag = job.download(*(this) , resConfiguration);
+			/*if (flag)
 			{
 				job.process();
-				job.upload(*(this) , *resConfiguration);
+				job.upload(*(this) , resConfiguration);
 			}*/
 		}
 
@@ -105,14 +113,16 @@
 		 * in each iteration of the while loop, we read from the socket
 		 * as much as we can into the frame[].
 		 */
-		bool Employee::getBytes(char frame[] , int bytesToRead)
+		bool Employee::getBytes(uchar frame[] , int bytesToRead)
 		{
 			int tmp = 0;
+			cout<<"needs to read "<<bytesToRead<<" bytes"<<endl;
 			try
 			{
 				while (bytesToRead > tmp)
 				{
 					//frame + tmp = &frame[tmp] , pointers arithmetics
+					cout<<"read "<<tmp<<" bytes"<<endl;
 					tmp = tmp + this->socket_.receiveBytes(frame + tmp , bytesToRead - tmp);
 				}
 			}
@@ -147,13 +157,13 @@
 	    // Returns false in case connection closed before null can be read.
 	    bool Employee::getFrameAscii(string& frame)
 	    {
-	    	char ch = '\0';
+	    	uchar ch = '\n';
 	    	//stop when we encounter a null character
 	    	//notice that the null character is not appended to the frame string.
 	    	try
 	    	{
 	    	this->socket_.receiveBytes(&ch , 1);
-	    	while(ch !='\0')
+	    	while(ch !='\n')
 	    	{
 	    		frame.append(1 , ch);
 	    		this->socket_.receiveBytes(&ch , 1);
@@ -186,7 +196,7 @@
 
 		// Send a fixed number of bytes from the client - blocking.
 	    // Returns false in case the connection is closed before bytesToWrite bytes can be read.
-	    bool Employee::sendBytes(const char frame[], int bytesToWrite)
+	    bool Employee::sendBytes(const uchar frame[], int bytesToWrite)
 	    {
 	    	int tmp = 0;
 	    	try

@@ -8,7 +8,6 @@
 #ifndef HTTPLINEINTERPERTER_H_
 #define HTTPLINEINTERPERTER_H_
 
-#include <iostream>
 #include <string>
 
 using namespace std;

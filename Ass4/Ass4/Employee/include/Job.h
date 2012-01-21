@@ -63,6 +63,8 @@ class Job
 		 * adds the action `action` to the GraphicProcess object
 		 */
 		void addEffect(GraphicAction *action);
+		
+		void print();
 };
 
 

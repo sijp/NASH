@@ -27,6 +27,7 @@ class GraphicProcess
 		void addAction(GraphicAction *a);
 		void process(Mat &dst);
 		~GraphicProcess();
+		void print();
 };
 
 #endif /* GRAPHICPROCESSER_H_ */
