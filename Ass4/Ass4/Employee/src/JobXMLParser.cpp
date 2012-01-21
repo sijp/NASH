@@ -14,12 +14,12 @@ JobXMLParser::JobXMLParser(string xml):XMLData(xml)
 {
 }
 
-Job &JobXMLParser::getParsedXML()
+Job &JobXMLParser::getJob()
 {
 	return this->job;
 }
 
-void JobXMLParser::parseXml(){
+void JobXMLParser::parseXML(){
 	//get the factory
 	Poco::XML::DOMParser parser;
 	//filters white space nodes v1.4.2p

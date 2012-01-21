@@ -23,6 +23,7 @@ class JobXMLParser
 		void parseDocument();
 		Job &getJob();
 		void parseXMLFile();
+		void parseXML();
 		void addEffects(Poco::XML::Node* docIteratorNode);
 		~JobXMLParser();
 }
