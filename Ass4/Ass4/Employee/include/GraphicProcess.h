@@ -19,12 +19,14 @@ class GraphicProcess
 {
 	
 	private:
-		Mat &image;
+		Mat *image;
 		vector<GraphicAction *> actions;
 	public:
-		GraphicProcess(Mat &m);
+		GraphicProcess();
+		void setImage(Mat* img);
 		void addAction(GraphicAction *a);
-		virtual void process(Mat &dst);
+		void process(Mat &dst);
+		~GraphicProcess();
 };
 
 #endif /* GRAPHICPROCESSER_H_ */
