@@ -1,5 +1,6 @@
 #include "../include/JobXMLParser.h"
 #include "../include/Job.h"
+#include <string>
 
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -9,8 +10,9 @@ int main()
 {
 	Mat m=imread("test.png");
 	
-	string xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
-	    "<JobRequest>\n"+
+	string xml;
+	xml=string("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n") +
+	    //"<JobRequest>\n" +
 	    "<InputRepresentation=\"1\"/>\n"+
 	    "<OutputRepresentation=\"2\"/>\n"+
 	    "<effectsList>\n"+
@@ -39,6 +41,6 @@ int main()
 	Job &job=parser.getJob();
 	
 	
-	imwrite("re.png",dst);
+//	imwrite("re.png",dst);
 	
 }

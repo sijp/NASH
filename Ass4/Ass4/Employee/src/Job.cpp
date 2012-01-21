@@ -35,7 +35,7 @@
 			if(downResponsetInterperter.getStatus() == "200")
 			{
 				//init a new byte array in the size of the content length
-				int byteLength = atoi(downResponsetInterperter.getContentLength().c_str());
+				int byteLength = downResponsetInterperter.getContentLength();
 				char* dataByte = new char[byteLength];
 				employee.getBytes(dataByte , byteLength);
 				//dataBytes holds the bytes for the image
@@ -99,4 +99,9 @@
 		void Job::setRepUpload(string rep)
 		{
 			this->repUpload = rep;
+		}
+
+		void Job::addEffect(GraphicAction *action)
+		{
+			this->gP.addAction(action);
 		}

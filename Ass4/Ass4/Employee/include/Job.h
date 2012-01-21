@@ -10,8 +10,12 @@
 
 #include <iostream>
 #include <string>
+
+class Job;
+
 #include "../include/Employee.h"
 #include "../include/GraphicProcess.h"
+#include "../include/HttpLineInterperter.h"
 
 using namespace std;
 
@@ -55,6 +59,11 @@ class Job
 		 * set the url for aploading the edited image
 		 */
 		void setRepUpload(string rep);
+
+		/*
+		 * adds the action `action` to the GraphicProcess object
+		 */
+		void addEffect(GraphicAction *action);
 };
 
 

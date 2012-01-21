@@ -50,7 +50,7 @@
 					resConfiguration->insertLine(s);
 				}
 			//init a new byte array in the size of the content length
-			int byteLength = atoi(resConfiguration->getContentLength().c_str());
+			int byteLength = resConfiguration->getContentLength();
 			char* dataByte = new char[byteLength];
 
 			this->getBytes(dataByte , byteLength);
@@ -69,14 +69,14 @@
 			JobXMLParser xmlDecoder(strData);
 			xmlDecoder.parseXML();
 			xmlDecoder.parseDocument();
-			Job job = xmlDecoder.getJob();
+			/*Job job = xmlDecoder.getJob();
 			bool flag;
-			flag = job.download(*this , resConfiguration);
+			flag = job.download(*(this) , *resConfiguration);
 			if (flag)
 			{
 				job.process();
-				job.upload(*this , resConfiguration);
-			}
+				job.upload(*(this) , *resConfiguration);
+			}*/
 		}
 
 		/*

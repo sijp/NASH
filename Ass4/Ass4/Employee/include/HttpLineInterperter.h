@@ -22,8 +22,8 @@ class HttpLineInterperter
 		string resStatus,
 			resServer,
 			resResource,
-			resContentType,
-			resContentLength;
+			resContentType;
+		int resContentLength;
 
 	public:
 		/*
@@ -54,7 +54,7 @@ class HttpLineInterperter
 		/*
 		 *
 		 */
-		string getContentLength();
+		int getContentLength();
 
 };
 

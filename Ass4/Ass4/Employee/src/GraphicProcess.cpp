@@ -5,7 +5,7 @@
  *      Author: shlomi
  */
 
-#include "../include/GraphicProcesser.h"
+#include "../include/GraphicProcess.h"
 
 GraphicProcess::GraphicProcess():image(NULL)
 {

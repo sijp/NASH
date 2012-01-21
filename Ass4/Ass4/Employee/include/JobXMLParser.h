@@ -13,6 +13,8 @@
 #include <vector>
 
 #include "../include/Job.h"
+#include "../include/GraphicAction.h"
+
 
 using namespace std;
 
@@ -30,6 +32,10 @@ class JobXMLParser
 		void parseXML();
 		void addEffects(Poco::XML::Node* docIteratorNode);
 		~JobXMLParser();
+		GraphicAction *getGaussianBlurAction(Poco::XML::Node* docIteratorNode);
+		GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode);
+		GraphicAction *getGrayAction(Poco::XML::Node* docIteratorNode);
+
 };
 
 #endif

@@ -5,13 +5,15 @@
  *      Author: nadav
  */
 
+#include <string>
 #include "../include/HttpLineInterperter.h"
+
 
 	HttpLineInterperter::HttpLineInterperter():resStatus(""),
 												resServer(""),
 												resResource(""),
 												resContentType(""),
-												resContentLength("")
+												resContentLength(0)
 	{
 
 	}
@@ -34,7 +36,7 @@
 		else if (subStart == "Content-Type:")
 			this->resContentType = subEnd;
 		else if (subStart == "Content-length:")
-			this->resContentLength = subEnd;
+			this->resContentLength = 10;
 	}
 	/*
 	 *
@@ -67,7 +69,7 @@
 	/*
 	 *
 	 */
-	string HttpLineInterperter::getContentLength()
+	int HttpLineInterperter::getContentLength()
 	{
 		return this->resContentLength;
 	}

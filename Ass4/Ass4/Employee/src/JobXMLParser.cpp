@@ -23,9 +23,9 @@ void JobXMLParser::parseXML(){
 	//get the factory
 	Poco::XML::DOMParser parser;
 	//filters white space nodes v1.4.2p
-	//parser.setFeature(parser.FEATURE_FILTER_WHITESPACE, true);
+	parser.setFeature(parser.FEATURE_FILTER_WHITESPACE, true);
 	//filter white space nodes v1.3.0 - uni version
-	parser.setFeature(Poco::XML::DOMParser::FEATURE_WHITESPACE,false);
+	//parser.setFeature(Poco::XML::DOMParser::FEATURE_WHITESPACE,false);
 	//parse using builder to get fDom representation of the XML file
 	fDom = parser.parseString(this->XMLData);
 
@@ -83,10 +83,10 @@ void JobXMLParser::parseDocument()
 
 void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 {
-	Poco::XML::AutoPtr<Poco::XML::Node *> effect = docIteratorNode->firstChild();
+	Poco::XML::Node * effect = docIteratorNode->firstChild();
 	while (effect!=NULL)
 	{
-		GraphicAction ga;
+		GraphicAction *ga;
 		if(effect->nodeName() == "cvtColor")
 			ga=this->getGrayAction(effect);
 		else if(effect->nodeName() == "resize")
@@ -99,7 +99,7 @@ void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 	}
 }
 
-GraphicAction *getGrayAction(Poco::XML::Node* docIteratorNode)
+GraphicAction *JobXMLParser::getGrayAction(Poco::XML::Node* docIteratorNode)
 {
 	string code;
 	Poco::XML::AutoPtr<Poco::XML::NodeList> childrenList = docIteratorNode->childNodes();
@@ -112,19 +112,19 @@ GraphicAction *getGrayAction(Poco::XML::Node* docIteratorNode)
 	return NULL;
 }
 
-GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode)
+GraphicAction *JobXMLParser::getResizeAction(Poco::XML::Node* docIteratorNode)
 {
 	double Fx,Fy;
 	string inter;
 	int interValue=INTER_LINEAR;
-	Poco::XML::AutoPtr<Poco::XML::Node *> prop = docIteratorNode->firstChild();
+	Poco::XML::Node * prop = docIteratorNode->firstChild();
 	
 	while (prop!=NULL)
 	{
 		if (prop->nodeName()=="scaleFactorX")
-			Fx=atoi(prop->getNodeValue());		
+			Fx=atoi(prop->getNodeValue().c_str());
 		else if (prop->nodeName()=="scaleFactorY")
-			Fy=atoi(prop->getNodeValue());
+			Fy=atoi(prop->getNodeValue().c_str());
 		else if (prop->nodeName()=="scaleFactorX")
 			inter=prop->getNodeValue();
 	}
@@ -144,24 +144,25 @@ GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode)
 	
 }
 
-GraphicAction *getGaussianBlurAction(Poco::XML::Node* docIteratorNode)
+GraphicAction *JobXMLParser::getGaussianBlurAction(Poco::XML::Node* docIteratorNode)
 {
 	Size ksize;
 	int Sx,Sy;
 	string borderType;
-	Poco::XML::AutoPtr<Poco::XML::Node *> prop = docIteratorNode->firstChild();
+	int borderTypeValue;
+	Poco::XML::Node * prop = docIteratorNode->firstChild();
 	
 	while (prop!=NULL)
 	{
 		if (prop->nodeName()=="kSize")
 		{
-			int ks=atoi(prop->getNodeValue());
+			int ks=atoi(prop->getNodeValue().c_str());
 			ksize=Size(ks,ks);
 		}
 		else if (prop->nodeName()=="SigmaX")
-			Sx=atoi(prop->getNodeValue());
+			Sx=atoi(prop->getNodeValue().c_str());
 		else if (prop->nodeName()=="SigmaY")
-			Sy=atoi(prop->getNodeValue());
+			Sy=atoi(prop->getNodeValue().c_str());
 		else if (prop->nodeName()=="borderType")
 			borderType=prop->getNodeValue();
 	}
