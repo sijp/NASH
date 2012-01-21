@@ -1,4 +1,7 @@
 #include "../include/JobXMLParser.h"
+#include "../include/GrayAction.h"
+#include "../include/BlurAction.h"
+#include "../include/ResizeAction.h"
 
 JobXMLParser::JobXMLParser()
 {
@@ -99,7 +102,7 @@ void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 	}
 }
 
-GraphicAction *JobXMLParser::getGrayAction(Poco::XML::Node* docIteratorNode)
+GraphicAction* JobXMLParser::getGrayAction(Poco::XML::Node* docIteratorNode)
 {
 	string code;
 	Poco::XML::AutoPtr<Poco::XML::NodeList> childrenList = docIteratorNode->childNodes();

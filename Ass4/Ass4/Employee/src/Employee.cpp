@@ -6,7 +6,7 @@
 // Description :
 //============================================================================
 #include "../include/Employee.h"
-
+#include "../include/JobXMLParser.h"
 		/*
 		 * init a new employee
 		 */

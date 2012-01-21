@@ -11,11 +11,10 @@
 #include <iostream>
 #include <string>
 
-class Job;
-
-#include "../include/Employee.h"
-#include "../include/GraphicProcess.h"
 #include "../include/HttpLineInterperter.h"
+#include "../include/Employee.h"
+#include "../include/GraphicAction.h"
+#include "../include/GraphicProcess.h"
 
 using namespace std;
 

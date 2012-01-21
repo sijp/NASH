@@ -22,10 +22,7 @@
 //#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
-class Employee;
 
-//#include "../include/Job.h"
-#include "../include/JobXMLParser.h"
 #include "../include/HttpLineInterperter.h"
 
 using namespace std;
