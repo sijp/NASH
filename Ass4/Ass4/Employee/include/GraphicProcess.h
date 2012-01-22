@@ -15,6 +15,13 @@
 using namespace cv;
 using namespace std;
 
+/**
+ *
+ * GraphicProcess: this class stores an image and a vector of GrapihcAction's which once the process 
+ * method is called adds the effects specified in the GraphicAction's vectors in a sequential manner.
+ *
+ */
+
 class GraphicProcess
 {
 	
@@ -23,8 +30,23 @@ class GraphicProcess
 		vector<GraphicAction *> actions;
 	public:
 		GraphicProcess();
+		/**
+		 *
+		 * sets the internal image
+		 *
+		 */
 		void setImage(Mat* img);
+		/**
+		 *
+		 * adds a new effect to the list of effects
+		 *
+		 */
 		void addAction(GraphicAction *a);
+		/**
+		 *
+		 * process the effects
+		 *
+		 */
 		void process(Mat &dst);
 		~GraphicProcess();
 		void print();

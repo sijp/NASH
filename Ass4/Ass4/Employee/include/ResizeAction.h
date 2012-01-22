@@ -12,6 +12,13 @@
 
 using namespace cv;
 
+/**
+ *
+ * ResizeAction: resizes an image
+ * inherits from GraphicAction, see GraphicAction for more details
+ *
+ */
+
 class ResizeAction:public GraphicAction
 {
 	private:

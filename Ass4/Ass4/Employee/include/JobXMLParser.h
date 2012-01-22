@@ -18,6 +18,13 @@
 
 using namespace std;
 
+/**
+ *
+ * JobXMLParser: parses an XML string into a Job object.
+ * you mush initialize it then call parseXML, parseDocument and only then getJob to get the job.
+ *
+ */
+
 class JobXMLParser
 {
 	private:
@@ -26,14 +33,56 @@ class JobXMLParser
 		Job job;
 	public:
 		JobXMLParser();
+		/**
+		 *
+		 * sets the XMLData to the string specified
+		 *
+		 */
 		JobXMLParser(string);
+		/**
+		 *
+		 * parses the document object model
+		 *
+		 */
 		void parseDocument();
+		/**
+		 *
+		 * gets the job
+		 *
+		 */
 		Job &getJob();
+		/**
+		 *
+		 * parses the XML into a DOM object
+		 *
+		 */
 		void parseXML();
+		/**
+		 *
+		 * adds an effect from the <effectlist> tag in the XML
+		 *
+		 */
 		void addEffects(Poco::XML::Node* docIteratorNode);
 		~JobXMLParser();
+		
+		/**
+		 *
+		 * analyze the GaussianBlur tag
+		 *
+		 */
 		GraphicAction *getGaussianBlurAction(Poco::XML::Node* docIteratorNode);
+		/**
+		 *
+		 * analyze the Resize tag
+		 *
+		 */
 		GraphicAction *getResizeAction(Poco::XML::Node* docIteratorNode);
+		/**
+		 *
+		 * analyze the Grayscale tag
+		 *
+		 */
+		
 		GraphicAction *getGrayAction(Poco::XML::Node* docIteratorNode);
 
 };

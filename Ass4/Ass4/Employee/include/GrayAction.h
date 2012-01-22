@@ -13,6 +13,13 @@
 
 using namespace cv;
 
+/**
+ *
+ * turns the image into grayscale
+ * inherits from GraphicAction, see GraphicAction for more details
+ *
+ */
+
 class GrayAction:public GraphicAction
 {
 	private:
