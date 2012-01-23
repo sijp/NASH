@@ -74,15 +74,43 @@ public class ConnectionHandler implements Runnable {
     
     private void processByteData()
     {
-    	int pos = protocol.getContentType().indexOf("/");
-    	String dataType = protocol.getContentType().substring(0, pos);
-    	//TODO: divide each http request to the appropiate method
-    	/*
-    	*if (dataType.equals("PUT") && this.protocol.getContentType().contains("upload"))
-    	*	this.uploadNewImageFromClient();
-    	*else if (dataType.equals("PUT") && this.protocol.getContentType().contains("="))
-    	*	this.uploadNewImageFromEmployee();
-  		*/
+    	String dataType = this.protocol.getContentType();
+    	//TODO: implement all this methods!
+    	
+    	//client uploads a new image
+    	if (dataType.equals("PUT /upload"))
+    		this.uploadNewImageFromClient();
+    	//employee uploads an edited image
+    	else if (dataType.subSequence(0,2).equals("PUT"))
+    		this.uploadNewImageFromEmployee();
+    	//request for all the representations of a source
+    	else if (dataType.contains("GET /photos/") &&
+    			!(dataType.contains("=")))
+    		this.allRepresentationsOfSource();
+  		//client asks for a specific representation
+    	else if (dataType.contains("GET /photos/") &&
+    			dataType.contains("="))
+    		this.getRepresentation();
+    	//shows all photos and all representations
+    	else if (dataType.contains("GET /photos"))
+    		this.allPhotosAndRepresentations();
+    	//request for a spesific job
+    	else if (dataType.contains("GET /jobs/"))
+    		this.getJob();
+    	//request for all jobs
+    	else if (dataType.contains("GET /jobs"))
+    		this.getAllJobs();
+    	//This request is also used by the client in order to submit a new job
+    	else if (dataType.contains("POST /photos/"))
+    		this.postNewJob();
+    	//This request is used by employees to ask for a new job. 
+    	else if(dataType.contains("POST /jobs/"))
+    		this.getNewJobForEmployee();
+    	//If a client calls this page, the server should shutdown gracefully. If an employee tries to
+    	//reach the server when it is down - he should exit gracefully as well.
+    	else if (dataType.contains("POST /shutdown"))
+    		this.shutdown()
+    		
     }
       
       // Starts listening
