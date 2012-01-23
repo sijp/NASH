@@ -14,7 +14,6 @@ using namespace cv;
 
 BlurAction::BlurAction(Size ks,double sx,double sy, int bt):ksize(ks),sigmaX(sx),sigmaY(sy),borderType(bt)
 {
-	cout<<"BlurAction:"<<sx<<","<<sy<<","<<bt<<endl;
 }
 
 void BlurAction::process(const Mat &src,Mat &dst)

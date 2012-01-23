@@ -24,10 +24,9 @@
 									resConfiguration->getResource() +
 									"/index.php?rep=" + this->repDownload +
 									" HTTP/1.1";
-			cout<<downloadRequest<<endl;
 			employee.send(downloadRequest);
 			employee.send("Host: "+employee.getHost()+"\n");
-/*			
+			
 			HttpLineInterperter downResponsetInterperter;
 			string s;
 			while(employee.getFrameAscii(s) && s.size()>1)
@@ -36,7 +35,7 @@
 				s.clear();
 			}
 			//if we succeded in downloading the image
-			if(downResponsetInterperter.getStatus() == "200")
+			if(downResponsetInterperter.getStatus() == "200 OK")
 			{
 				//init a new byte array in the size of the content length
 				int byteLength = downResponsetInterperter.getContentLength();
@@ -44,14 +43,15 @@
 				employee.getBytes(dataByte , byteLength);
 				//dataBytes holds the bytes for the image
 				this->mimeType = downResponsetInterperter.getContentType();
-				vector<uchar> vecByte(dataByte , dataByte + sizeof(dataByte)/sizeof(uchar));
+				//cout<<dataByte<<endl;
+				vector<uchar> vecByte(dataByte , dataByte + byteLength/sizeof(uchar));
 				//-1 as a flag means we get the image as is.
-				imdecode(Mat(vecByte) , -1);
+				this->image=imdecode(Mat(vecByte) , -1);
 
 				this->gP.setImage(&(this->image));
-
+				delete [] dataByte;
 				return true;
-			}*/
+			}
 			return false;
 		}
 
@@ -60,7 +60,10 @@
 		 */
 		void Job::process()
 		{
+			cout<<"fdsfdsa"<<endl;
+			imwrite("input.jpg",this->image);
 			this->gP.process(this->editedImage);
+			imwrite("output.jpg",this->editedImage);
 		}
 
 		/*
@@ -82,7 +85,7 @@
 			 * sending the edited image in bytes
 			 */
 			int pos = this->mimeType.find("/");
-			string imgExt = this->mimeType.substr(pos+1);
+			string imgExt = "."+this->mimeType.substr(pos+1);
 			vector<uchar> vecByte;
 			imencode(imgExt , this->editedImage , vecByte);
 			uchar* buf = vecByte.data();

@@ -34,6 +34,8 @@ class Job
 		 */
 		Job();
 
+		Job(const Job&j);
+
 		/*
 		 * downloads the image from the manager, using resource id and repdownload
 		 */

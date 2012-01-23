@@ -150,7 +150,7 @@ GraphicAction *JobXMLParser::getResizeAction(Poco::XML::Node* docIteratorNode)
 	else if (inter=="INTER_LANCZOS4")
 		interValue=INTER_LANCZOS4;
 		
-	return new ResizeAction(Size(5,5), Fx,Fy, interValue);
+	return new ResizeAction(Size(0,0), Fx,Fy, interValue);
 	
 }
 
@@ -178,7 +178,7 @@ GraphicAction *JobXMLParser::getGaussianBlurAction(Poco::XML::Node* docIteratorN
 		else if (prop->nodeName()=="borderType")
 			borderType=prop->firstChild()->getNodeValue();
 	}
-		
+	borderTypeValue=BORDER_CONSTANT;
 	if (borderType=="BORDER_CONSTANT")
 		borderTypeValue=BORDER_CONSTANT;
 	else if (borderType=="BORDER_DEFAULT")

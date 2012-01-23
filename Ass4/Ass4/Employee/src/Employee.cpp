@@ -22,7 +22,7 @@
 		
 		string Employee::getHost()
 		{
-			return this->sa_.host().toString();
+			return this->host_;
 		}
 
 		/*
@@ -39,6 +39,7 @@
 					sleep(30000);
 				else
 					this->doJob(data , &resConfiguration);
+				this->toRun=false;
 			}
 		}
 
@@ -61,7 +62,6 @@
 			uchar* dataByte = new uchar[byteLength];
 
 			this->getBytes(dataByte , byteLength);
-			cout<<dataByte<<endl;
 			return dataByte;
 
 		}
@@ -77,14 +77,15 @@
 			JobXMLParser xmlDecoder(strData);
 			xmlDecoder.parseXML();
 			xmlDecoder.parseDocument();
-			Job job = xmlDecoder.getJob();
+			Job &job = xmlDecoder.getJob();
 			bool flag;
 			flag = job.download(*(this) , resConfiguration);
-			/*if (flag)
+			if (flag)
 			{
 				job.process();
+				
 				job.upload(*(this) , resConfiguration);
-			}*/
+			}
 		}
 
 		/*
@@ -116,14 +117,13 @@
 		bool Employee::getBytes(uchar frame[] , int bytesToRead)
 		{
 			int tmp = 0;
-			cout<<"needs to read "<<bytesToRead<<" bytes"<<endl;
 			try
 			{
 				while (bytesToRead > tmp)
 				{
 					//frame + tmp = &frame[tmp] , pointers arithmetics
-					cout<<"read "<<tmp<<" bytes"<<endl;
 					tmp = tmp + this->socket_.receiveBytes(frame + tmp , bytesToRead - tmp);
+					cout<<"read "<<tmp<<" bytes"<<endl;
 				}
 			}
 			catch(Exception & error)
@@ -133,6 +133,8 @@
 			}
 			return true;
 		}
+		
+		
 
 		/*
 		 *
