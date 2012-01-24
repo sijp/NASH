@@ -74,19 +74,22 @@ public class ConnectionHandler implements Runnable {
     
     private void processByteData()
     {
-    	String dataType = this.protocol.getContentType();
+    	String dataType = this.protocol.getRequestType();
     	//TODO: implement all this methods!
     	
     	//client uploads a new image
     	if (dataType.equals("PUT /upload"))
-    		this.uploadNewImageFromClient();
+    		this.uploadNewImage("0");
     	//employee uploads an edited image
     	else if (dataType.subSequence(0,2).equals("PUT"))
-    		this.uploadNewImageFromEmployee();
+    	{
+    		String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
+    		this.uploadNewImage(rep);
+    	}
     	//request for all the representations of a source
     	else if (dataType.contains("GET /photos/") &&
     			!(dataType.contains("=")))
-    		this.allRepresentationsOfSource();
+    		this.allRepresentationsOfResource();
   		//client asks for a specific representation
     	else if (dataType.contains("GET /photos/") &&
     			dataType.contains("="))
@@ -111,6 +114,85 @@ public class ConnectionHandler implements Runnable {
     	else if (dataType.contains("POST /shutdown"))
     		this.shutdown()
     		
+    }
+    
+    void uploadNewImage(String rep)
+    {
+    	File photosDir=new File("./photos/");
+    	if (!photosDir.exists() || !photosDir.isDirectory())
+    		photosDir.mkdir();
+    	//TODO needs to write a class for handling resources
+    	String id=ResourceCloset.getInstance().getNewResourceId();
+    	File resDir=new File("./photos/"+id+"/");
+    	resDir.mkdir();
+    	FileOutputStream writer = new FileOutputStream(new File("./photos/"+id+"/"+rep));
+    	writer.write(this.byteData);
+    	writer.flush();
+    	
+    	this.sendUploadNewImageResponse(id,rep);
+    	
+    }
+    
+    void sendUploadNewImageResponse(String id,String rep)
+    {
+    	
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+    	String htmlResponse="<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+    			"\t<head>\n"+
+    			"\t\t<title>"+serverName+"/photos/"+id+"</title>\n"+
+    			"\t</head>\n"+
+    			"\t<body>\n"+
+    			"\t\t<b>HTTP/1.1 201 Created:</b>\n"+
+    			"\t\t<a href=\"photos/"+id+"\">Resource "+id+"</a>\n"+
+    			"\t\t has been created successfully.<br/>"+
+    			"\t\tOrigianl image can be found <a href=\"photos/"+id+"?rep="+rep+"\">here</a>.\n"+
+    			"\t</body>\n"+
+    			"</html>";
+    			
+    	
+    	this.out.println("HTTP/1.1 201 Created");
+    	this.out.println("Server: "+ serverName);
+    	this.out.println("Content-Type: text/html; charset=utf-8");
+    	this.out.println("Content-Length: "+htmlResponse.length());
+    	this.out.println();
+    	this.out.print(htmlResponse);
+    }
+    
+    private void allRepresentationsOfResource()
+    {
+    	String res=this.protocol.getRequestType().substring(12);
+    	
+    }
+    
+    private void getRepresentation()
+    {
+    	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("?"));//TODO lo kolel
+    	String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
+    	if (JobManagerImpl.getInstance().isCompleted(res,rep))
+    	{
+    		this.out.println("HTTP/1.1 200 OK");
+    		this.out.println("Server: "+this.clientSocket.getLocalAddress().getHostAddress());
+    		this.out.println("Content-Type: " + ResourceClosetImple.getInstance().getOriginalMimeType(res));
+    		this.out.println("Content-Length: "+ResourceClosetImple.getInstance().getRepresentationFile(res,rep).length());
+    		this.out.println();
+    		this.out.flush();
+    		
+    		byte data[]=new byte[ResourceClosetImple.getInstance().getRepresentationFile(res,rep).length()];
+    		FileInputStream reader=new FileInputStream(ResourceClosetImple.getInstance().getRepresentationFile(res,rep));
+    		reader.read(data);
+    		
+    		this.clientSocket.getOutputStream().write(data);
+    	}
+    	else if (JobManagerImpl.getInstance().isAssigned(res,rep))
+    	{
+    		this.out.println("HTTP/1.1 206 Partial Content");
+    		this.out.println();
+    	}
+    	else
+    	{
+    		this.out.println("HTTP/1.1 404 Not Found");
+    		this.out.println();
+    	}
     }
       
       // Starts listening

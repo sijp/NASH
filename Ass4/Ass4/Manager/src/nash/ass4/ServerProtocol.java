@@ -36,4 +36,10 @@ public interface ServerProtocol
 	 * @return
 	 */
 	public String getContentType();
+	
+	/**
+	 * 
+	 * @return the request type
+	 */
+	public String getRequestType();
 }

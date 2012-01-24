@@ -13,7 +13,7 @@ public class HttpProtocol implements ServerProtocol {
 	private String reqResource;
 	private String reqContentType;
 	private int reqContentLength;
-    
+	
 	public HttpProtocol() 
     {
 		
@@ -40,9 +40,11 @@ public class HttpProtocol implements ServerProtocol {
 		String start = msg.substring(0 , pos1);
 		if(start.equals("GET") || start.equals("PUT") || start.equals("POST"))
 		{
-			this.reqType = start;
+			/*this.reqType = start;
 			int pos2 = msg.indexOf(" ", pos1+1);
-			this.reqResource = msg.substring(pos1+1, pos2);
+			this.reqResource = msg.substring(pos1+1, pos2);*/
+			
+			this.reqType=msg;
 		}
 		
 		else if(start.equals("Content-Type:"))
@@ -56,6 +58,10 @@ public class HttpProtocol implements ServerProtocol {
 		}	
 	}
 	
+	public String getRequestType()
+	{
+		return this.reqType;
+	}
 	
 
 	/* (non-Javadoc)
