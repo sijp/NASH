@@ -35,6 +35,8 @@ class GraphicProcess
 		 * sets the internal image
 		 *
 		 */
+		GraphicProcess(const GraphicProcess &);
+		GraphicProcess &operator=(const GraphicProcess &);
 		void setImage(Mat* img);
 		/**
 		 *

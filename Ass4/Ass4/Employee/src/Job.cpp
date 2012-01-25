@@ -10,7 +10,7 @@
 		/*
 		 * init a new job.
 		 */
-		Job::Job()
+		Job::Job():repDownload(),repUpload(),image(),mimeType(),editedImage(),gP()
 		{
 
 		}

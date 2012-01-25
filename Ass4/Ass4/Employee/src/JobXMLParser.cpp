@@ -3,7 +3,7 @@
 #include "../include/BlurAction.h"
 #include "../include/ResizeAction.h"
 
-JobXMLParser::JobXMLParser()
+JobXMLParser::JobXMLParser():XMLData(),fDom(),job()
 {
 }
 
@@ -13,7 +13,7 @@ JobXMLParser::~JobXMLParser()
 
 }
 
-JobXMLParser::JobXMLParser(string xml):XMLData(xml)
+JobXMLParser::JobXMLParser(string xml):XMLData(xml),fDom(),job()
 {
 }
 
@@ -91,7 +91,7 @@ void JobXMLParser::parseDocument()
 void JobXMLParser::addEffects(Poco::XML::Node* docIteratorNode)
 {
 	Poco::XML::NodeList * effects = docIteratorNode->childNodes();
-	int i;
+	unsigned int i;
 	for (i=0;i<effects->length();i++)
 	{
 		GraphicAction *ga;
@@ -126,7 +126,7 @@ GraphicAction *JobXMLParser::getResizeAction(Poco::XML::Node* docIteratorNode)
 	string inter;
 	int interValue=INTER_LINEAR;
 	Poco::XML::AutoPtr<Poco::XML::NodeList> props = docIteratorNode->childNodes();
-	int i;
+	unsigned int i;
 	for (i=0;i<props->length();i++)
 	{
 		Poco::XML::Node *prop=props->item(i);
@@ -161,7 +161,7 @@ GraphicAction *JobXMLParser::getGaussianBlurAction(Poco::XML::Node* docIteratorN
 	string borderType;
 	int borderTypeValue;
 	Poco::XML::AutoPtr<Poco::XML::NodeList> props = docIteratorNode->childNodes();
-	int i;
+	unsigned int i;
 	for (i=0;i<props->length();i++)
 	{
 
