@@ -112,7 +112,7 @@ public class ConnectionHandler implements Runnable {
     	//If a client calls this page, the server should shutdown gracefully. If an employee tries to
     	//reach the server when it is down - he should exit gracefully as well.
     	else if (dataType.contains("POST /shutdown"))
-    		this.shutdown()
+    		this.shutdown();
     		
     }
     

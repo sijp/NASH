@@ -11,9 +11,35 @@ import java.util.Vector;
  *
  */
 public interface ResourceCloset {
+	/**
+	 * 
+	 * @return
+	 */
 	public String getNewResourceId();
+	/**
+	 * 
+	 * @param resId
+	 * @return
+	 */
 	public String getNewRepresentationId(String resId);
-	public Vector<Job> getJobsByRepresentation(String resId,string repId);
+	/**
+	 * 
+	 * @param resId
+	 * @param repId
+	 * @return
+	 */
+	public Vector<Job> getJobsByRepresentation(String resId , String repId);
+	/**
+	 * 
+	 * @param resId
+	 * @return
+	 */
 	public String getOriginalMimeType(String resId);
-	public File getRepresentationFile(res,rep);
+	/**
+	 * 
+	 * @param res
+	 * @param rep
+	 * @return
+	 */
+	public File getRepresentationFile(String res ,String rep);
 }

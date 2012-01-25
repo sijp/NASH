@@ -9,8 +9,8 @@ package nash.ass4;
  */
 public interface Job {
 	public String getId();
-	public String getRepresentation();
 	public String getResource();
+	public String getRepresentation();
 	public String getXML();
 	public String getStatus();
 }
