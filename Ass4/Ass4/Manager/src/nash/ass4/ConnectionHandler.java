@@ -349,7 +349,7 @@ public class ConnectionHandler implements Runnable {
     		Job job = JobManagerImpl.getInstance().getNonSubmittedJobs().elementAt(i);
     		htmlResponse+="/t/t/t/t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
     				"<a href=\"photos/" + job.getResource() + "\">Resource " +
-    				job.getResource() + "</a>.</li>\n"
+    				job.getResource() + "</a>.</li>\n";
     	}
     	htmlResponse+="/t/t/t</ul>\n" +
     			"\t\t</li>\n";
@@ -357,7 +357,7 @@ public class ConnectionHandler implements Runnable {
     			"\t\t\t<ul>\n" ;
     	for (int i=0 ; i<JobManagerImpl.getInstance().getSubmittedJobs().size() ; i++)
     	{
-    		Job job = JobManagerImpl.getInstance().getSubmitted().elementAt(i);
+    		Job job = JobManagerImpl.getInstance().getSubmittedJobs().elementAt(i);
     		htmlResponse+="\t\t\t\t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
     				"<a href=\"photos/" + job.getResource() + "\">Resource " +
     				job.getResource() + "</a>.</li>\n";
@@ -366,9 +366,9 @@ public class ConnectionHandler implements Runnable {
     			"\t\t</li>\n";
     	htmlResponse+="\t\t<li>Finished Jobs\n" +
     			"\t\t\t<ul>\n" ;
-    	for (int i=0 ; i<JobManagerImpl.getInstance().getFinished().size() ; i++)
+    	for (int i=0 ; i<JobManagerImpl.getInstance().getFinishedJobs().size() ; i++)
     	{
-    		Job job = JobManagerImpl.getInstance().getFinished().elementAt(i);
+    		Job job = JobManagerImpl.getInstance().getFinishedJobs().elementAt(i);
     		htmlResponse+="\t\t\t\t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
     				"<a href=\"photos/" + job.getResource() + "\">Resource " +
     				job.getResource() + "</a>.</li>\n";
