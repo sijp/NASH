@@ -19,8 +19,10 @@ public class ConnectionHandler implements Runnable {
     Socket clientSocket;
     ServerProtocol protocol;
     byte[] byteData;
+    MultipleClientProtocolServer multipleClientProtocolServer;
     
-    public ConnectionHandler(Socket acceptedSocket, ServerProtocol p) 
+    public ConnectionHandler(Socket acceptedSocket, ServerProtocol p , 
+    		MultipleClientProtocolServer multipleClientProtocolServer) 
     {
       in = null;
       out = null;
@@ -29,6 +31,7 @@ public class ConnectionHandler implements Runnable {
       System.out.println("Accepted connection from client!");
       System.out.println("The client is from: " + 
     		  acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
+      this.multipleClientProtocolServer = multipleClientProtocolServer;
     }
 	
 	/* (non-Javadoc)
@@ -66,9 +69,11 @@ public class ConnectionHandler implements Runnable {
         {
         	 isEnd = protocol.processMessage(msg);
         }
-        byteData = new byte[protocol.getContentLength()];
-        clientSocket.getInputStream().read(byteData);
-        
+        if (this.protocol.getContentLength() > 0)
+        {
+        	byteData = new byte[protocol.getContentLength()];
+        	clientSocket.getInputStream().read(byteData);
+        }
         this.processByteData();
      }
     
@@ -132,6 +137,7 @@ public class ConnectionHandler implements Runnable {
 			writer = new FileOutputStream(newRes.getRepresentationFile(rep));
 			writer.write(this.byteData);
 	    	writer.flush();
+	    	newRes.setReady();
 		}
 		catch (IOException e) 
 		{
@@ -336,14 +342,127 @@ public class ConnectionHandler implements Runnable {
     			"<body>\n" +
     			"\t<p>Jobs Status</p>\n" +
     			"\t<ol>\n";
-    	htmlResponse+="<li>Non Submitted Jobs\n" +
-    			"<ul>\n" ;
-    	for (int i=0;i<JobManagerImpl.getInstance().getAssignedJobs().size();i++)
+    	htmlResponse+="\t\t<li>Non Submitted Jobs\n" +
+    			"\t\t\t<ul>\n" ;
+    	for (int i=0 ; i<JobManagerImpl.getInstance().getNonSubmittedJobs().size() ; i++)
     	{
-    		Job j = JobManagerImpl.getInstance().getAssignedJobs().elementAt(i);
-    		htmlResponse+="<li><a href=\"jobs/"+j.getId()+"\">JOB "+j.getId()+"</a>:" +
-    				"<a href=\"photos/""\"></a></li>"
+    		Job job = JobManagerImpl.getInstance().getNonSubmittedJobs().elementAt(i);
+    		htmlResponse+="/t/t/t/t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
+    				"<a href=\"photos/" + job.getResource() + "\">Resource " +
+    				job.getResource() + "</a>.</li>\n"
     	}
+    	htmlResponse+="/t/t/t</ul>\n" +
+    			"\t\t</li>\n";
+    	htmlResponse+="\t\t<li>Submitted Jobs\n" +
+    			"\t\t\t<ul>\n" ;
+    	for (int i=0 ; i<JobManagerImpl.getInstance().getSubmittedJobs().size() ; i++)
+    	{
+    		Job job = JobManagerImpl.getInstance().getSubmitted().elementAt(i);
+    		htmlResponse+="\t\t\t\t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
+    				"<a href=\"photos/" + job.getResource() + "\">Resource " +
+    				job.getResource() + "</a>.</li>\n";
+    	}
+    	htmlResponse+="\t\t\t</ul>\n" +
+    			"\t\t</li>\n";
+    	htmlResponse+="\t\t<li>Finished Jobs\n" +
+    			"\t\t\t<ul>\n" ;
+    	for (int i=0 ; i<JobManagerImpl.getInstance().getFinished().size() ; i++)
+    	{
+    		Job job = JobManagerImpl.getInstance().getFinished().elementAt(i);
+    		htmlResponse+="\t\t\t\t<li><a href=\"jobs/"+job.getId()+"\">JOB "+job.getId()+"</a>:" +
+    				"<a href=\"photos/" + job.getResource() + "\">Resource " +
+    				job.getResource() + "</a>.</li>\n";
+    	}
+    	htmlResponse+="\t\t\t</ul>\n" +
+    			"\t\t</li>\n" +
+    			"\t</ol>\n " +
+    			"</body>\n" +
+    			"</html>";
+    	
+    	this.out.println("HTTP/1.1 200 OK");
+    	this.out.println("Server: " + serverName);
+    	this.out.println("Content-Type: text/html; charset=utf-8");
+    	try {
+			this.out.println("Content-Length: " + htmlResponse.getBytes().length);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	this.out.println();
+    	this.out.print(htmlResponse);
+    	this.out.flush();
+    }
+    
+    public void postNewJob()
+    {
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+
+    	String resId = this.protocol.getRequestType().substring(13);
+    	int pos = this.protocol.getContentType().indexOf(":");
+    	String charset = this.protocol.getContentType().substring(pos+2);
+    	String jobXml = new String(this.byteData , charset);
+    	Job newJob = JobManagerImpl.getInstance().getNewJob(resId , jobXml);
+    	
+    	String htmlResponse = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+    			"\t<head>\n" +
+    			"\t\t<title>" + serverName + "/photos/" + resId + "/" +newJob.getRepresentationTarget() +
+    			"</title>\n" +
+    			"\t</head>" +
+    			"\t<body>" +
+    			"\t\t<b>HTTP/1.1 202 Accepted:</b></br>\n" +
+    			"\t\tRepresentation image can be found<a href=\"photos/" + resId + "?rep=" +
+    				newJob.getRepresentationTarget() + ">here</a>\n" +
+    				"\t</body>\n" +
+    				"</html>";
+    	
+    	this.out.println("HTTP/1.1 202 Accepted");
+    	this.out.println("Server: " + serverName);
+    	this.out.println("Content-Type: text/xml; charset=utf-8");
+    	try {
+			this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	this.out.println();
+    	this.out.print(htmlResponse);
+    	this.out.flush();
+    	
+    }
+    
+    private void getNewJobForEmployee()
+    {
+    	Job job = JobManagerImpl.getInstance().requestJob();
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+
+    	if(job != null)
+    	{
+	    	this.out.println("HTTP/1.1 200 OK");
+	    	this.out.println("Server: " + serverName);
+	    	this.out.println("resource: " + job.getResource());
+	    	this.out.println("Content-Type: text/xml; charset=utf-8");
+	    	try {
+				this.out.println("Content-Length: " + job.getXML().getBytes("UTF-8").length);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+	    	
+	    	this.out.println();
+	    	this.out.print(job.getXML());
+	    	this.out.flush();
+    	}
+    	
+    	else
+    	{
+    		this.out.println("HTTP/1.1 204 No Content");
+	    	this.out.println("Server: " + serverName);
+    	}
+    	
+    }
+    
+    public void shutdown()
+    {
+    	this.multipleClientProtocolServer.shutDown();
     }
       
       // Starts listening
