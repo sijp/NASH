@@ -32,9 +32,9 @@ public class ResourceClosetImpl implements ResourceCloset {
 	 * @see nash.ass4.ResourceCloset#addNewResource(java.lang.String)
 	 */
 	@Override
-	public Resource addNewResource(String mimeType) {
-		// TODO Auto-generated method stub
-		return null;
+	public Resource addNewResource(String mimeType)
+	{
+		Resource ret=new Resource();
 	}
 
 	/* (non-Javadoc)
