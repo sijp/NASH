@@ -3,43 +3,30 @@
  */
 package nash.ass4;
 
-import java.io.File;
 import java.util.Vector;
 
 /**
  * @author nadav
  *
  */
-public interface ResourceCloset {
+public interface ResourceCloset 
+{
 	/**
-	 * 
-	 * @return
+	 * adds a new resource to the closet (via Yardena)
+	 * and returns it
 	 */
-	public String getNewResourceId();
-	/**
-	 * 
-	 * @param resId
-	 * @return
-	 */
-	public String getNewRepresentationId(String resId);
+	public Resource addNewResource(String mimeType);
+	
 	/**
 	 * 
 	 * @param resId
-	 * @param repId
-	 * @return
+	 * @return a resource by the resId
 	 */
-	public Vector<Job> getJobsByRepresentation(String resId , String repId);
+	public Resource getResource(String resId);
+	
 	/**
 	 * 
-	 * @param resId
-	 * @return
+	 * @return a vector of all the resources
 	 */
-	public String getOriginalMimeType(String resId);
-	/**
-	 * 
-	 * @param res
-	 * @param rep
-	 * @return
-	 */
-	public File getRepresentationFile(String res ,String rep);
+	public Vector<Resource> getResList();
 }

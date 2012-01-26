@@ -10,10 +10,38 @@ import java.util.Vector;
  *
  */
 public interface JobManager {
-	public Vector<Job> getJobsByRepresentation(String resource,String representation);
-	public void addJob(String resource, String representation, Job j);
-	public boolean hasNewJob();
-	public boolean isCompleted(String res,String rep);
-	public boolean isAssigned(String res,String rep);
+	/**
+	 * change the statush of the job from preAssigned to assigned
+	 * or from assigned to completed.
+	 * and, move the job to the appropiate list.
+	 * @param job
+	 */
+	public void levelUp(Job job);
+	/**
+	 * adds a new job to the appropiate list
+	 * @param job
+	 */
+	public void addJob(Job job);
 	
+	/**
+	 * 
+	 * @param Id
+	 * @return a job by the id
+	 */
+	public Job getJob(String Id);
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isPreAssigned(String res , String rep);
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isAssigned(String res , String rep);
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isCompleted(String res , String rep);
 }

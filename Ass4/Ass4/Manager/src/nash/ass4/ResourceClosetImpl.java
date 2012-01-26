@@ -3,51 +3,52 @@
  */
 package nash.ass4;
 
-import java.io.File;
+import java.util.Vector;
 
 /**
  * @author nadav
  *
  */
 public class ResourceClosetImpl implements ResourceCloset {
-
 	
-	String id;
+	Vector<Resource> resList;
+	private static ResourceCloset resourceCloset; 
+	
+	public static ResourceCloset getInstance()
+	{
+		if(ResourceClosetImpl.resourceCloset == null)
+		{
+			resourceCloset = new ResourceClosetImpl();
+		}
+		return resourceCloset;
+	}
+	
+	private ResourceClosetImpl()
+	{
+		this.resList = new Vector<Resource>();
+	}
 	
 	/* (non-Javadoc)
-	 * @see nash.ass4.ResourceCloset#getNewResourceId()
+	 * @see nash.ass4.ResourceCloset#addNewResource(java.lang.String)
 	 */
 	@Override
-	public String getNewResourceId() {
+	public Resource addNewResource(String mimeType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	/* (non-Javadoc)
-	 * @see nash.ass4.ResourceCloset#getNewRepresentationId(java.lang.String)
+	 * @see nash.ass4.ResourceCloset#getResource(java.lang.String)
 	 */
 	@Override
-	public String getNewRepresentationId(String resId) {
+	public Resource getResource(String resId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * @see nash.ass4.ResourceCloset#getOriginalMimeType(java.lang.String)
-	 */
-	@Override
-	public String getOriginalMimeType(String resId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see nash.ass4.ResourceCloset#getRepresentationFile(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public File getRepresentationFile(String res, String rep) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public Vector<Resource> getResList()
+	{
+		return this.resList;
 	}
 
 }

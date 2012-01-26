@@ -13,7 +13,8 @@ public class JobImpl implements Job {
 	
 	private String id;
 	private String resourceId;
-	private String representationId;
+	private String representationSource;
+	private String representationTarget;
 	private String jobXml;
 	private String jobStatus;
 	
@@ -29,8 +30,8 @@ public class JobImpl implements Job {
 	 * @see nash.ass4.Job#getRepresentation()
 	 */
 	@Override
-	public String getRepresentation() {
-		return this.representationId;
+	public String getRepresentationSource() {
+		return this.representationSource;
 	}
 
 	/* (non-Javadoc)
@@ -55,6 +56,12 @@ public class JobImpl implements Job {
 	@Override
 	public String getStatus() {
 		return this.jobStatus;
+	}
+
+
+	@Override
+	public String getRepresentationTarget() {
+		return this.representationTarget;
 	}
 
 }

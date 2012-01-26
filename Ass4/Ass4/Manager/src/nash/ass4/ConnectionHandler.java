@@ -122,14 +122,24 @@ public class ConnectionHandler implements Runnable {
     	if (!photosDir.exists() || !photosDir.isDirectory())
     		photosDir.mkdir();
     	//TODO needs to write a class for handling resources
-    	String id=ResourceCloset.getInstance().getNewResourceId();
-    	File resDir=new File("./photos/"+id+"/");
+    	Resource newRes = ResourceClosetImpl.getInstance().addNewResource
+    			(this.protocol.getContentType());
+    	File resDir=new File("photos/"+newRes.getId()+"/");
     	resDir.mkdir();
-    	FileOutputStream writer = new FileOutputStream(new File("./photos/"+id+"/"+rep));
-    	writer.write(this.byteData);
-    	writer.flush();
+    	FileOutputStream writer;
+		try 
+		{
+			writer = new FileOutputStream(newRes.getRepresentationFile(rep));
+			writer.write(this.byteData);
+	    	writer.flush();
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
     	
-    	this.sendUploadNewImageResponse(id,rep);
+    	
+    	this.sendUploadNewImageResponse(newRes.getId() , rep);
     	
     }
     
@@ -161,8 +171,51 @@ public class ConnectionHandler implements Runnable {
     private void allRepresentationsOfResource()
     {
     	String res=this.protocol.getRequestType().substring(12);
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+    	Resource resource = ResourceClosetImpl.getInstance().getResource(res);
+    	String htmlResponse = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" +
+    			"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+    			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+    			"<head>\n" +
+    			"\t<title>" + serverName + "/photos/" + res + "</title>\n" +
+    			"</head>\n" +
+    			"<body>\n" +
+    			"\t<p>JOB STATUS CATEGORY</p>\n" +
+    			"\t<ol>\n";
+
+    	for(int i = 0 ; i < resource.getRepList().size() ; i++)
+    	{
+    		Representation repI = resource.getRepList().elementAt(i);
+    		htmlResponse+= "\t\t<li><a href=\"photos/" + res + "?rep=" + repI.getId() +
+    				"\">Representation " + repI.getId() + "</a>\n" +
+    				"\t\t\t<ul>\n";
+    		for(int j = 0 ; j < repI.getRepresentationJobs().size() ; j++)
+    		{
+    			Job jobJ = repI.getRepresentationJobs().elementAt(j);
+    			htmlResponse+= "\t\t\t\t<li><a href=\"jobs/" + jobJ.getId() + "\">" +
+    					"JOB " + jobJ.getId() + "</a>. Status - " + jobJ.getStatus() +"</li>\n";
+    		}
+    		htmlResponse+="\t\t\t</ul>\n" +
+    				"\t\t</li>\n";
+    	}
+    	htmlResponse+="\t\t</ol>\n" +
+    			"\t</body>\n" +
+    			"</html>";
     	
+    	this.out.println("HTTP/1.1 200 OK");
+    	this.out.println("Server: " + serverName);
+    	this.out.println("Content-Type: text/html; charset=utf-8");
+    	try {
+			this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	this.out.println();
+    	this.out.print(htmlResponse);
+    	this.out.flush();
     }
+    
     
     private void getRepresentation()
     {
@@ -172,16 +225,23 @@ public class ConnectionHandler implements Runnable {
     	{
     		this.out.println("HTTP/1.1 200 OK");
     		this.out.println("Server: "+this.clientSocket.getLocalAddress().getHostAddress());
-    		this.out.println("Content-Type: " + ResourceClosetImple.getInstance().getOriginalMimeType(res));
-    		this.out.println("Content-Length: "+ResourceClosetImple.getInstance().getRepresentationFile(res,rep).length());
+    		this.out.println("Content-Type: " + ResourceClosetImpl.getInstance().getResource(res).getOriginalMimeType());
+    		this.out.println("Content-Length: "+ResourceClosetImpl.getInstance().getResource(res).getRepresentationFile(rep).length());
     		this.out.println();
     		this.out.flush();
     		
-    		byte data[]=new byte[ResourceClosetImple.getInstance().getRepresentationFile(res,rep).length()];
-    		FileInputStream reader=new FileInputStream(ResourceClosetImple.getInstance().getRepresentationFile(res,rep));
-    		reader.read(data);
+    		byte data[]=new byte[(int)ResourceClosetImpl.getInstance().getResource(res).getRepresentationFile(rep).length()];
+    		FileInputStream reader;
+			try
+			{
+				reader = new FileInputStream(ResourceClosetImpl.getInstance().getResource(res).getRepresentationFile(rep));
+	    		reader.read(data);
+	    		this.clientSocket.getOutputStream().write(data);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
     		
-    		this.clientSocket.getOutputStream().write(data);
     	}
     	else if (JobManagerImpl.getInstance().isAssigned(res,rep))
     	{
@@ -192,6 +252,97 @@ public class ConnectionHandler implements Runnable {
     	{
     		this.out.println("HTTP/1.1 404 Not Found");
     		this.out.println();
+    	}
+    }
+    
+    private void allPhotosAndRepresentations()
+    {
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+
+    	String htmlResponse = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" +
+    			"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+    			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+    			"<head>\n" +
+    			"\t<title>photos</title>\n" +
+    			"</head>\n" +
+    			"<body>\n" +
+    			"\t<p>Photos</p>\n" +
+    			"\t<ol>\n";
+    	for (int i = 0 ; i < ResourceClosetImpl.getInstance().getResList().size() ; i++)
+    	{
+    		Resource res = ResourceClosetImpl.getInstance().getResList().elementAt(i);
+    		htmlResponse+="\t\t\t<li><a href=\"photos/" + res.getId() + "\">" +
+    				"Photo " + res.getId() + "</a>\n" +
+    				"\t\t\t\t<ol>\n";
+    		for(int j = 0 ; j < res.getRepList().size() ; j++)
+    		{
+    			Representation rep = res.getRepList().elementAt(j);
+    			htmlResponse+= "\t\t\t\t\t" +
+    					"<li><a href=\"photos/" + res.getId() + "?rep=" +
+    					rep.getId() + "\">Representation " + rep.getId() + "</a></li>\n";
+    		}
+    		htmlResponse+="\t\t\t\t</ol>\n" +
+    				"\t\t\t</li>";
+    	}
+    	htmlResponse+="\t</ol>\n" +
+    			"</body>\n" +
+    			"</html>";
+    	
+    	this.out.println("HTTP/1.1 200 OK");
+    	this.out.println("Server: " + serverName);
+    	this.out.println("Content-Type: text/html; charset=utf-8");
+    	try {
+			this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	this.out.println();
+    	this.out.print(htmlResponse);
+    	this.out.flush();
+    }
+    
+    private void getJob()
+    {
+    	String jobId = this.protocol.getRequestType().substring(10);
+    	Job job = JobManagerImpl.getInstance().getJob(jobId);
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+
+    	
+    	this.out.println("HTTP/1.1 200 OK");
+    	this.out.println("Server: " + serverName);
+    	this.out.println("Content-Type: text/xml; charset=utf-8");
+    	try {
+			this.out.println("Content-Length: " + job.getXML().getBytes("UTF-8").length);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	
+    	this.out.println();
+    	this.out.print(job.getXML());
+    	this.out.flush();
+    }
+    
+    private void getAllJobs()
+    {
+    	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
+
+    	String htmlResponse = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" +
+    			"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+    			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+    			"<head>\n" +
+    			"\t<title>" + serverName + "/jobs</title>\n" +
+    			"</head>\n" +
+    			"<body>\n" +
+    			"\t<p>Jobs Status</p>\n" +
+    			"\t<ol>\n";
+    	htmlResponse+="<li>Non Submitted Jobs\n" +
+    			"<ul>\n" ;
+    	for (int i=0;i<JobManagerImpl.getInstance().getAssignedJobs().size();i++)
+    	{
+    		Job j = JobManagerImpl.getInstance().getAssignedJobs().elementAt(i);
+    		htmlResponse+="<li><a href=\"jobs/"+j.getId()+"\">JOB "+j.getId()+"</a>:" +
+    				"<a href=\"photos/""\"></a></li>"
     	}
     }
       
