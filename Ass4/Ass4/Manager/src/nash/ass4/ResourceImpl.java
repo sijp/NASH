@@ -18,9 +18,10 @@ public class ResourceImpl implements Resource {
 	private String mimeType;
 	boolean ready;
 	
-	public ResourceImpl(String id , Representation zero , String mimeType)
+	public ResourceImpl(String id , String mimeType)
 	{
 		this.id = id;
+		Representation zero = new RepresentationImpl("0", this, null);
 		this.repList.add(zero);
 		this.mimeType = mimeType;
 		this.ready=false;
@@ -64,15 +65,10 @@ public class ResourceImpl implements Resource {
 	public Vector<Representation> getRepList() {
 		return this.repList;
 	}
-	public void setReady()
+	public void setReady(String repId)
 	{
-		this.ready=true;
+		this.getRepresentation(repId).setReady();
 	}
-	
-	public boolean isReady()
-	{
-		return this.ready;
-	}
-	
 
+	
 }

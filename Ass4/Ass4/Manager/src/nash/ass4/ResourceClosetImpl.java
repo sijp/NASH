@@ -34,7 +34,8 @@ public class ResourceClosetImpl implements ResourceCloset {
 	@Override
 	public Resource addNewResource(String mimeType)
 	{
-		Resource ret=new Resource();
+		Resource ret=new ResourceImpl(this.resList.size()+"" ,mimeType);
+		this.resList.add(ret);
 		return ret;
 	}
 
@@ -43,8 +44,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 	 */
 	@Override
 	public Resource getResource(String resId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.resList.elementAt(Integer.parseInt(resId.trim()));
 	}
 	
 	public Vector<Resource> getResList()

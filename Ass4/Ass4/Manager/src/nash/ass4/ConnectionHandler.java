@@ -137,7 +137,7 @@ public class ConnectionHandler implements Runnable {
 			writer = new FileOutputStream(newRes.getRepresentationFile(rep));
 			writer.write(this.byteData);
 	    	writer.flush();
-	    	newRes.setReady();
+	    	newRes.setReady(rep);
 		}
 		catch (IOException e) 
 		{
@@ -227,7 +227,7 @@ public class ConnectionHandler implements Runnable {
     {
     	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("?"));//TODO lo kolel
     	String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
-    	if (JobManagerImpl.getInstance().isCompleted(res,rep))
+    	if (JobManagerImpl.getInstance().isFinished(res,rep))
     	{
     		this.out.println("HTTP/1.1 200 OK");
     		this.out.println("Server: "+this.clientSocket.getLocalAddress().getHostAddress());
@@ -249,7 +249,7 @@ public class ConnectionHandler implements Runnable {
 			}
     		
     	}
-    	else if (JobManagerImpl.getInstance().isAssigned(res,rep))
+    	else if (JobManagerImpl.getInstance().isSubmitted(res,rep))
     	{
     		this.out.println("HTTP/1.1 206 Partial Content");
     		this.out.println();
@@ -382,11 +382,7 @@ public class ConnectionHandler implements Runnable {
     	this.out.println("HTTP/1.1 200 OK");
     	this.out.println("Server: " + serverName);
     	this.out.println("Content-Type: text/html; charset=utf-8");
-    	try {
-			this.out.println("Content-Length: " + htmlResponse.getBytes().length);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+    	this.out.println("Content-Length: " + htmlResponse.getBytes().length);
     	
     	this.out.println();
     	this.out.print(htmlResponse);
@@ -400,33 +396,39 @@ public class ConnectionHandler implements Runnable {
     	String resId = this.protocol.getRequestType().substring(13);
     	int pos = this.protocol.getContentType().indexOf(":");
     	String charset = this.protocol.getContentType().substring(pos+2);
-    	String jobXml = new String(this.byteData , charset);
-    	Job newJob = JobManagerImpl.getInstance().getNewJob(resId , jobXml);
-    	
-    	String htmlResponse = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
-    			"\t<head>\n" +
-    			"\t\t<title>" + serverName + "/photos/" + resId + "/" +newJob.getRepresentationTarget() +
-    			"</title>\n" +
-    			"\t</head>" +
-    			"\t<body>" +
-    			"\t\t<b>HTTP/1.1 202 Accepted:</b></br>\n" +
-    			"\t\tRepresentation image can be found<a href=\"photos/" + resId + "?rep=" +
-    				newJob.getRepresentationTarget() + ">here</a>\n" +
-    				"\t</body>\n" +
-    				"</html>";
-    	
-    	this.out.println("HTTP/1.1 202 Accepted");
-    	this.out.println("Server: " + serverName);
-    	this.out.println("Content-Type: text/xml; charset=utf-8");
-    	try {
-			this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+    	String jobXml;
+		try {
+			jobXml = new String(this.byteData , charset);
+			Job newJob = JobManagerImpl.getInstance().getNewJob(resId , jobXml);
+	    	
+	    	String htmlResponse = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+	    			"\t<head>\n" +
+	    			"\t\t<title>" + serverName + "/photos/" + resId + "/" +newJob.getRepresentationTarget() +
+	    			"</title>\n" +
+	    			"\t</head>" +
+	    			"\t<body>" +
+	    			"\t\t<b>HTTP/1.1 202 Accepted:</b></br>\n" +
+	    			"\t\tRepresentation image can be found<a href=\"photos/" + resId + "?rep=" +
+	    				newJob.getRepresentationTarget() + ">here</a>\n" +
+	    				"\t</body>\n" +
+	    				"</html>";
+	    	
+	    	this.out.println("HTTP/1.1 202 Accepted");
+	    	this.out.println("Server: " + serverName);
+	    	this.out.println("Content-Type: text/xml; charset=utf-8");
+	    	try {
+				this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+	    	
+	    	this.out.println();
+	    	this.out.print(htmlResponse);
+	    	this.out.flush();
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
 		}
     	
-    	this.out.println();
-    	this.out.print(htmlResponse);
-    	this.out.flush();
     	
     }
     

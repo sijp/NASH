@@ -48,7 +48,6 @@ public interface Resource {
 	 */
 	public Vector<Representation> getRepList();
 	
-	public void setReady();
+	public void setReady(String rep);
 	
-	public boolean isReady();
 }

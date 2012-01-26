@@ -82,25 +82,47 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public Vector<Job> getFinishedJobs()
 	{
-		return this.completedJobs;
+		return this.finished;
 	}
 	
 	@Override
 	public Vector<Job> getNonSubmittedJobs()
 	{
-		return this.nonCompletedJobs;
+		return this.nonSubmitted;
 	}
 
 	@Override
 	public Vector<Job> getSubmittedJobs()
 	{
-		return this.submittedJobs;
+		return this.submitted;
 	}
 
 	public Job getNewJob(String resId,String xml)
 	{
-		ResourceCloset.getInstance().getResource(resId).
-		Job j=new Job();
+		String targetId = ResourceClosetImpl.getInstance().getResource(resId).getNewRepresentationId();
+		String id = this.nonSubmitted.size() + this.submitted.size() +
+				this.finished.size() + "";
+		Job newJob=new JobImpl(id , resId , targetId , xml);
+		this.nonSubmitted.add(newJob);
+		return newJob;
+	}
+
+	@Override
+	public Job requestJob() 
+	{
+		Job assignJob = null;
+		for (int i = 0 ; i<this.nonSubmitted.size() ; i++)
+		{
+			Representation repSrc = ResourceClosetImpl.getInstance().getResource
+					(this.submitted.elementAt(i).getResource()).getRepresentation(this.submitted.elementAt(i).getRepresentationSource());
+			if (repSrc.isReady())
+			{
+				assignJob = this.nonSubmitted.elementAt(i);
+				this.levelUp(assignJob);
+				return assignJob;
+			}
+		}
+		return assignJob;
 	}
 	
 

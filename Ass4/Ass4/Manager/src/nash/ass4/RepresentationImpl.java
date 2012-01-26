@@ -15,7 +15,7 @@ public class RepresentationImpl implements Representation {
 	private Resource resource;
 	private Job generatorJob;
 	private Vector<Job> repJobs;
-	
+	private boolean ready;
 	public RepresentationImpl(String id , Resource resource , 
 			Job generatorJob)
 	{
@@ -23,6 +23,7 @@ public class RepresentationImpl implements Representation {
 		this.resource = resource;
 		this.generatorJob = generatorJob;
 		this.repJobs = new Vector<Job>();
+		this.ready = false;
 	}
 	
 	/* (non-Javadoc)
@@ -73,6 +74,16 @@ public class RepresentationImpl implements Representation {
 	public void addJob(Job job) 
 	{
 		this.repJobs.add(job);
+	}
+	
+	public boolean isReady()
+	{
+		return this.ready;
+	}
+	
+	public void setReady()
+	{
+		this.ready=true;
 	}
 
 }
