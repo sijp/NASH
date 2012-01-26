@@ -35,6 +35,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 	public Resource addNewResource(String mimeType)
 	{
 		Resource ret=new Resource();
+		return ret;
 	}
 
 	/* (non-Javadoc)

@@ -33,23 +33,23 @@ public interface JobManager {
 	 * 
 	 * @return
 	 */
-	public boolean isPreAssigned(String res , String rep);
+	public boolean isNonSubmitted(String res , String rep);
 	/**
 	 * 
 	 * @return
 	 */
-	public boolean isAssigned(String res , String rep);
+	public boolean isSubmitted(String res , String rep);
 	/**
 	 * 
 	 * @return
 	 */
-	public boolean isCompleted(String res , String rep);
+	public boolean isFinished(String res , String rep);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Vector<Job> getCompletedJobs();
+	public Vector<Job> getFinishedJobs();
 	
 	/**
 	 * 
@@ -72,5 +72,7 @@ public interface JobManager {
 	 * @return a nonsubmitted job
 	 */
 	public Job requestJob();
+	
+	public Job getNewJob(String resId,String xml);
 	
 }

@@ -80,7 +80,7 @@ public class JobManagerImpl implements JobManager {
 	
 	
 	@Override
-	public Vector<Job> getCompletedJobs()
+	public Vector<Job> getFinishedJobs()
 	{
 		return this.completedJobs;
 	}
@@ -97,6 +97,11 @@ public class JobManagerImpl implements JobManager {
 		return this.submittedJobs;
 	}
 
+	public Job getNewJob(String resId,String xml)
+	{
+		ResourceCloset.getInstance().getResource(resId).
+		Job j=new Job();
+	}
 	
 
 
