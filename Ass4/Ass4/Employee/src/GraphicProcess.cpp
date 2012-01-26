@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-GraphicProcess::GraphicProcess():image(NULL)
+GraphicProcess::GraphicProcess():image(NULL),actions()
 {
 		
 }
@@ -26,7 +26,7 @@ void GraphicProcess::setImage(Mat* img)
 
 void GraphicProcess::process(Mat &dst)
 {
-	int i;
+	unsigned int i;
 	Mat dst_tmp;
 	dst=this->image->clone();
 	for (i=0;i<actions.size();i++)
@@ -38,7 +38,7 @@ void GraphicProcess::process(Mat &dst)
 
 GraphicProcess::~GraphicProcess()
 {
-	int i;
+	unsigned int i;
 	for (i=0;i<actions.size();i++)
 	{
 		delete actions[i];
@@ -48,10 +48,20 @@ GraphicProcess::~GraphicProcess()
 void GraphicProcess::print()
 {
 	cout<<"actions:"<<endl;
-	int i;
+	unsigned int i;
 	for (i=0;i<this->actions.size();i++)
 	{
 		cout<<i<<":";
 		actions[i]->getName();
 	}
 }
+
+	GraphicProcess::GraphicProcess(const GraphicProcess &obj):image(obj.image),actions()
+	{
+		
+	}
+	GraphicProcess &GraphicProcess::operator=(const GraphicProcess &obj)
+	{
+		this->image=obj.image;
+		return *(this);
+	}

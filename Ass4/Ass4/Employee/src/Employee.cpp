@@ -9,13 +9,24 @@
 #include "../include/JobXMLParser.h"
 		/*
 		 * init a new employee
+		 
+		 Poco::Net::SocketAddress sa_;
+		Poco::Net::StreamSocket socket_;
+		Poco::Net::SocketStream inputStream_;
+		bool toRun;
+
+	public:
+		const short port_;
+		const string host_;
+
 		 */
-		Employee::Employee(const string & host , const short port) : host_(host),
-																	port_(port),
-																	sa_(host,port),
-																	socket_(),
-																	inputStream_(socket_),
-																	toRun(true)
+		Employee::Employee(const string & host , const short port) :
+										sa_(host,port),
+										socket_(),
+										inputStream_(socket_),
+										toRun(true),
+										port_(port),
+										host_(host)
 		{
 
 		}
