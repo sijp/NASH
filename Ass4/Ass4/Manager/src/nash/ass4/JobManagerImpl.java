@@ -43,28 +43,61 @@ public class JobManagerImpl implements JobManager {
 	}
 
 	@Override
-	public Job getJob(String Id) {
-		// TODO Auto-generated method stub
+	public Job getJob(String Id)
+	{
+		for (Job j : this.nonSubmitted)
+			if (j.getId().equals (Id))
+				return j;
 		return null;
 	}
 
 	@Override
-	public boolean isPreAssigned(String res, String rep) {
-		// TODO Auto-generated method stub
+	public boolean isNonSubmitted(String res, String rep)
+	{
+		for (Job j:this.nonSubmitted)
+			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
+				return true;
 		return false;
 	}
 
 	@Override
-	public boolean isAssigned(String res, String rep) {
-		// TODO Auto-generated method stub
+	public boolean isSubmitted(String res, String rep)
+	{
+		for (Job j:this.submitted)
+			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
+				return true;
 		return false;
 	}
 
 	@Override
-	public boolean isCompleted(String res, String rep) {
-		// TODO Auto-generated method stub
+	public boolean isFinished(String res, String rep)
+	{
+		for (Job j:this.finished)
+			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
+				return true;
 		return false;
 	}
+	
+	
+	@Override
+	public Vector<Job> getCompletedJobs()
+	{
+		return this.completedJobs;
+	}
+	
+	@Override
+	public Vector<Job> getNonSubmittedJobs()
+	{
+		return this.nonCompletedJobs;
+	}
+
+	@Override
+	public Vector<Job> getSubmittedJobs()
+	{
+		return this.submittedJobs;
+	}
+
+	
 
 
 }

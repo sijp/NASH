@@ -47,4 +47,8 @@ public interface Resource {
 	 * @return a vector of representations of a resource
 	 */
 	public Vector<Representation> getRepList();
+	
+	public void setReady();
+	
+	public boolean isReady();
 }

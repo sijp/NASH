@@ -44,4 +44,33 @@ public interface JobManager {
 	 * @return
 	 */
 	public boolean isCompleted(String res , String rep);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Vector<Job> getCompletedJobs();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Vector<Job> getNonSubmittedJobs();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Vector<Job> getSubmittedJobs();
+	
+	
+	/**
+	 * request a new job.
+	 * the job is pulled from the nonsubmitted jobs
+	 * and moved to the submitted jobs
+	 * and returned.
+	 * @return a nonsubmitted job
+	 */
+	public Job requestJob();
+	
 }

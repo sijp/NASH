@@ -16,12 +16,14 @@ public class ResourceImpl implements Resource {
 	String id;
 	private Vector<Representation> repList;
 	private String mimeType;
+	boolean ready;
 	
 	public ResourceImpl(String id , Representation zero , String mimeType)
 	{
 		this.id = id;
 		this.repList.add(zero);
 		this.mimeType = mimeType;
+		this.ready=false;
 	}
 	/* (non-Javadoc)
 	 * @see nash.ass4.ResourceCloset#getNewResourceId()
@@ -62,6 +64,15 @@ public class ResourceImpl implements Resource {
 	public Vector<Representation> getRepList() {
 		return this.repList;
 	}
-
+	public void setReady()
+	{
+		this.ready=true;
+	}
+	
+	public boolean isReady()
+	{
+		return this.ready;
+	}
+	
 
 }
