@@ -33,7 +33,7 @@
 			this->resStatus = subEnd;
 		else if (subStart == "Server:")
 			this->resServer = subEnd;
-		else if (subStart == "Resource:")
+		else if (subStart == "resource:")
 			this->resResource = subEnd;
 		else if (subStart == "Content-Type:")
 			this->resContentType = subEnd;

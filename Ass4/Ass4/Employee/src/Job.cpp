@@ -20,9 +20,10 @@
 		 */
 		bool Job::download(Employee &employee, HttpLineInterperter *resConfiguration)
 		{
+			cout<<"Resource is:"<<resConfiguration->getResource()<<endl;
 			string downloadRequest = "GET /photos/" +
 									resConfiguration->getResource() +
-									"/index.php?rep=" + this->repDownload +
+									"?rep=" + this->repDownload +
 									" HTTP/1.1";
 			employee.send(downloadRequest);
 			employee.send("Host: "+employee.getHost()+"\n");
@@ -47,6 +48,8 @@
 				vector<uchar> vecByte(dataByte , dataByte + byteLength/sizeof(uchar));
 				//-1 as a flag means we get the image as is.
 				this->image=imdecode(Mat(vecByte) , -1);
+				
+				cout<<"BLJKADSLVGJASDLFAS"<<endl;
 
 				this->gP.setImage(&(this->image));
 				delete [] dataByte;
@@ -78,9 +81,7 @@
 			employee.send(uploadRequest);
 			employee.send("Host: " + resConfiguration->getServer());
 			employee.send("Content-Type: " + this->mimeType);
-			employee.send("Content-Length: " + this->editedImage.elemSize());
-			employee.send("");
-
+			//employee.send("Content-Length: " + this->editedImage.elemSize());
 			/*
 			 * sending the edited image in bytes
 			 */
@@ -88,8 +89,16 @@
 			string imgExt = "."+this->mimeType.substr(pos+1);
 			vector<uchar> vecByte;
 			imencode(imgExt , this->editedImage , vecByte);
+			
+			stringstream out;
+			out << vecByte.size();
+			string clen=out.str();
+			cout<<"clen:"<<clen<<endl;
+			employee.send("Content-Length: " + clen);
+			employee.send("");
+			
 			uchar* buf = vecByte.data();
-			employee.sendBytes(buf , this->editedImage.elemSize());
+			employee.sendBytes(buf , vecByte.size());
 		}
 
 		/*

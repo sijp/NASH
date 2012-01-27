@@ -51,15 +51,21 @@
 				{
 					//this->close();
 					cout<<"sleepping"<<endl;
-					Poco::Thread::sleep(30);
+					Poco::Thread::sleep(3000);
 					//Poco::Net::StreamSocket sookie();
 					//this->inputStream_(sookie)	;
-					this->socket.close();
-					this.connect();
+					this->socket_.close();
+					this->connect();
 					//cout<<"connecting"<<endl;
 				}
 				else
+				{
 					this->doJob(data , &resConfiguration);
+					//delete [] data;
+					data=NULL;
+					//this->socket_.close();
+					//this->connect();
+				}
 			}
 		}
 
@@ -68,7 +74,7 @@
 		 */
 		uchar* Employee::getJob(HttpLineInterperter *resConfiguration)
 		{
-			this->send("POST /jobs/get-new-job/index.php HTTP/1.1");
+			this->send("POST /jobs/get-new-job HTTP/1.1");
 			this->send("Host: "+host_);
 			this->send("");
 			string s;
@@ -98,17 +104,24 @@
 			//convert the bytes data into string
 			//assuming the srcEncoding and encoding are the same type
 			string strData((char *)data , resConfiguration->getContentLength());
+			cout<<"GOT the XML:"<<endl;
+			cout<<strData<<endl;
 			JobXMLParser xmlDecoder(strData);
 			xmlDecoder.parseXML();
 			xmlDecoder.parseDocument();
 			Job &job = xmlDecoder.getJob();
+			cout<<"A"<<endl;
+			this->socket_.close();
+			this->connect();
 			bool flag;
 			flag = job.download(*(this) , resConfiguration);
 			if (flag)
 			{
 				job.process();
-				
+				this->socket_.close();
+				this->connect();
 				job.upload(*(this) , resConfiguration);
+
 			}
 		}
 
@@ -224,13 +237,25 @@
 	    // Returns false in case the connection is closed before bytesToWrite bytes can be read.
 	    bool Employee::sendBytes(const uchar frame[], int bytesToWrite)
 	    {
-	    	int tmp = 0;
+	    	//unsigned int tmp = 0;
 	    	try
 	    	{
+	    		int x=frame[0];
+	    		cout<<x<<endl;
+	    	
+	    		/*for (int i=0;i<bytesToWrite;i++)
+	    		{
+	    			this->socket_.sendBytes(frame + i , 1);
+	    		}*/
+	    		
 	    		while (bytesToWrite > tmp)
 	    		{
+	    			cout<<"needs to send total of "<<bytesToWrite<<endl;
 	    			tmp = tmp + this->socket_.sendBytes(frame + tmp , bytesToWrite - tmp);
+
+	    			cout<<"sending "<<  tmp <<endl;
 	    		}
+
 	    	}
 	    	catch(Exception & error)
 	    	{
