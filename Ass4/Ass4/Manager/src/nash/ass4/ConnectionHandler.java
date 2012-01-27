@@ -65,15 +65,28 @@ public class ConnectionHandler implements Runnable {
     {
         String msg;
         boolean isEnd = false;
-        while ((msg = in.readLine()) != null && !isEnd) 
+        while (!isEnd && (msg = in.readLine()) != null) 
         {
+        	 System.out.println("HTTP:(" + msg+")");
         	 isEnd = protocol.processMessage(msg);
+        	 System.out.println("isEnd="+isEnd);
         }
+        System.out.println("Now reading data");
         if (this.protocol.getContentLength() > 0)
         {
-        	byteData = new byte[protocol.getContentLength()];
-        	clientSocket.getInputStream().read(byteData);
+        	int clen=protocol.getContentLength();
+        	byteData = new byte[clen];
+        	while (clen>0)
+        	{
+        		System.out.println("needs to read total of "+clen+"bytes");
+        		int readAmount=clientSocket.getInputStream().read(byteData,
+        				byteData.length-clen,clen);
+        		clen = clen-readAmount;
+        		System.out.println("reading "+readAmount+" bytes");
+        	}
+        	
         }
+        System.out.println("HTTP headers processed");
         this.processByteData();
      }
     
@@ -81,10 +94,13 @@ public class ConnectionHandler implements Runnable {
     {
     	String dataType = this.protocol.getRequestType();
     	//TODO: implement all this methods!
-    	
+    	System.out.println("process the data:"+dataType);
     	//client uploads a new image
-    	if (dataType.equals("PUT /upload"))
+    	if (dataType.contains("PUT /upload"))
+    	{
+    		System.out.println("new upload");
     		this.uploadNewImage("0");
+    	}
     	//employee uploads an edited image
     	else if (dataType.subSequence(0,2).equals("PUT"))
     	{
@@ -119,6 +135,17 @@ public class ConnectionHandler implements Runnable {
     	else if (dataType.contains("POST /shutdown"))
     		this.shutdown();
     		
+    }
+    
+    /**
+     * 
+     */
+    
+    void print404Error()
+    {
+    	this.out.println("HTTP/1.1 404 Not Found");
+    	this.out.println("Server: " + this.clientSocket.getLocalAddress().getHostAddress());
+    	this.out.println();
     }
     
     void uploadNewImage(String rep)
@@ -176,50 +203,55 @@ public class ConnectionHandler implements Runnable {
     
     private void allRepresentationsOfResource()
     {
-    	String res=this.protocol.getRequestType().substring(12);
+    	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("HTTP")-1);
     	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
     	Resource resource = ResourceClosetImpl.getInstance().getResource(res);
-    	String htmlResponse = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" +
-    			"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
-    			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
-    			"<head>\n" +
-    			"\t<title>" + serverName + "/photos/" + res + "</title>\n" +
-    			"</head>\n" +
-    			"<body>\n" +
-    			"\t<p>JOB STATUS CATEGORY</p>\n" +
-    			"\t<ol>\n";
-
-    	for(int i = 0 ; i < resource.getRepList().size() ; i++)
+    	if (resource!=null)
     	{
-    		Representation repI = resource.getRepList().elementAt(i);
-    		htmlResponse+= "\t\t<li><a href=\"photos/" + res + "?rep=" + repI.getId() +
-    				"\">Representation " + repI.getId() + "</a>\n" +
-    				"\t\t\t<ul>\n";
-    		for(int j = 0 ; j < repI.getRepresentationJobs().size() ; j++)
-    		{
-    			Job jobJ = repI.getRepresentationJobs().elementAt(j);
-    			htmlResponse+= "\t\t\t\t<li><a href=\"jobs/" + jobJ.getId() + "\">" +
-    					"JOB " + jobJ.getId() + "</a>. Status - " + jobJ.getStatus() +"</li>\n";
-    		}
-    		htmlResponse+="\t\t\t</ul>\n" +
-    				"\t\t</li>\n";
+	    	String htmlResponse = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" +
+	    			"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+	    			"<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+	    			"<head>\n" +
+	    			"\t<title>" + serverName + "/photos/" + res + "</title>\n" +
+	    			"</head>\n" +
+	    			"<body>\n" +
+	    			"\t<p>JOB STATUS CATEGORY</p>\n" +
+	    			"\t<ol>\n";
+	
+	    	for(int i = 0 ; i < resource.getRepList().size() ; i++)
+	    	{
+	    		Representation repI = resource.getRepList().elementAt(i);
+	    		htmlResponse+= "\t\t<li><a href=\"photos/" + res + "?rep=" + repI.getId() +
+	    				"\">Representation " + repI.getId() + "</a>\n" +
+	    				"\t\t\t<ul>\n";
+	    		for(int j = 0 ; j < repI.getRepresentationJobs().size() ; j++)
+	    		{
+	    			Job jobJ = repI.getRepresentationJobs().elementAt(j);
+	    			htmlResponse+= "\t\t\t\t<li><a href=\"jobs/" + jobJ.getId() + "\">" +
+	    					"JOB " + jobJ.getId() + "</a>. Status - " + jobJ.getStatus() +"</li>\n";
+	    		}
+	    		htmlResponse+="\t\t\t</ul>\n" +
+	    				"\t\t</li>\n";
+	    	}
+	    	htmlResponse+="\t\t</ol>\n" +
+	    			"\t</body>\n" +
+	    			"</html>";
+	    	
+	    	this.out.println("HTTP/1.1 200 OK");
+	    	this.out.println("Server: " + serverName);
+	    	this.out.println("Content-Type: text/html; charset=utf-8");
+	    	try {
+				this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+	    	
+	    	this.out.println();
+	    	this.out.print(htmlResponse);
+	    	this.out.flush();
     	}
-    	htmlResponse+="\t\t</ol>\n" +
-    			"\t</body>\n" +
-    			"</html>";
-    	
-    	this.out.println("HTTP/1.1 200 OK");
-    	this.out.println("Server: " + serverName);
-    	this.out.println("Content-Type: text/html; charset=utf-8");
-    	try {
-			this.out.println("Content-Length: " + htmlResponse.getBytes("UTF-8").length);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-    	
-    	this.out.println();
-    	this.out.print(htmlResponse);
-    	this.out.flush();
+    	else
+    		this.print404Error();
     }
     
     
@@ -470,7 +502,7 @@ public class ConnectionHandler implements Runnable {
       // Starts listening
       public void initialize() throws IOException {
         // Initialize I/O
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(),"UTF-8"));
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(),"UTF-8"),1);
         out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(),"UTF-8"), true);
         System.out.println("I/O initialized");
       }

@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
  */
 public class JobImpl implements Job {
 
-	//TODO: allow jobStatus to be only one of this: preAssigned, Assigned , completed.
 	
 	private String id;
 	private String resourceId;

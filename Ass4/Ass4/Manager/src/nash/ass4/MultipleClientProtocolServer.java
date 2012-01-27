@@ -47,7 +47,7 @@ public class MultipleClientProtocolServer implements Runnable {
           } catch (IOException e) {
             System.out.println("Cannot listen on port " + listenPort);
           }
-          while (true) 
+          while (this.runFlag) 
           {
             try 
             {

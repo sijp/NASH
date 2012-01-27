@@ -43,11 +43,16 @@ public class ResourceClosetImpl implements ResourceCloset {
 	 * @see nash.ass4.ResourceCloset#getResource(java.lang.String)
 	 */
 	@Override
-	public Resource getResource(String resId) {
-		return this.resList.elementAt(Integer.parseInt(resId.trim()));
+	public Resource getResource(String resId)
+	{
+		int id=Integer.parseInt(resId.trim());
+		if (this.resList.size()>id)
+			return this.resList.elementAt(id);
+		return null;
 	}
 	
-	public Vector<Resource> getResList()
+	public Vector<Resource>
+	getResList()
 	{
 		return this.resList;
 	}

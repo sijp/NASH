@@ -22,6 +22,7 @@ public class ResourceImpl implements Resource {
 	{
 		this.id = id;
 		Representation zero = new RepresentationImpl("0", this, null);
+		repList=new Vector<Representation>();
 		this.repList.add(zero);
 		this.mimeType = mimeType;
 		this.ready=false;
@@ -68,6 +69,9 @@ public class ResourceImpl implements Resource {
 	public void setReady(String repId)
 	{
 		this.getRepresentation(repId).setReady();
+
+		
+		
 	}
 
 	

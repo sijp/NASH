@@ -70,6 +70,7 @@ public class HttpProtocol implements ServerProtocol {
 	@Override
 	public boolean isEnd(String msg) 
 	{
+		System.out.println(msg.equals(""));
 		return msg.equals("");
     }
 	
