@@ -55,7 +55,7 @@
 					//Poco::Net::StreamSocket sookie();
 					//this->inputStream_(sookie)	;
 					this->socket.close();
-					this->connect();
+					this.connect();
 					//cout<<"connecting"<<endl;
 				}
 				else

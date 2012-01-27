@@ -30,7 +30,10 @@ import org.xml.sax.SAXException;
  *
  */
 public class JobImpl implements Job {
-
+	
+	public static final String NONSUBMITTED="Non Submitted", 
+								SUBMITTED="Submitted", 
+								FINISHED= "Finished";
 	
 	private String id;
 	private String resourceId;
@@ -39,6 +42,8 @@ public class JobImpl implements Job {
 	private String jobXml;
 	private String jobStatus;
 	private Document xmlDocument;
+
+	private Object lock=new Object();
 	
 	/**
 	 *
@@ -50,7 +55,7 @@ public class JobImpl implements Job {
 	 	this.resourceId=resId;
 	 	this.jobXml=xml;
 	 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	 	
+	 	this.jobStatus = JobImpl.NONSUBMITTED;
 	 	try {
 
 			//Using factory get an instance of document builder
@@ -73,13 +78,14 @@ public class JobImpl implements Job {
 		
 		NodeList nl = docEle.getElementsByTagName("InputRepresentation");
 		this.representationSource=((Element) nl.item(0)).getAttribute("id");
-
+		ResourceClosetImpl.getInstance().getResource(resId)
+			.getRepresentation(this.representationSource).addJob(this);
 		this.representationTarget=repTargetId;
 		
 		Element outputRepElem=this.xmlDocument.createElement("OutputRepresentation");
 		outputRepElem.setAttribute("id",repTargetId);
-		this.xmlDocument.insertBefore(outputRepElem,((Element) nl.item(0)));
-		
+		nl.item(0).getParentNode().insertBefore(outputRepElem, nl.item(0));
+		//this.xmlDocument.insertBefore(outputRepElem,((Element)nl.item(1)));
 	 }
 	
 	/* (non-Javadoc)
@@ -112,6 +118,8 @@ public class JobImpl implements Job {
 	@Override
 	public String getXML()
 	{
+		System.out.println("******");
+		System.out.println(this.jobXml);
 		String xmlString="";
 		Transformer transformer;
 		try {
@@ -125,6 +133,7 @@ public class JobImpl implements Job {
 			transformer.transform(source, result);
 
 		xmlString = result.getWriter().toString();
+		System.out.println(xmlString);
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
@@ -143,6 +152,14 @@ public class JobImpl implements Job {
 	@Override
 	public String getRepresentationTarget() {
 		return this.representationTarget;
+	}
+
+	@Override
+	public void setStatus(String newStatus) {
+		synchronized (lock) {
+			this.jobStatus = newStatus;
+		}
+		
 	}
 
 }

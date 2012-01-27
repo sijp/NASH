@@ -31,7 +31,8 @@ public class ResourceImpl implements Resource {
 	 * @see nash.ass4.ResourceCloset#getNewResourceId()
 	 */
 	@Override
-	public String getNewRepresentationId() {
+	public synchronized String getNewRepresentationId()
+	{
 		return this.repList.size() +"";
 	}
 
@@ -55,7 +56,7 @@ public class ResourceImpl implements Resource {
 	}
 	
 	@Override
-	public Representation getRepresentation(String rep) {
+	public synchronized Representation getRepresentation(String rep) {
 		return this.repList.elementAt(Integer.parseInt(rep.trim()));
 	}
 	@Override
@@ -63,16 +64,13 @@ public class ResourceImpl implements Resource {
 		return this.id;
 	}
 	@Override
-	public Vector<Representation> getRepList() {
+	public synchronized Vector<Representation>  getRepList() {
 		return this.repList;
 	}
-	public void setReady(String repId)
+	public synchronized void setReady(String repId)
 	{
+		System.out.println("OH HAI I AM "+this.getId());
+		System.out.println(repId+":"+this.repList.size());
 		this.getRepresentation(repId).setReady();
-
-		
-		
 	}
-
-	
 }

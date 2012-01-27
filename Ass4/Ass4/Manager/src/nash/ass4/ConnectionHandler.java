@@ -63,7 +63,7 @@ public class ConnectionHandler implements Runnable {
 	
     public void process() throws IOException 
     {
-        String msg;
+        String msg = "";
         boolean isEnd = false;
         while (!isEnd && (msg = in.readLine()) != null) 
         {
@@ -76,15 +76,39 @@ public class ConnectionHandler implements Runnable {
         {
         	int clen=protocol.getContentLength();
         	byteData = new byte[clen];
+        	int readAmount = 0;
         	while (clen>0)
         	{
         		System.out.println("needs to read total of "+clen+"bytes");
+<<<<<<< HEAD
         		DataInputStream din=new DataInputStream(clientSocket.getInputStream());
         		int readAmount=din.read(byteData,
+=======
+        		System.out.println(this.in.ready());
+        		
+        		BufferedInputStream dis = new BufferedInputStream(clientSocket.getInputStream());
+        		readAmount = dis.read(byteData,
+>>>>>>> fbc33091380c3a99b7bfe17c265189132e6b27bf
         				byteData.length-clen,clen);
         		clen = clen-readAmount;
         		System.out.println("reading "+readAmount+" bytes");
         	}
+        	
+        	/*
+        	DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
+        	System.out.println("bytaData size is: " + this.byteData.length);
+        	        	
+        	for(int i = 0 ; i < this.byteData.length ; i++)
+        	{
+        		System.out.println("reading byte #: " + i);
+        		System.out.println("if you see this, you are stuck.");
+        		this.byteData[i] = dis.readByte();
+        		System.out.println("succeed reading byte #: " + i);
+        	}
+        	*/
+        	
+        	
+        	//System.out.println(in.readLine());
         	
         }
         System.out.println("HTTP headers processed");
@@ -103,9 +127,13 @@ public class ConnectionHandler implements Runnable {
     		this.uploadNewImage("0");
     	}
     	//employee uploads an edited image
-    	else if (dataType.subSequence(0,2).equals("PUT"))
+    	else if (dataType.startsWith("PUT"))
     	{
+    		System.out.println("☺☺☺☺☺☺☺☺☺☺☺");
     		String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
+    		int spacePos=rep.indexOf(" ");
+    		rep=rep.substring(0,spacePos);
+    		System.out.println("derp:" + rep);
     		this.uploadNewImage(rep);
     	}
     	//request for all the representations of a source
@@ -155,10 +183,23 @@ public class ConnectionHandler implements Runnable {
     	if (!photosDir.exists() || !photosDir.isDirectory())
     		photosDir.mkdir();
     	//TODO needs to write a class for handling resources
-    	Resource newRes = ResourceClosetImpl.getInstance().addNewResource
-    			(this.protocol.getContentType());
-    	File resDir=new File("photos/"+newRes.getId()+"/");
-    	resDir.mkdir();
+    	Resource newRes;
+    	if (rep.equals("0"))
+    	{
+	    	newRes = ResourceClosetImpl.getInstance().addNewResource
+	    			(this.protocol.getContentType());
+	    	File resDir=new File("photos/"+newRes.getId()+"/");
+	    	resDir.mkdir();
+    	}
+    	else
+    	{
+    		int qMark=this.protocol.getRequestType().indexOf("?");
+    		String resId=this.protocol.getRequestType().substring(12, qMark);
+    		newRes=ResourceClosetImpl.getInstance().getResource(resId);
+    		Job origJob=newRes.getRepresentation(rep).getGeneratorJob();
+    		JobManagerImpl.getInstance().levelUp(origJob);
+    	}
+    	
     	FileOutputStream writer;
 		try 
 		{
@@ -227,6 +268,8 @@ public class ConnectionHandler implements Runnable {
 	    				"\t\t\t<ul>\n";
 	    		for(int j = 0 ; j < repI.getRepresentationJobs().size() ; j++)
 	    		{
+	    			System.out.println("!!!!!!!!!!!");
+	    			System.out.println("jobs size for rep: " + repI.getId() + ":" + repI.getRepresentationJobs().size());
 	    			Job jobJ = repI.getRepresentationJobs().elementAt(j);
 	    			htmlResponse+= "\t\t\t\t<li><a href=\"jobs/" + jobJ.getId() + "\">" +
 	    					"JOB " + jobJ.getId() + "</a>. Status - " + jobJ.getStatus() +"</li>\n";
@@ -260,7 +303,10 @@ public class ConnectionHandler implements Runnable {
     {
     	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("?"));//TODO lo kolel
     	String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
-    	if (JobManagerImpl.getInstance().isFinished(res,rep))
+    	int spacePos=rep.indexOf(" ");
+    	rep=rep.substring(0,spacePos);
+    	System.out.println("Requesting image: "+rep);
+    	if (rep.equals("0") || JobManagerImpl.getInstance().isFinished(res,rep))
     	{
     		this.out.println("HTTP/1.1 200 OK");
     		this.out.println("Server: "+this.clientSocket.getLocalAddress().getHostAddress());
@@ -344,7 +390,12 @@ public class ConnectionHandler implements Runnable {
     private void getJob()
     {
     	String jobId = this.protocol.getRequestType().substring(10);
+    	int spacePos = jobId.indexOf(" ");
+    	jobId = jobId.substring(0, spacePos);
+   
+    	
     	Job job = JobManagerImpl.getInstance().getJob(jobId);
+    	
     	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
 
     	
@@ -427,14 +478,32 @@ public class ConnectionHandler implements Runnable {
     	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
 
     	String resId = this.protocol.getRequestType().substring(13);
-    	int pos = this.protocol.getContentType().indexOf(":");
-    	String charset = this.protocol.getContentType().substring(pos+2);
+    	int spacePos = resId.indexOf(" ");
+    	resId = resId.substring(0, spacePos);
+    	int pos = this.protocol.getContentType().indexOf(";");
+    	String charset = this.protocol.getContentType().substring(pos+10);
+    	charset = charset.toUpperCase();
+    	System.out.println(this.protocol.getContentType());
+    	System.out.println(charset);
+    	
     	String jobXml;
 		try {
 			jobXml = new String(this.byteData , charset);
+			
 			Job newJob = JobManagerImpl.getInstance().getNewJob(resId , jobXml);
 	    	
-	    	String htmlResponse = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
+			if(newJob == null)
+			{
+				this.out.println("HTTP/1.1 500 Internal Server Error");
+				String ans = "there is no such resource called: " + resId;
+				this.out.println("Content-Type: text/plain; charset:utf-8");
+				this.out.println("Content-Length: "+ans.getBytes("UTF-8").length);
+				this.out.println();
+				this.out.println(ans);
+			}
+			else
+			{
+			String htmlResponse = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"+
 	    			"\t<head>\n" +
 	    			"\t\t<title>" + serverName + "/photos/" + resId + "/" +newJob.getRepresentationTarget() +
 	    			"</title>\n" +
@@ -457,6 +526,7 @@ public class ConnectionHandler implements Runnable {
 	    	
 	    	this.out.println();
 	    	this.out.print(htmlResponse);
+			}
 	    	this.out.flush();
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
