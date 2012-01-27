@@ -1,14 +1,20 @@
 #include "../include/JobXMLParser.h"
 #include "../include/Job.h"
 #include <string>
+#include <iostream>
 
 #include <opencv2/imgproc/imgproc.hpp>
 
 using namespace std;
 
-int main()
+int main(int argc,char *argv[])
 {
-	Employee e("192.168.2.105",8080);
+	if (argc!=3)
+	{
+		cout<<"arg mismatch"<<endl;
+		return 1;
+	}
+	Employee e(argv[1],atoi(argv[2]));
 	e.connect();
 	e.run();
 	e.close();

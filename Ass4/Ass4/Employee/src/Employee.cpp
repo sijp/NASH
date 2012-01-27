@@ -235,9 +235,9 @@
 
 		// Send a fixed number of bytes from the client - blocking.
 	    // Returns false in case the connection is closed before bytesToWrite bytes can be read.
-	    bool Employee::sendBytes(const uchar frame[], int bytesToWrite)
+	    bool Employee::sendBytes(const uchar frame[],  int bytesToWrite)
 	    {
-	    	//unsigned int tmp = 0;
+	    	 int tmp = 0;
 	    	try
 	    	{
 	    		int x=frame[0];
