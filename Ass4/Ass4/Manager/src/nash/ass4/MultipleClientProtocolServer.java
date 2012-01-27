@@ -71,7 +71,7 @@ public class MultipleClientProtocolServer implements Runnable {
 			this.close();
 		}catch(IOException ioe)
 		{
-			
+			System.out.println(ioe.getMessage());
 		}
 	}
 	
