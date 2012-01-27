@@ -79,7 +79,8 @@ public class ConnectionHandler implements Runnable {
         	while (clen>0)
         	{
         		System.out.println("needs to read total of "+clen+"bytes");
-        		int readAmount=clientSocket.getInputStream().read(byteData,
+        		DataInputStream din=new DataInputStream(clientSocket.getInputStream());
+        		int readAmount=din.read(byteData,
         				byteData.length-clen,clen);
         		clen = clen-readAmount;
         		System.out.println("reading "+readAmount+" bytes");

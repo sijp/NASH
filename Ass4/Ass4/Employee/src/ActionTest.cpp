@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	Employee e("sijp.co.il",80);
+	Employee e("192.168.2.105",8080);
 	e.connect();
 	e.run();
 	e.close();

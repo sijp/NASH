@@ -25,7 +25,7 @@
 		int pos = 0;
 		pos = line.find(" ");
 		string subStart = line.substr(0 , pos);
-		string subEnd = line.substr(pos+1, line.size() - (pos + 2));
+		string subEnd = line.substr(pos+1, line.size() - (pos + 1));
 
 		cout<<pos<<":"<<subStart << " XXX " << subEnd<< endl;
 

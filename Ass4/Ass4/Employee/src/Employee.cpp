@@ -7,6 +7,7 @@
 //============================================================================
 #include "../include/Employee.h"
 #include "../include/JobXMLParser.h"
+#include <Poco/Thread.h>
 		/*
 		 * init a new employee
 		 
@@ -47,10 +48,18 @@
 				HttpLineInterperter resConfiguration;
 				uchar *data = this->getJob(&resConfiguration);
 				if(data == NULL)
-					sleep(30000);
+				{
+					//this->close();
+					cout<<"sleepping"<<endl;
+					Poco::Thread::sleep(30);
+					//Poco::Net::StreamSocket sookie();
+					//this->inputStream_(sookie)	;
+					this->socket.close();
+					this->connect();
+					//cout<<"connecting"<<endl;
+				}
 				else
 					this->doJob(data , &resConfiguration);
-				this->toRun=false;
 			}
 		}
 
@@ -69,6 +78,10 @@
 					s.clear();
 				}
 			//init a new byte array in the size of the content length
+			
+			if(resConfiguration->getStatus()=="204 No Content")
+				return NULL;
+			
 			int byteLength = resConfiguration->getContentLength();
 			uchar* dataByte = new uchar[byteLength];
 
