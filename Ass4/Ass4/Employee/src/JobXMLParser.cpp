@@ -26,9 +26,9 @@ void JobXMLParser::parseXML(){
 	//get the factory
 	Poco::XML::DOMParser parser;
 	//filters white space nodes v1.4.2p
-	parser.setFeature(parser.FEATURE_FILTER_WHITESPACE, true);
+	//parser.setFeature(parser.FEATURE_FILTER_WHITESPACE, true);
 	//filter white space nodes v1.3.0 - uni version
-	//parser.setFeature(Poco::XML::DOMParser::FEATURE_WHITESPACE,false);
+	parser.setFeature(Poco::XML::DOMParser::FEATURE_WHITESPACE,false);
 	//parse using builder to get fDom representation of the XML file
 	fDom = parser.parseString(this->XMLData);
 
