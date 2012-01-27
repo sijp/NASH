@@ -8,10 +8,13 @@ package nash.ass4;
  *
  */
 
-import java.io.*;
-import java.net.*;
+
 
 public interface ProtocolFactory 
 {
+	/**
+	 * 
+	 * @return serverProtocol
+	 */
 	ServerProtocol create();
 }

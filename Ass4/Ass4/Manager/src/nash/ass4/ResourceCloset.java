@@ -12,14 +12,15 @@ import java.util.Vector;
 public interface ResourceCloset 
 {
 	/**
-	 * adds a new resource to the closet (via Yardena)
-	 * and returns it
+	 * 
+	 * @param mimeType for the types
+	 * @return resource
 	 */
 	public Resource addNewResource(String mimeType);
 	
 	/**
 	 * 
-	 * @param resId
+	 * @param resId the id
 	 * @return a resource by the resId
 	 */
 	public Resource getResource(String resId);

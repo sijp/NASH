@@ -18,13 +18,18 @@ public class ResourceImpl implements Resource {
 	private String mimeType;
 	boolean ready;
 	
-	public ResourceImpl(String id , String mimeType)
+	/**
+	 * 
+	 * @param id1 the id
+	 * @param mType the mimeType
+	 */
+	public ResourceImpl(String id1 , String mType)
 	{
-		this.id = id;
+		this.id = id1;
 		Representation zero = new RepresentationImpl("0", this, null);
-		repList=new Vector<Representation>();
+		this.repList=new Vector<Representation>();
 		this.repList.add(zero);
-		this.mimeType = mimeType;
+		this.mimeType = mType;
 		this.ready=false;
 	}
 	/* (non-Javadoc)
@@ -67,6 +72,10 @@ public class ResourceImpl implements Resource {
 	public synchronized Vector<Representation>  getRepList() {
 		return this.repList;
 	}
+	
+
+	
+	@Override
 	public synchronized void setReady(String repId)
 	{
 		System.out.println("OH HAI I AM "+this.getId());

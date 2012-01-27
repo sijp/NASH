@@ -3,37 +3,30 @@
  */
 package nash.ass4;
 
-/**
- * @author nadav
- *
- */
-import java.io.*;
-import java.net.*;
-
 public interface ServerProtocol 
 {
 	/**
 	 * 
-	 * @param msg
-	 * @return
+	 * @param msg holds msg
+	 * @return boolean
 	 */
 	boolean processMessage(String msg);
     /**
      * 
-     * @param msg
-     * @return
+     * @param msg message
+     * @return boolean
      */
 	boolean isEnd(String msg);
 	
 	/**
 	 * 
-	 * @return
+	 * @return int
 	 */
 	public int getContentLength();
 	
 	/**
 	 * 
-	 * @return
+	 * @return String
 	 */
 	public String getContentType();
 	

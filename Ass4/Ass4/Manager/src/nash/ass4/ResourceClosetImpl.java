@@ -13,7 +13,10 @@ public class ResourceClosetImpl implements ResourceCloset {
 	
 	Vector<Resource> resList;
 	private static ResourceCloset resourceCloset; 
-	
+	/**
+	 * 
+	 * @return instance
+	 */
 	public synchronized static ResourceCloset getInstance()
 	{
 		if(ResourceClosetImpl.resourceCloset == null)
@@ -51,7 +54,8 @@ public class ResourceClosetImpl implements ResourceCloset {
 		return null;
 	}
 	
-	public synchronized Vector<Resource>	getResList()
+	@Override
+	public synchronized Vector<Resource> getResList()
 	{
 		return this.resList;
 	}

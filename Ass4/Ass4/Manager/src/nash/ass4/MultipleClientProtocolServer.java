@@ -10,8 +10,6 @@ package nash.ass4;
 
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class MultipleClientProtocolServer implements Runnable {
@@ -24,12 +22,16 @@ public class MultipleClientProtocolServer implements Runnable {
     private boolean runFlag;
     
     
-    
+    /**
+     * 
+     * @param port the port
+     * @param pf the pf
+     */
     public MultipleClientProtocolServer(int port, ProtocolFactory pf) 
     {
-    	serverSocket = null;
-    	listenPort = port;
-    	protocolFactory = pf;
+    	this.serverSocket = null;
+    	this.listenPort = port;
+    	this.protocolFactory = pf;
     	this.runFlag = true;
     }
     
@@ -40,26 +42,28 @@ public class MultipleClientProtocolServer implements Runnable {
 	public void run() 
 	{
         try {
-            serverSocket = new ServerSocket(listenPort);
+            this.serverSocket = new ServerSocket(this.listenPort);
             System.out.println("Listening...");
           } catch (IOException e) {
-            System.out.println("Cannot listen on port " + listenPort);
+            System.out.println("Cannot listen on port " + this.listenPort);
           }
           while (this.runFlag) 
           {
             try 
             {
               ConnectionHandler newConnection = new ConnectionHandler
-            		  (serverSocket.accept(), protocolFactory.create() , this);
+            		  (this.serverSocket.accept(), this.protocolFactory.create() , this);
               Thread t=new Thread(newConnection);
               t.start();
             } catch (IOException e) {
-              System.out.println("Failed to accept on port " + listenPort);
+              System.out.println("Failed to accept on port " + this.listenPort);
             }
           }
           System.out.println("Done!");
 	}
-
+	/**
+	 * shutting dowwwn
+	 */
 	public void shutDown()
 	{
 		this.runFlag = false;
@@ -71,8 +75,12 @@ public class MultipleClientProtocolServer implements Runnable {
 		}
 	}
 	
+	/**
+	 * closssing
+	 * @throws IOException IO
+	 */
     public void close() throws IOException 
     {
-        serverSocket.close();
+        this.serverSocket.close();
       }
 }

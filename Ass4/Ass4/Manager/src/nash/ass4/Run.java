@@ -10,7 +10,7 @@ package nash.ass4;
 public class Run {
 
 	/**
-	 * @param args
+	 * @param args information for the server
 	 */
 	public static void main(String[] args) 
 	{

@@ -15,7 +15,10 @@ public class JobManagerImpl implements JobManager {
 	static JobManager jobManager;
 	Object lock=new Object(); 
 	
-	
+	/**
+	 * 
+	 * @return JobManager
+	 */
 	public static JobManager getInstance()
 	{
 		if (jobManager==null)
@@ -35,7 +38,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public void levelUp(Job job) 
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 			
 			if(job.getStatus().equals(JobImpl.NONSUBMITTED))
 			{
@@ -55,7 +58,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public void addJob(Job job) 
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 			this.nonSubmitted.add(job);	
 		}
 		
@@ -64,7 +67,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public Job getJob(String Id)
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 		for (Job j : this.nonSubmitted)
 			if (j.getId().equals (Id))
 				return j;
@@ -75,7 +78,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public boolean isNonSubmitted(String res, String rep)
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 		for (Job j:this.nonSubmitted)
 			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
 				return true;
@@ -86,7 +89,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public boolean isSubmitted(String res, String rep)
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 		for (Job j:this.submitted)
 			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
 				return true;
@@ -97,7 +100,7 @@ public class JobManagerImpl implements JobManager {
 	@Override
 	public boolean isFinished(String res, String rep)
 	{
-		synchronized (lock) {
+		synchronized (this.lock) {
 		for (Job j:this.finished)
 			if (j.getResource().equals(res) && j.getRepresentationTarget().equals(rep))
 				return true;
@@ -123,11 +126,13 @@ public class JobManagerImpl implements JobManager {
 	{
 		return this.submitted;
 	}
-
+	
+	
+	@Override
 	public Job getNewJob(String resId,String xml)
 	{
 		Job newJob;
-		synchronized (lock) {
+		synchronized (this.lock) {
 			if(ResourceClosetImpl.getInstance().getResource(resId) == null)
 				return null;
 			
@@ -150,7 +155,7 @@ public class JobManagerImpl implements JobManager {
 	public Job requestJob() 
 	{
 		Job assignJob = null;
-		synchronized (lock) {
+		synchronized (this.lock) {
 			
 			for (int i = 0 ; i<this.nonSubmitted.size() ; i++)
 			{

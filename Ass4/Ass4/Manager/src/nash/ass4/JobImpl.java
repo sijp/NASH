@@ -11,10 +11,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -46,12 +44,16 @@ public class JobImpl implements Job {
 	private Object lock=new Object();
 	
 	/**
-	 *
+	 * 
+	 * @param id1 holds the id
+	 * @param resId holds res id
+	 * @param repTargetId holds target id
+	 * @param xml the xml
 	 */
 	 
-	 public JobImpl(String id,String resId,String repTargetId,String xml)
+	 public JobImpl(String id1,String resId,String repTargetId,String xml)
 	 {
-	 	this.id=id;
+	 	this.id=id1;
 	 	this.resourceId=resId;
 	 	this.jobXml=xml;
 	 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -156,7 +158,7 @@ public class JobImpl implements Job {
 
 	@Override
 	public void setStatus(String newStatus) {
-		synchronized (lock) {
+		synchronized (this.lock) {
 			this.jobStatus = newStatus;
 		}
 		

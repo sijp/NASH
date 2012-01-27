@@ -10,7 +10,6 @@ package nash.ass4;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
 
 public class ConnectionHandler implements Runnable {
 
@@ -21,17 +20,23 @@ public class ConnectionHandler implements Runnable {
     byte[] byteData;
     MultipleClientProtocolServer multipleClientProtocolServer;
     
+    /**
+     *  fghfhfhf
+     * @param acceptedSocket as
+     * @param p p
+     * @param multipleClientProtocolServer1 mcps
+     */
     public ConnectionHandler(Socket acceptedSocket, ServerProtocol p , 
-    		MultipleClientProtocolServer multipleClientProtocolServer) 
+    		MultipleClientProtocolServer multipleClientProtocolServer1) 
     {
-      in = null;
-      out = null;
-      clientSocket = acceptedSocket;
-      protocol = p;
+      this.in = null;
+      this.out = null;
+      this.clientSocket = acceptedSocket;
+      this.protocol = p;
       System.out.println("Accepted connection from client!");
       System.out.println("The client is from: " + 
     		  acceptedSocket.getInetAddress() + ":" + acceptedSocket.getPort());
-      this.multipleClientProtocolServer = multipleClientProtocolServer;
+      this.multipleClientProtocolServer = multipleClientProtocolServer1;
     }
 	
 	/* (non-Javadoc)
@@ -40,7 +45,6 @@ public class ConnectionHandler implements Runnable {
 	@Override
 	public void run() 
 	{
-		 String msg;
 	        try 
 	        {
 	        	initialize();
@@ -61,32 +65,37 @@ public class ConnectionHandler implements Runnable {
 	        close();
 	}
 	
+	/**
+	 * process
+	 * @throws IOException IO
+	 */
     public void process() throws IOException 
     {
         String msg = "";
         boolean isEnd = false;
-        while (!isEnd && (msg = in.readLine()) != null) 
+        while (!isEnd && (msg = this.in.readLine()) != null) 
         {
         	 System.out.println("HTTP:(" + msg+")");
-        	 isEnd = protocol.processMessage(msg);
+        	 isEnd = this.protocol.processMessage(msg);
         	 System.out.println("isEnd="+isEnd);
         }
         System.out.println("Now reading data");
         if (this.protocol.getContentLength() > 0)
         {
-        	int clen=protocol.getContentLength();
-        	byteData = new byte[clen];
+        	int clen=this.protocol.getContentLength();
+        	this.byteData = new byte[clen];
         	int readAmount = 0;
         	while (clen>0)
         	{
         		System.out.println("needs to read total of "+clen+"bytes");
         		System.out.println(this.in.ready());
         		
-        		BufferedInputStream dis = new BufferedInputStream(clientSocket.getInputStream());
-        		readAmount = dis.read(byteData,
-        				byteData.length-clen,clen);
+        		DataInputStream dis = new DataInputStream(this.clientSocket.getInputStream());
+        		readAmount = dis.read(this.byteData,
+        				this.byteData.length-clen,clen);
         		clen = clen-readAmount;
         		System.out.println("reading "+readAmount+" bytes");
+        		System.out.println("first byte: " + this.byteData[0]);
         	}
         	
         	/*
@@ -189,7 +198,8 @@ public class ConnectionHandler implements Runnable {
     	else
     	{
     		int qMark=this.protocol.getRequestType().indexOf("?");
-    		String resId=this.protocol.getRequestType().substring(12, qMark);
+    		final int TWELVE = 12;
+    		String resId=this.protocol.getRequestType().substring(TWELVE, qMark);
     		newRes=ResourceClosetImpl.getInstance().getResource(resId);
     		Job origJob=newRes.getRepresentation(rep).getGeneratorJob();
     		JobManagerImpl.getInstance().levelUp(origJob);
@@ -199,6 +209,7 @@ public class ConnectionHandler implements Runnable {
 		try 
 		{
 			writer = new FileOutputStream(newRes.getRepresentationFile(rep));
+			System.out.println(this.protocol.getContentLength());
 			writer.write(this.byteData);
 	    	writer.flush();
 	    	newRes.setReady(rep);
@@ -240,7 +251,8 @@ public class ConnectionHandler implements Runnable {
     
     private void allRepresentationsOfResource()
     {
-    	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("HTTP")-1);
+    	final int TWELVE = 12;
+    	String res=this.protocol.getRequestType().substring(TWELVE,this.protocol.getRequestType().indexOf("HTTP")-1);
     	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
     	Resource resource = ResourceClosetImpl.getInstance().getResource(res);
     	if (resource!=null)
@@ -296,7 +308,8 @@ public class ConnectionHandler implements Runnable {
     
     private void getRepresentation()
     {
-    	String res=this.protocol.getRequestType().substring(12,this.protocol.getRequestType().indexOf("?"));//TODO lo kolel
+    	final int TWELVE = 12;
+    	String res=this.protocol.getRequestType().substring(TWELVE,this.protocol.getRequestType().indexOf("?"));//TODO lo kolel
     	String rep=this.protocol.getRequestType().substring(this.protocol.getRequestType().indexOf("=")+1);
     	int spacePos=rep.indexOf(" ");
     	rep=rep.substring(0,spacePos);
@@ -384,10 +397,11 @@ public class ConnectionHandler implements Runnable {
     
     private void getJob()
     {
-    	String jobId = this.protocol.getRequestType().substring(10);
+    	final int TEN = 10;
+    	String jobId = this.protocol.getRequestType().substring(TEN);
     	int spacePos = jobId.indexOf(" ");
     	jobId = jobId.substring(0, spacePos);
-   
+    	System.out.println(jobId);
     	
     	Job job = JobManagerImpl.getInstance().getJob(jobId);
     	
@@ -398,6 +412,7 @@ public class ConnectionHandler implements Runnable {
     	this.out.println("Server: " + serverName);
     	this.out.println("Content-Type: text/xml; charset=utf-8");
     	try {
+    		System.out.println(job);
 			this.out.println("Content-Length: " + job.getXML().getBytes("UTF-8").length);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -468,15 +483,19 @@ public class ConnectionHandler implements Runnable {
     	this.out.flush();
     }
     
+    /**
+     * post new job
+     */
     public void postNewJob()
     {
     	String serverName=this.clientSocket.getLocalAddress().getHostAddress();
-
-    	String resId = this.protocol.getRequestType().substring(13);
+    	final int THIRDTEEN = 13;
+    	String resId = this.protocol.getRequestType().substring(THIRDTEEN);
     	int spacePos = resId.indexOf(" ");
     	resId = resId.substring(0, spacePos);
     	int pos = this.protocol.getContentType().indexOf(";");
-    	String charset = this.protocol.getContentType().substring(pos+10);
+    	final int TEN = 10;
+    	String charset = this.protocol.getContentType().substring(pos+TEN);
     	charset = charset.toUpperCase();
     	System.out.println(this.protocol.getContentType());
     	System.out.println(charset);
@@ -560,29 +579,37 @@ public class ConnectionHandler implements Runnable {
     	
     }
     
+    /**
+     * shutdown
+     */
     public void shutdown()
     {
     	this.multipleClientProtocolServer.shutDown();
     }
       
-      // Starts listening
+    /**
+     * Starts listening
+     * @throws IOException IO
+     */
       public void initialize() throws IOException {
         // Initialize I/O
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(),"UTF-8"),1);
-        out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(),"UTF-8"), true);
+        this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream(),"UTF-8"),1);
+        this.out = new PrintWriter(new OutputStreamWriter(this.clientSocket.getOutputStream(),"UTF-8"), true);
         System.out.println("I/O initialized");
       }
       
-      // Closes the connection
+      /**
+       *  Closes the connection
+       */
       public void close() {
         try {
-          if (in != null) {
-            in.close();
+          if (this.in != null) {
+            this.in.close();
           }
-          if (out != null) {
-            out.close();
+          if (this.out != null) {
+            this.out.close();
           }
-          clientSocket.close();
+          this.clientSocket.close();
         } catch (IOException e) {
           System.out.println("Exception in closing I/O");
         }

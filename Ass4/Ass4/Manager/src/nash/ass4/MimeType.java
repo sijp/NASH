@@ -14,16 +14,24 @@ import java.io.*;
 
 public class MimeType {
 
-	static final String defaultType = "text/plain";
+	static final String DEFAULTTYPE = "text/plain";
 	Hashtable<String , String> types;
 
+	/**
+	 * 
+	 * @param fname fmnann
+	 */
 	public MimeType(String fname)
 	{
-		types = new Hashtable<String , String>();
+		this.types = new Hashtable<String , String>();
 		readTypes(fname);
 	}
 
-
+	/**
+	 * 
+	 * @param fname fnammm
+	 * @return rett
+	 */
 	public String getType(String fname)
 	{
 		StringTokenizer st = new StringTokenizer(fname, ".");
@@ -33,8 +41,8 @@ public class MimeType {
 		while (st.hasMoreTokens())
 			ext = st.nextToken();
 
-		ans = (String) types.get(ext);
-		return ans==null?defaultType:ans.toLowerCase();
+		ans = (String)this.types.get(ext);
+		return ans==null?DEFAULTTYPE:ans.toLowerCase();
 	}
 
 	private void readTypes(String fname)
@@ -75,25 +83,14 @@ public class MimeType {
 			type = st.nextToken();
 			while (st.hasMoreTokens()){
 				extension = st.nextToken();
-				types.put(extension, type);
+				this.types.put(extension, type);
 			}
 		}
 		
 		// add a text/plain mime type for no extension:
-		types.put("", defaultType);
+		this.types.put("", DEFAULTTYPE);
 	}
 
-
-	public static void main(String [] args)
-	{
-		String file;
-		MimeType mt = new MimeType("mime.types");
-
-		for (int i=0; i<args.length; i++)
-			System.out.println("the type of "+ args[i]+ " is: "+ mt.getType(args[i]));
-
-		return;
-	}
 
 
 	

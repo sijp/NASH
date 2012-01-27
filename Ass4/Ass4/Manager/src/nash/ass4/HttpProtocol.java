@@ -10,10 +10,12 @@ package nash.ass4;
 public class HttpProtocol implements ServerProtocol {
 
 	private String reqType;
-	private String reqResource;
 	private String reqContentType;
 	private int reqContentLength;
 	
+	/**
+	 * httpProtocol
+	 */
 	public HttpProtocol() 
     {
 		
@@ -58,6 +60,9 @@ public class HttpProtocol implements ServerProtocol {
 		}	
 	}
 	
+	/**
+	 * @return string
+	 */
 	public String getRequestType()
 	{
 		return this.reqType;

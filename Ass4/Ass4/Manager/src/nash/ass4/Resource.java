@@ -13,27 +13,25 @@ import java.util.Vector;
 public interface Resource {
 	/**
 	 * 
-	 * @return
+	 * @return string
 	 */
 	public String getNewRepresentationId(); 
 	/**
 	 * 
-	 * @param resId
-	 * @return
+	 * @return string
 	 */
 	public String getOriginalMimeType();
 	/**
 	 * 
-	 * @param res
-	 * @param rep
-	 * @return
+	 * @param rep repi
+	 * @return File
 	 */
 	public File getRepresentationFile(String rep);
 	
 	/**
 	 * 
-	 * @param rep
-	 * @return
+	 * @param rep representation
+	 * @return representation
 	 */
 	public Representation getRepresentation(String rep);
 	
@@ -48,6 +46,10 @@ public interface Resource {
 	 */
 	public Vector<Representation> getRepList();
 	
+	/**
+	 * 
+	 * @param rep representation
+	 */
 	public void setReady(String rep);
 	
 }
