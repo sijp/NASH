@@ -14,4 +14,5 @@ public interface Job {
 	public String getXML();
 	public String getStatus();
 	public String getRepresentationTarget();
+	public void setStatus(String newStatus);
 }

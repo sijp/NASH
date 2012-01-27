@@ -14,7 +14,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 	Vector<Resource> resList;
 	private static ResourceCloset resourceCloset; 
 	
-	public static ResourceCloset getInstance()
+	public synchronized static ResourceCloset getInstance()
 	{
 		if(ResourceClosetImpl.resourceCloset == null)
 		{
@@ -32,7 +32,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 	 * @see nash.ass4.ResourceCloset#addNewResource(java.lang.String)
 	 */
 	@Override
-	public Resource addNewResource(String mimeType)
+	public synchronized Resource addNewResource(String mimeType)
 	{
 		Resource ret=new ResourceImpl(this.resList.size()+"" ,mimeType);
 		this.resList.add(ret);
@@ -43,7 +43,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 	 * @see nash.ass4.ResourceCloset#getResource(java.lang.String)
 	 */
 	@Override
-	public Resource getResource(String resId)
+	public synchronized Resource getResource(String resId)
 	{
 		int id=Integer.parseInt(resId.trim());
 		if (this.resList.size()>id)
@@ -51,8 +51,7 @@ public class ResourceClosetImpl implements ResourceCloset {
 		return null;
 	}
 	
-	public Vector<Resource>
-	getResList()
+	public synchronized Vector<Resource>	getResList()
 	{
 		return this.resList;
 	}

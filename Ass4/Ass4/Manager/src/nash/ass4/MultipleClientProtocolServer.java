@@ -20,7 +20,6 @@ public class MultipleClientProtocolServer implements Runnable {
 	private ServerSocket serverSocket;
     private ProtocolFactory protocolFactory;
     private int listenPort;
-    private ExecutorService _executor;
 
     private boolean runFlag;
     
@@ -28,7 +27,6 @@ public class MultipleClientProtocolServer implements Runnable {
     
     public MultipleClientProtocolServer(int port, ProtocolFactory pf) 
     {
-    	_executor = Executors.newCachedThreadPool();
     	serverSocket = null;
     	listenPort = port;
     	protocolFactory = pf;
@@ -53,16 +51,24 @@ public class MultipleClientProtocolServer implements Runnable {
             {
               ConnectionHandler newConnection = new ConnectionHandler
             		  (serverSocket.accept(), protocolFactory.create() , this);
-              _executor.execute(newConnection);
+              Thread t=new Thread(newConnection);
+              t.start();
             } catch (IOException e) {
               System.out.println("Failed to accept on port " + listenPort);
             }
           }
+          System.out.println("Done!");
 	}
 
 	public void shutDown()
 	{
 		this.runFlag = false;
+		try{
+			this.close();
+		}catch(IOException ioe)
+		{
+			
+		}
 	}
 	
     public void close() throws IOException 

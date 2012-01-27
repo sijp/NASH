@@ -30,7 +30,7 @@ public class RepresentationImpl implements Representation {
 	 * @see nash.ass4.Representation#getId()
 	 */
 	@Override
-	public String getId() {
+	public synchronized String getId() {
 		return this.id;
 	}
 
@@ -38,7 +38,7 @@ public class RepresentationImpl implements Representation {
 	 * @see nash.ass4.Representation#getResource()
 	 */
 	@Override
-	public Resource getResource() {
+	public synchronized Resource getResource() {
 		return this.resource;
 	}
 
@@ -46,7 +46,7 @@ public class RepresentationImpl implements Representation {
 	 * @see nash.ass4.Representation#getGeneratorJob()
 	 */
 	@Override
-	public Job getGeneratorJob() {
+	public synchronized Job getGeneratorJob() {
 		return this.generatorJob;
 	}
 
@@ -62,7 +62,7 @@ public class RepresentationImpl implements Representation {
 	 * @see nash.ass4.Representation#setGenaratorJob(nash.ass4.Job)
 	 */
 	@Override
-	public void setGenaratorJob(Job job) 
+	public synchronized void setGenaratorJob(Job job) 
 	{
 		this.generatorJob = job;
 	}
@@ -71,17 +71,17 @@ public class RepresentationImpl implements Representation {
 	 * @see nash.ass4.Representation#addJob(nash.ass4.Job)
 	 */
 	@Override
-	public void addJob(Job job) 
+	public synchronized void addJob(Job job) 
 	{
 		this.repJobs.add(job);
 	}
 	
-	public boolean isReady()
+	public synchronized boolean isReady()
 	{
 		return this.ready;
 	}
 	
-	public void setReady()
+	public synchronized void setReady()
 	{
 		this.ready=true;
 	}
